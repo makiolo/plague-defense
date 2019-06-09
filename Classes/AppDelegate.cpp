@@ -26,7 +26,7 @@
 #include "HelloWorldScene.h"
 
 // #define USE_AUDIO_ENGINE 1
-// #define USE_SIMPLE_AUDIO_ENGINE 1
+#define USE_SIMPLE_AUDIO_ENGINE 1
 
 #if USE_AUDIO_ENGINE && USE_SIMPLE_AUDIO_ENGINE
 #error "Don't use AudioEngine and SimpleAudioEngine at the same time. Please just select one in your game!"
@@ -42,7 +42,7 @@ using namespace CocosDenshion;
 
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(480, 320);
+static cocos2d::Size designResolutionSize = cocos2d::Size(1700, 900);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
@@ -91,7 +91,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
 
     // turn on display FPS
-    director->setDisplayStats(true);
+    // director->setDisplayStats(true);
 
     // set FPS. the default value is 1.0/60 if you don't call this
     director->setAnimationInterval(1.0f / 60);
@@ -122,6 +122,8 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // run
     director->runWithScene(scene);
+
+	// SimpleAudioEngine::getInstance()->playBackgroundMusic("music/Ghostemane-Plague-Doctor-Mask.mp3", true);
 
     return true;
 }
