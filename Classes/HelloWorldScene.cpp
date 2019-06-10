@@ -24,6 +24,8 @@
 
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
+//
+#include <random>
 
 USING_NS_CC;
 
@@ -78,7 +80,41 @@ bool HelloWorld::init()
     // create menu, it's an autorelease object
     auto menu = Menu::create(closeItem, NULL);
     menu->setPosition(Vec2::ZERO);
-    this->addChild(menu, 1);
+    this->addChild(menu, 3);
+
+	// cielo
+	auto bg = cocos2d::LayerColor::create(Color4B(185, 220, 234, 255));
+	this->addChild(bg, 0);
+
+
+	// nube
+	// 
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<> scale_random{ 0.2, 0.4 };
+	std::normal_distribution<> height_random{ 150, 100 };
+	std::uniform_int_distribution<> width_random{ 150, 300 };
+
+	for(int i=0; i<10; ++i)
+	{
+		auto cloud = Sprite::create("img/decoration/cloud.png");
+		if (cloud == nullptr)
+		{
+			problemLoading("'img/decoration/cloud.png'");
+		}
+		else
+		{
+			// position the sprite on the center of the screen
+			float scale = scale_random(gen);
+			Vec2 position((width_random(gen)*(1+i)) % int(visibleSize.width), height_random(gen));
+			cloud->setPosition(Vec2(position.x + (scale * cloud->boundingBox().size.width / 2), visibleSize.height - position.y - scale * (cloud->boundingBox().size.height / 2)));
+			cloud->setScale(scale);
+
+			// add the sprite as a child to this layer
+			this->addChild(cloud, 1);
+			_clouds.push_back(cloud);
+		}
+	}
 
     /////////////////////////////
     // 3. add your codes below...
@@ -86,6 +122,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
 
+	/*
     auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
     if (label == nullptr)
     {
@@ -98,24 +135,50 @@ bool HelloWorld::init()
                                 origin.y + visibleSize.height - label->getContentSize().height));
 
         // add the label as a child to this layer
-        this->addChild(label, 1);
+        this->addChild(label, 2);
     }
+	*/
 
     // add "HelloWorld" splash screen"
-    auto sprite = Sprite::create("img/character/death-doctor.png");
+
+    auto sprite = Sprite::create("img/building/house.png");
     if (sprite == nullptr)
     {
-        problemLoading("'img/character/death-doctor.png'");
+        problemLoading("'img/building/house.png'");
     }
     else
     {
         // position the sprite on the center of the screen
-        sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, visibleSize.height/2 + origin.y));
+        sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, 310));
+		sprite->setScale(1.7f);
 
         // add the sprite as a child to this layer
-        this->addChild(sprite, 0);
+        this->addChild(sprite, 2);
     }
+
     return true;
+}
+
+
+void HelloWorld::render(cocos2d::Renderer* renderer, const cocos2d::Mat4& eyeTransform, const cocos2d::Mat4* eyeProjection)
+{
+	cocos2d::Scene::render(renderer, eyeTransform, eyeProjection);
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+
+	for (auto cloud : _clouds)
+	{
+		float width_cloud = cloud->getScale() * cloud->boundingBox().size.width;
+		if (cloud->getPosition().x > (visibleSize.width + width_cloud))
+		{
+			Vec2 position = cloud->getPosition();
+			position.x -= (visibleSize.width + width_cloud);
+			cloud->setPosition(position);
+		}
+		else
+		{
+			cloud->setPosition(cloud->getPosition() + Vec2(1.0f / (60.0f * cloud->getScaleX()), 0));
+		}
+	}
 }
 
 
