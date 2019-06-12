@@ -6,7 +6,13 @@ LOCAL_MODULE := MyGame_shared
 
 LOCAL_MODULE_FILENAME := libMyGame
 
-LOCAL_SRC_FILES := $(LOCAL_PATH)/hellocpp/main.cpp \
+LOCAL_SRC_FILES := $(LOCAL_PATH)/../../../Classes/entityx/Entity.cc  \
+                   $(LOCAL_PATH)/../../../Classes/entityx/Event.cc  \
+                   $(LOCAL_PATH)/../../../Classes/entityx/System.cc \
+                   $(LOCAL_PATH)/../../../Classes/entityx/help/Pool.cc \
+                   $(LOCAL_PATH)/../../../Classes/entityx/help/Timer.cc \
+                   $(LOCAL_PATH)/../../../Classes/fast-event-system/clock.cpp \
+                   $(LOCAL_PATH)/hellocpp/main.cpp \
                    $(LOCAL_PATH)/../../../Classes/AppDelegate.cpp \
                    $(LOCAL_PATH)/../../../Classes/HelloWorldScene.cpp
 

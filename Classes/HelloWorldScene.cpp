@@ -24,10 +24,21 @@
 
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
-//
 #include <random>
+#include "entityx/entityx.h"
+
+// ENTITY / MODELS
+#include "Sprite.h"
+#include "Transform.h"
+// SYSTEMS
+#include "MovementClouds.h"
+#include "InputKeyboard.h"
+// EVENTS
+#include "ChangeScene.h"
 
 USING_NS_CC;
+
+entityx::EntityX ex;
 
 Scene* HelloWorld::createScene()
 {
@@ -50,6 +61,8 @@ bool HelloWorld::init()
     {
         return false;
     }
+
+	// Director::getInstance()->pushScene();
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -82,6 +95,7 @@ bool HelloWorld::init()
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 3);
 
+
 	// cielo
 	auto bg = cocos2d::LayerColor::create(Color4B(185, 220, 234, 255));
 	this->addChild(bg, 0);
@@ -95,7 +109,7 @@ bool HelloWorld::init()
 	std::normal_distribution<> height_random{ 150, 100 };
 	std::uniform_int_distribution<> width_random{ 150, 300 };
 
-	for(int i=0; i<10; ++i)
+	for(int i=0; i<80; ++i)
 	{
 		auto cloud = Sprite::create("img/decoration/cloud.png");
 		if (cloud == nullptr)
@@ -104,17 +118,22 @@ bool HelloWorld::init()
 		}
 		else
 		{
-			// position the sprite on the center of the screen
-			float scale = scale_random(gen);
-			Vec2 position((width_random(gen)*(1+i)) % int(visibleSize.width), height_random(gen));
-			cloud->setPosition(Vec2(position.x + (scale * cloud->boundingBox().size.width / 2), visibleSize.height - position.y - scale * (cloud->boundingBox().size.height / 2)));
-			cloud->setScale(scale);
+			entityx::Entity entity = ex.entities.create();
 
-			// add the sprite as a child to this layer
-			this->addChild(cloud, 1);
-			_clouds.push_back(cloud);
+			// add transform
+			float scale = scale_random(gen);
+			Vec2 position( (width_random(gen) * (1 + i)) % int(visibleSize.width), height_random(gen) );
+			position = (Vec2(position.x + (scale * cloud->boundingBox().size.width / 2), visibleSize.height - position.y - scale * (cloud->boundingBox().size.height / 2)));
+			auto cloud_node = cocos2d::Node::create();
+			this->addChild(cloud_node, 1);
+			entity.assign<plague::Transform>(cloud_node, position, scale);
+
+			// add sprite
+			entity.assign<plague::Sprite>(cloud);
+			cloud_node->addChild(cloud);
 		}
 	}
+
 
     /////////////////////////////
     // 3. add your codes below...
@@ -122,8 +141,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
 
-	/*
-    auto label = Label::createWithTTF("Hello World", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF("0 points", "fonts/Marker Felt.ttf", 24);
     if (label == nullptr)
     {
         problemLoading("'fonts/Marker Felt.ttf'");
@@ -131,30 +149,70 @@ bool HelloWorld::init()
     else
     {
         // position the label on the center of the screen
-        label->setPosition(Vec2(origin.x + visibleSize.width/2,
-                                origin.y + visibleSize.height - label->getContentSize().height));
+        label->setPosition(Vec2(45, 20));
+		label->setColor(cocos2d::Color3B(0, 0, 0));
+		label->setAlignment(cocos2d::TextHAlignment::LEFT);
 
         // add the label as a child to this layer
         this->addChild(label, 2);
     }
-	*/
+
 
     // add "HelloWorld" splash screen"
 
-    auto sprite = Sprite::create("img/building/house.png");
-    if (sprite == nullptr)
+    auto building_sprite = Sprite::create("img/building/house.png");
+    if (building_sprite == nullptr)
     {
         problemLoading("'img/building/house.png'");
     }
     else
     {
-        // position the sprite on the center of the screen
-        sprite->setPosition(Vec2(visibleSize.width/2 + origin.x, 310));
-		sprite->setScale(1.7f);
+		entityx::Entity entity = ex.entities.create();
 
-        // add the sprite as a child to this layer
-        this->addChild(sprite, 2);
+		// add transform
+		Vec2 position(Vec2(visibleSize.width / 2 + origin.x, 310));
+		float scale = 1.7f;
+		auto building_node = cocos2d::Node::create();
+		building_node->setPosition(position);
+		building_node->setScale(scale);
+		this->addChild(building_node, 2);
+
+		// add sprite
+		entity.assign<plague::Sprite>(building_sprite);
+		building_node->addChild(building_sprite);
     }
+
+	// probando particulas creadas con: http://particle2dx.com/
+	// auto particle_system = ParticleSystem::create("particles/particle_texture.plist");
+	auto particle_system = ParticleFireworks::create();
+	particle_system->setDuration(ParticleSystem::DURATION_INFINITY);
+	/*
+	particle_system->setEmitterMode(ParticleSystem::Mode::RADIUS);
+	particle_system->setStartRadius(100);
+	particle_system->setStartRadiusVar(0);
+	particle_system->setEndRadius(ParticleSystem::START_RADIUS_EQUAL_TO_END_RADIUS);
+	particle_system->setEndRadiusVar(0);
+	*/
+	if (particle_system == nullptr)
+	{
+		problemLoading("'particles/particle_texture.plist'");
+	}
+	else
+	{
+		// position the sprite on the center of the screen
+		particle_system->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+		// particle_system->setScale(1.7f);
+
+		// add the sprite as a child to this layer
+		this->addChild(particle_system, 3);
+	}
+
+	// add systems
+	ex.systems.add<plague::MovementSystem>();
+	ex.systems.add<plague::InputKeyboard>();
+	ex.systems.configure();
+
+	ex.events.emit<plague::ChangeScene>(this);
 
     return true;
 }
@@ -163,22 +221,7 @@ bool HelloWorld::init()
 void HelloWorld::render(cocos2d::Renderer* renderer, const cocos2d::Mat4& eyeTransform, const cocos2d::Mat4* eyeProjection)
 {
 	cocos2d::Scene::render(renderer, eyeTransform, eyeProjection);
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-
-	for (auto cloud : _clouds)
-	{
-		float width_cloud = cloud->getScale() * cloud->boundingBox().size.width;
-		if (cloud->getPosition().x > (visibleSize.width + width_cloud))
-		{
-			Vec2 position = cloud->getPosition();
-			position.x -= (visibleSize.width + width_cloud);
-			cloud->setPosition(position);
-		}
-		else
-		{
-			cloud->setPosition(cloud->getPosition() + Vec2(1.0f / (60.0f * cloud->getScaleX()), 0));
-		}
-	}
+	ex.systems.update_all(0.0);
 }
 
 

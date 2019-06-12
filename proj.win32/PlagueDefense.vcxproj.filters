@@ -10,6 +10,42 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="design-patterns-cpp14">
+      <UniqueIdentifier>{37331a50-a4b5-4787-8abe-d0f280d08ede}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entityx">
+      <UniqueIdentifier>{6927ee1f-c541-430e-9785-8b1c2f5b924d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="nlohmann">
+      <UniqueIdentifier>{8cf6527d-39c9-4735-a703-ed0835d9745e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="fast-event-system">
+      <UniqueIdentifier>{11fcea35-7eb5-482a-b435-aaf57fd1ed15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entityx\3rdparty">
+      <UniqueIdentifier>{b88fabf3-a872-4216-bb60-8f403f01b755}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entityx\deps">
+      <UniqueIdentifier>{39f94a20-837e-4710-9ef0-c3d751e9b7c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entityx\help">
+      <UniqueIdentifier>{3f339dae-2688-4adf-a88a-71b1219facd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="entityx\tags">
+      <UniqueIdentifier>{071f16a9-6df0-4afd-bc32-eae79ada92af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\systems">
+      <UniqueIdentifier>{ca321cfa-0890-49bc-a09b-885ef6f8b502}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\entities">
+      <UniqueIdentifier>{c6f57f7c-d7af-4061-b8d2-23c2d49f1ffa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\events">
+      <UniqueIdentifier>{9fccf45b-4378-4900-93c4-06f8c2f8f637}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\scenes">
+      <UniqueIdentifier>{7d66b1ed-4c24-4baf-889b-dd5a68754809}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -19,7 +55,25 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\HelloWorldScene.cpp">
-      <Filter>src</Filter>
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\fast-event-system\clock.cpp">
+      <Filter>fast-event-system</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\entityx\help\Timer.cc">
+      <Filter>entityx\help</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\entityx\help\Pool.cc">
+      <Filter>entityx\help</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\entityx\Event.cc">
+      <Filter>entityx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\entityx\System.cc">
+      <Filter>entityx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\entityx\Entity.cc">
+      <Filter>entityx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -29,13 +83,123 @@
     <ClInclude Include="..\Classes\AppDelegate.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\MovementClouds.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Transform.h">
+      <Filter>src\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InputKeyboard.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ChangeScene.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\LeftCommand.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\RightCommand.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Sprite.h">
+      <Filter>src\entities</Filter>
+    </ClInclude>
     <ClInclude Include="..\Classes\HelloWorldScene.h">
-      <Filter>src</Filter>
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\nlohmann\json.hpp">
+      <Filter>nlohmann</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\fast-event-system\clock.h">
+      <Filter>fast-event-system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\fast-event-system\connection.h">
+      <Filter>fast-event-system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\fast-event-system\internal_connection.h">
+      <Filter>fast-event-system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\fast-event-system\message.h">
+      <Filter>fast-event-system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\fast-event-system\method.h">
+      <Filter>fast-event-system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\fast-event-system\sem.h">
+      <Filter>fast-event-system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\fast-event-system\sync.h">
+      <Filter>fast-event-system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\fast-event-system\api.h">
+      <Filter>fast-event-system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\fast-event-system\async_delay.h">
+      <Filter>fast-event-system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\fast-event-system\async_fast.h">
+      <Filter>fast-event-system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\fast-event-system\bind.h">
+      <Filter>fast-event-system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\3rdparty\simplesignal.h">
+      <Filter>entityx\3rdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\3rdparty\catch.hpp">
+      <Filter>entityx\3rdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\deps\Dependencies.h">
+      <Filter>entityx\deps</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\help\Timer.h">
+      <Filter>entityx\help</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\help\NonCopyable.h">
+      <Filter>entityx\help</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\help\Pool.h">
+      <Filter>entityx\help</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\tags\TagsComponent.h">
+      <Filter>entityx\tags</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\Entity.h">
+      <Filter>entityx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\entityx.h">
+      <Filter>entityx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\Event.h">
+      <Filter>entityx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\System.h">
+      <Filter>entityx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\config.h">
+      <Filter>entityx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\design-patterns-cpp14\factory.h">
+      <Filter>design-patterns-cpp14</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\design-patterns-cpp14\memoize.h">
+      <Filter>design-patterns-cpp14</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\design-patterns-cpp14\common.h">
+      <Filter>design-patterns-cpp14</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\entityx\quick.h">
+      <Filter>entityx</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="game.rc">
       <Filter>resource</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Classes\entityx\config.h.in">
+      <Filter>entityx</Filter>
+    </None>
   </ItemGroup>
 </Project>
