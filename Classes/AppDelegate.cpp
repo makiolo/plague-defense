@@ -123,7 +123,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     // run
     director->runWithScene(scene);
 
-	SimpleAudioEngine::getInstance()->playBackgroundMusic("music/Ghostemane-Plague-Doctor-Mask.mp3", true);
+	// SimpleAudioEngine::getInstance()->playBackgroundMusic("music/Ghostemane-Plague-Doctor-Mask.mp3", true);
 
     return true;
 }

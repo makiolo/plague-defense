@@ -56,9 +56,9 @@ struct MovementSystem : public entityx::System<MovementSystem>, public entityx::
 			if (condition)
 			{
 				if(_right_command)
-					position.x += 1.0f / (8.0f * scale);
+					position.x += 1.0f / (0.6f * scale);
 				else
-					position.x -= 1.0f / (8.0f * scale);
+					position.x -= 1.0f / (0.6f * scale);
 			}
 			else
 			{

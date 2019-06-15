@@ -106,10 +106,10 @@ bool HelloWorld::init()
 	std::random_device rd;
 	std::mt19937 gen(rd());
 	std::uniform_real_distribution<> scale_random{ 0.2, 0.4 };
-	std::normal_distribution<> height_random{ 150, 100 };
+	std::normal_distribution<> height_random{ 150, 500 };
 	std::uniform_int_distribution<> width_random{ 150, 300 };
 
-	for(int i=0; i<80; ++i)
+	for(int i=0; i<120; ++i)
 	{
 		auto cloud = Sprite::create("img/decoration/cloud.png");
 		if (cloud == nullptr)
@@ -141,7 +141,7 @@ bool HelloWorld::init()
     // add a label shows "Hello World"
     // create and initialize a label
 
-    auto label = Label::createWithTTF("0 points", "fonts/Marker Felt.ttf", 24);
+    auto label = Label::createWithTTF("Hello world", "fonts/Marker Felt.ttf", 24);
     if (label == nullptr)
     {
         problemLoading("'fonts/Marker Felt.ttf'");
@@ -149,7 +149,7 @@ bool HelloWorld::init()
     else
     {
         // position the label on the center of the screen
-        label->setPosition(Vec2(45, 20));
+        label->setPosition(Vec2(200, 20));
 		label->setColor(cocos2d::Color3B(0, 0, 0));
 		label->setAlignment(cocos2d::TextHAlignment::LEFT);
 
@@ -170,8 +170,8 @@ bool HelloWorld::init()
 		entityx::Entity entity = ex.entities.create();
 
 		// add transform
-		Vec2 position(Vec2(visibleSize.width / 2 + origin.x, 310));
-		float scale = 1.7f;
+		Vec2 position(Vec2(400 + origin.x, 200));
+		float scale = 0.5f;
 		auto building_node = cocos2d::Node::create();
 		building_node->setPosition(position);
 		building_node->setScale(scale);
@@ -200,8 +200,8 @@ bool HelloWorld::init()
 	else
 	{
 		// position the sprite on the center of the screen
-		particle_system->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-		// particle_system->setScale(1.7f);
+		particle_system->setPosition(Vec2(150, 100));
+		particle_system->setScale(1.2f);
 
 		// add the sprite as a child to this layer
 		this->addChild(particle_system, 3);

@@ -48,6 +48,12 @@ endif()
 
 # add cross-platforms source files and header files 
 list(APPEND GAME_SOURCE
+     Classes/entityx/Entity.cc
+     Classes/entityx/Event.cc
+     Classes/entityx/System.cc
+     Classes/entityx/help/Pool.cc
+     Classes/entityx/help/Timer.cc
+     Classes/fast-event-system/clock.cpp
      Classes/AppDelegate.cpp
      Classes/HelloWorldScene.cpp
      )
