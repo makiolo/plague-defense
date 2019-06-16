@@ -46,6 +46,9 @@
     <Filter Include="src\scenes">
       <UniqueIdentifier>{7d66b1ed-4c24-4baf-889b-dd5a68754809}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\spawners">
+      <UniqueIdentifier>{f89bc448-3712-4743-bc79-8ae97ae1c66f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -75,6 +78,9 @@
     <ClCompile Include="..\Classes\entityx\Entity.cc">
       <Filter>entityx</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\MainMenuScene.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -91,9 +97,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\InputKeyboard.h">
       <Filter>src\systems</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\ChangeScene.h">
-      <Filter>src\events</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\LeftCommand.h">
       <Filter>src\events</Filter>
@@ -190,6 +193,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\entityx\quick.h">
       <Filter>entityx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MainMenuScene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MouseMoveCommand.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DebugBar.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\utils.h">
+      <Filter>src\spawners</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
