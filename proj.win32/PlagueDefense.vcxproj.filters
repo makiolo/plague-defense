@@ -37,16 +37,16 @@
     <Filter Include="src\systems">
       <UniqueIdentifier>{ca321cfa-0890-49bc-a09b-885ef6f8b502}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\entities">
-      <UniqueIdentifier>{c6f57f7c-d7af-4061-b8d2-23c2d49f1ffa}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\events">
       <UniqueIdentifier>{9fccf45b-4378-4900-93c4-06f8c2f8f637}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\scenes">
       <UniqueIdentifier>{7d66b1ed-4c24-4baf-889b-dd5a68754809}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\spawners">
+    <Filter Include="src\components">
+      <UniqueIdentifier>{c6f57f7c-d7af-4061-b8d2-23c2d49f1ffa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\prefabs">
       <UniqueIdentifier>{f89bc448-3712-4743-bc79-8ae97ae1c66f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -56,9 +56,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp">
-      <Filter>src\scenes</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\fast-event-system\clock.cpp">
       <Filter>fast-event-system</Filter>
@@ -81,6 +78,9 @@
     <ClCompile Include="..\Classes\MainMenuScene.cpp">
       <Filter>src\scenes</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\Level01.cpp">
+      <Filter>src\scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -93,7 +93,7 @@
       <Filter>src\systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Transform.h">
-      <Filter>src\entities</Filter>
+      <Filter>src\components</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\InputKeyboard.h">
       <Filter>src\systems</Filter>
@@ -105,10 +105,7 @@
       <Filter>src\events</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Sprite.h">
-      <Filter>src\entities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\HelloWorldScene.h">
-      <Filter>src\scenes</Filter>
+      <Filter>src\components</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\nlohmann\json.hpp">
       <Filter>nlohmann</Filter>
@@ -200,11 +197,14 @@
     <ClInclude Include="..\Classes\MouseMoveCommand.h">
       <Filter>src\events</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\DebugBar.h">
-      <Filter>src\systems</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\utils.h">
-      <Filter>src\spawners</Filter>
+      <Filter>src\prefabs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DebugBar.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Level01.h">
+      <Filter>src\scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

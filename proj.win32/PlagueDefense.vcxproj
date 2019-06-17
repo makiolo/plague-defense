@@ -157,7 +157,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClCompile Include="..\Classes\entityx\help\Timer.cc" />
     <ClCompile Include="..\Classes\entityx\System.cc" />
     <ClCompile Include="..\Classes\fast-event-system\clock.cpp" />
-    <ClCompile Include="..\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="..\Classes\Level01.cpp" />
     <ClCompile Include="..\Classes\MainMenuScene.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
@@ -191,9 +191,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\fast-event-system\method.h" />
     <ClInclude Include="..\Classes\fast-event-system\sem.h" />
     <ClInclude Include="..\Classes\fast-event-system\sync.h" />
-    <ClInclude Include="..\Classes\HelloWorldScene.h" />
     <ClInclude Include="..\Classes\InputKeyboard.h" />
     <ClInclude Include="..\Classes\LeftCommand.h" />
+    <ClInclude Include="..\Classes\Level01.h" />
     <ClInclude Include="..\Classes\MainMenuScene.h" />
     <ClInclude Include="..\Classes\MouseMoveCommand.h" />
     <ClInclude Include="..\Classes\MovementClouds.h" />

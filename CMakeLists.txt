@@ -55,11 +55,11 @@ list(APPEND GAME_SOURCE
      Classes/entityx/help/Timer.cc
      Classes/fast-event-system/clock.cpp
      Classes/AppDelegate.cpp
-     Classes/HelloWorldScene.cpp
+     Classes/Level01.cpp
+     Classes/MainMenuScene.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
-     Classes/HelloWorldScene.h
      )
 
 if(ANDROID)

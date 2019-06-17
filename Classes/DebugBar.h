@@ -12,15 +12,17 @@
 
 namespace plague {
 
-	struct DebugBar : public entityx::System<DebugBar>, public entityx::Receiver<DebugBar>
+	struct DebugBar : public entityx::Receiver<DebugBar>
 	{
-		explicit DebugBar(cocos2d::Scene* scene)
+		explicit DebugBar(cocos2d::Scene* scene, entityx::EventManager& events)
 			: _scene(scene)
 		{
+			events.subscribe<plague::MouseMoveCommand>(*this);
+
 			_label = cocos2d::Label::createWithTTF("Hello world", "fonts/Marker Felt.ttf", 24);
 			if (_label == nullptr)
 			{
-				throw std::exception("Error creating DebugBar ...");
+                // throw std::runtime_exception("Error creating DebugBar ...");
 			}
 			else
 			{
@@ -30,12 +32,8 @@ namespace plague {
 				_label->setAlignment(cocos2d::TextHAlignment::LEFT);
 
 				// add the label as a child to this layer
-				_scene->addChild(_label, 2);
+				_scene->addChild(_label, 5);
 			}
-		}
-
-		void configure(entityx::EntityManager& entities, entityx::EventManager& events) override {
-			events.subscribe<plague::MouseMoveCommand>(*this);
 		}
 
 		void receive(const plague::MouseMoveCommand& command) {
@@ -43,10 +41,6 @@ namespace plague {
 			ss << "x: " << command.x << ", y: " << command.y << std::endl;
 			_label->setString(ss.str());
 		}
-
-		void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override {
-
-		};
 
 	protected:
 		cocos2d::Scene* _scene;

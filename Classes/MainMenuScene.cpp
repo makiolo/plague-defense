@@ -2,13 +2,11 @@
 //
 #include "entityx/entityx.h"
 // SCENES
-#include "HelloWorldScene.h"
+#include "Level01.h"
 
 USING_NS_CC;
 
 namespace plague {
-
-entityx::EntityX ex;
 
 Scene* MainMenuScene::createScene()
 {
@@ -21,8 +19,6 @@ bool MainMenuScene::init()
 	{
 		return false;
 	}
-
-	ex.entities.reset();
 
 	/////////////////////////////////////////////////////////////
 
@@ -40,7 +36,7 @@ bool MainMenuScene::init()
 		playButton->getContentSize().width <= 0 ||
 		playButton->getContentSize().height <= 0)
 	{
-		throw std::exception("Error loading play button.");
+		// throw std::exception("Error loading play button.");
 	}
 	else
 	{
@@ -58,8 +54,8 @@ bool MainMenuScene::init()
 
 void MainMenuScene::menuPlayCallback(cocos2d::Ref* pSender)
 {
-	// Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, Level01::create()));
-	Director::getInstance()->replaceScene(Level01::create());
+	Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, Level01::create()));
+	// Director::getInstance()->replaceScene(Level01::create());
 }
 
 }

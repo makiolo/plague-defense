@@ -26,7 +26,7 @@ public:
 };
 
 
-struct InputKeyboard : public entityx::System<InputKeyboard> {
+struct InputKeyboard : public entityx::System<InputKeyboard>, public cocos2d::Node {
 
 	explicit InputKeyboard(cocos2d::Scene* scene)
 		: _send_right(true)
@@ -36,15 +36,18 @@ struct InputKeyboard : public entityx::System<InputKeyboard> {
 		, _spawn_spider(false)
 	{
 		_listener = cocos2d::EventListenerKeyboard::create();
+		_listener->retain();
 		_listener->onKeyPressed = CC_CALLBACK_2(InputKeyboard::onKeyPressed, this);
 		_listener->onKeyReleased = CC_CALLBACK_2(InputKeyboard::onKeyReleased, this);
 
 		_listener_touch = cocos2d::EventListenerTouchOneByOne::create();
+		_listener_touch->retain();
 		_listener_touch->onTouchBegan = CC_CALLBACK_2(InputKeyboard::onTouchBegan, this);
 		_listener_touch->onTouchMoved = CC_CALLBACK_2(InputKeyboard::onTouchMoved, this);
 		_listener_touch->onTouchEnded = CC_CALLBACK_2(InputKeyboard::onTouchEnded, this);
 
 		_listener_mouse = cocos2d::EventListenerMouse::create();
+		_listener_mouse->retain();
 		_listener_mouse->onMouseMove = CC_CALLBACK_1(InputKeyboard::onMouseMove, this);
 		_listener_mouse->onMouseUp = CC_CALLBACK_1(InputKeyboard::onMouseUp, this);
 		_listener_mouse->onMouseDown = CC_CALLBACK_1(InputKeyboard::onMouseDown, this);
@@ -57,7 +60,13 @@ struct InputKeyboard : public entityx::System<InputKeyboard> {
 
 	virtual ~InputKeyboard()
 	{
+		_scene->getEventDispatcher()->removeEventListener(_listener);
+		_scene->getEventDispatcher()->removeEventListener(_listener_touch);
+		_scene->getEventDispatcher()->removeEventListener(_listener_mouse);
 		
+		CC_SAFE_RELEASE_NULL(_listener);
+		CC_SAFE_RELEASE_NULL(_listener_touch);
+		CC_SAFE_RELEASE_NULL(_listener_mouse);
 	}
 
 	////////////////////////////////////////////////////////////////////////
@@ -74,18 +83,27 @@ struct InputKeyboard : public entityx::System<InputKeyboard> {
 
 	////////////////////// TOUCH EVENTS /////////////////////////////////////
 
-	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event)
+	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* e)
 	{
 		_touched = true;
+
+		// read touch position
+		cocos2d::CCPoint touchLocation = touch->getLocationInView();
+		touchLocation = cocos2d::CCDirector::sharedDirector()->convertToGL(touchLocation);
+		touchLocation = convertToNodeSpace(touchLocation);
+
+		_mouse_x = touchLocation.x;
+		_mouse_y = touchLocation.y;
+
 		return true;
 	}
 
-	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* event)
+	void onTouchMoved(cocos2d::Touch* touch, cocos2d::Event* e)
 	{
 
 	}
 
-	void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* event)
+	void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* e)
 	{
 
 	}
@@ -145,12 +163,20 @@ struct InputKeyboard : public entityx::System<InputKeyboard> {
 				events.emit<plague::LeftCommand>();
 			}
 			_send_right = !_send_right;
+			//
+			_spawn_spider = true;
 			_touched = false;
+			//
+			entityx::Entity spider = entities.create();
+			plague::make_sprite(spider, _scene, "img/enemy/spider.png", cocos2d::Vec2(_mouse_x, _mouse_y), 1.0f);
+			//
+			events.emit<plague::MouseMoveCommand>(_mouse_x, _mouse_y);
 		}
 
 		if (_spawn_spider)
 		{
-			plague::SpriteEntity(_scene, entities, "img/enemy/spider.png", cocos2d::Vec2(_mouse_x, _mouse_y), 1.0f);
+			entityx::Entity spider = entities.create();
+			plague::make_sprite(spider, _scene, "img/enemy/spider.png", cocos2d::Vec2(_mouse_x, _mouse_y), 1.0f);
 			_spawn_spider = false;
 		}
 
