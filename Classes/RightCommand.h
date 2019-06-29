@@ -7,10 +7,13 @@
 namespace plague {
 
 struct RightCommand {
-	explicit RightCommand()
+	explicit RightCommand(bool active_)
+		: active(active_)
 	{
 		
 	}
+
+	bool active;
 };
 
 }

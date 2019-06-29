@@ -10,7 +10,13 @@ struct Sprite {
 	explicit Sprite(cocos2d::Sprite* sprite_)
 		: sprite(sprite_)
 	{
-		
+		sprite->retain();
+	}
+
+	~Sprite()
+	{
+		sprite->removeFromParent();
+		sprite->release();
 	}
 
 	cocos2d::Sprite* sprite;

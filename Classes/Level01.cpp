@@ -3,13 +3,21 @@
 #include "SimpleAudioEngine.h"
 #include "entityx/entityx.h"
 
-// ENTITY / MODELS
+// COMPONENT
 #include "Sprite.h"
 #include "Transform.h"
+#include "DebugBar.h"
+#include "CharacterComponent.h"
 // SYSTEMS
 #include "MovementClouds.h"
 #include "InputKeyboard.h"
-#include "DebugBar.h"
+#include "AutoDestroySystem.h"
+#include "CountdownSystem.h"
+#include "BlackboardSystem.h"
+#include "DetectInvasionSystem.h"
+#include "CharacterSystem.h"
+#include "GravitySystem.h"
+#include "DetectFloorImpactSystem.h"
 // SCENES
 #include "MainMenuScene.h"
 // SPAWNERS
@@ -40,7 +48,6 @@ bool Level01::init()
     }
 
 	ex = std::unique_ptr<entityx::EntityX>(new entityx::EntityX);
-	// ex = std::make_unique<entityx::EntityX>();
 	
 	auto scenary = ex->entities.create();
 
@@ -48,12 +55,26 @@ bool Level01::init()
 	scenary.assign<plague::DebugBar>(this, ex->events);
 
 	plague::make_back_button(scenary, this, CC_CALLBACK_1(Level01::menuCloseCallback, this));
-	plague::make_sprite(scenary, this, "img/building/level01.png", cocos2d::Vec2(850, 400), 0.8f);
 	plague::make_clouds(this, ex->entities);
 	plague::make_sky(this);
 
+	auto building = ex->entities.create();
+	plague::make_sprite(building, this, "img/building/level01.png", cocos2d::Vec2(850, 400), 0.8f);
+
+	auto character = ex->entities.create();
+	// 488 - 1228
+	plague::make_sprite(character, this, "img/character/character.jpg", cocos2d::Vec2(858, 816), 0.15f);
+	character.assign<plague::CharacterComponent>(255.0f);
+
 	ex->systems.add<plague::MovementSystem>();
-	ex->systems.add<plague::InputKeyboard>(this);
+	ex->systems.add<plague::InputSystem>(this);
+	ex->systems.add<plague::AutoDestroySystem>();
+	ex->systems.add<plague::CountDownSystem>();
+	ex->systems.add<plague::BlackboardSystem>();
+	ex->systems.add<plague::DetectInvasionSystem>();
+	ex->systems.add<plague::CharacterSystem>();
+	ex->systems.add<plague::GravitySystem>();
+	ex->systems.add<plague::DetectFloorImpactSystem>();
 	ex->systems.configure();
 
     return true;
@@ -63,15 +84,13 @@ bool Level01::init()
 void Level01::render(cocos2d::Renderer* renderer, const cocos2d::Mat4& eyeTransform, const cocos2d::Mat4* eyeProjection)
 {
 	cocos2d::Scene::render(renderer, eyeTransform, eyeProjection);
-	ex->systems.update<plague::MovementSystem>(0.01f);
-	ex->systems.update<plague::InputKeyboard>(0.01f);
+	ex->systems.update_all(1.0f / 60.0f);
 }
 
 void Level01::menuCloseCallback(cocos2d::Ref* pSender)
 {
 	Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, plague::MainMenuScene::create()));
 	// cocos2d::Director::getInstance()->replaceScene(plague::MainMenuScene::create());
-
 
 	//Close the cocos2d-x game scene and quit the application
 	// Director::getInstance()->end();

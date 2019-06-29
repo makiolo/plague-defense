@@ -19,9 +19,6 @@
     <Filter Include="nlohmann">
       <UniqueIdentifier>{8cf6527d-39c9-4735-a703-ed0835d9745e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="fast-event-system">
-      <UniqueIdentifier>{11fcea35-7eb5-482a-b435-aaf57fd1ed15}</UniqueIdentifier>
-    </Filter>
     <Filter Include="entityx\3rdparty">
       <UniqueIdentifier>{b88fabf3-a872-4216-bb60-8f403f01b755}</UniqueIdentifier>
     </Filter>
@@ -56,9 +53,6 @@
     </ClCompile>
     <ClCompile Include="..\Classes\AppDelegate.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\fast-event-system\clock.cpp">
-      <Filter>fast-event-system</Filter>
     </ClCompile>
     <ClCompile Include="..\Classes\entityx\help\Timer.cc">
       <Filter>entityx\help</Filter>
@@ -109,39 +103,6 @@
     </ClInclude>
     <ClInclude Include="..\Classes\nlohmann\json.hpp">
       <Filter>nlohmann</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\fast-event-system\clock.h">
-      <Filter>fast-event-system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\fast-event-system\connection.h">
-      <Filter>fast-event-system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\fast-event-system\internal_connection.h">
-      <Filter>fast-event-system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\fast-event-system\message.h">
-      <Filter>fast-event-system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\fast-event-system\method.h">
-      <Filter>fast-event-system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\fast-event-system\sem.h">
-      <Filter>fast-event-system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\fast-event-system\sync.h">
-      <Filter>fast-event-system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\fast-event-system\api.h">
-      <Filter>fast-event-system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\fast-event-system\async_delay.h">
-      <Filter>fast-event-system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\fast-event-system\async_fast.h">
-      <Filter>fast-event-system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\fast-event-system\bind.h">
-      <Filter>fast-event-system</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\entityx\3rdparty\simplesignal.h">
       <Filter>entityx\3rdparty</Filter>
@@ -205,6 +166,63 @@
     </ClInclude>
     <ClInclude Include="..\Classes\Level01.h">
       <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AutoDestroy.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AutoDestroySystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Cloud.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CountdownSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CountDownReset.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\BlackBoardSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StartGame.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CountDownCommnad.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InsectDeadEvent.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InsectInvasionEvent.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DetectInvasionSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CharacterSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CharacterComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ProjectilComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DetectCollisionSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DetectFloorImpactSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\FireCommand.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GravityComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GravitySystem.h">
+      <Filter>src\systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

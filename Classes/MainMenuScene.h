@@ -1,7 +1,7 @@
 #ifndef __MAINMENU_SCENE_H__
 #define __MAINMENU_SCENE_H__
 
-#include "cocos2d.h"
+#include <cocos2d.h>
 
 namespace plague {
 
@@ -13,7 +13,6 @@ public:
 	virtual bool init();
 	void menuPlayCallback(cocos2d::Ref* pSender);
 
-	// implement the "static create()" method manually
 	CREATE_FUNC(MainMenuScene);
 };
 

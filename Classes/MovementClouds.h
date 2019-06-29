@@ -8,10 +8,11 @@
 #include "Transform.h"
 #include "LeftCommand.h"
 #include "RightCommand.h"
+#include "Cloud.h"
 
 namespace plague {
 
-struct MovementSystem : public entityx::System<MovementSystem>, public entityx::Receiver<MovementSystem> {
+struct MovementSystem : public entityx::System<MovementSystem> {
 
 	explicit MovementSystem()
 		: _right_command(true)
@@ -19,28 +20,11 @@ struct MovementSystem : public entityx::System<MovementSystem>, public entityx::
 		;
 	}
 
-	void configure(entityx::EntityManager& entities, entityx::EventManager& events) override {
-		events.subscribe<plague::LeftCommand>(*this);
-		events.subscribe<plague::RightCommand>(*this);
-	}
-
-	void receive(const plague::LeftCommand& command) {
-		_right_command = false;
-	}
-
-	void receive(const plague::RightCommand& command) {
-		_right_command = true;
-	}
-
-	/*
-	Responsabilidad:
-		- Leer/Escribir en Transform
-	*/
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override {
 
 		const auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 	
-		es.each<plague::Transform>([=](entityx::Entity entity, plague::Transform& transform) {
+		es.each<plague::Transform, plague::Cloud>([=](entityx::Entity entity, plague::Transform& transform, plague::Cloud& cloud) {
 
 			cocos2d::Vec2 position = transform.node->getPosition();
 			float scale = transform.node->getScale();
@@ -56,9 +40,9 @@ struct MovementSystem : public entityx::System<MovementSystem>, public entityx::
 			if (condition)
 			{
 				if(_right_command)
-					position.x += 1.0f / (0.6f * scale);
+					position.x += 1.0f / (60.0f * scale);
 				else
-					position.x -= 1.0f / (0.6f * scale);
+					position.x -= 1.0f / (60.0f * scale);
 			}
 			else
 			{

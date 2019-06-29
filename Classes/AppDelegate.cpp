@@ -1,6 +1,10 @@
 #include "AppDelegate.h"
 //
 #include "MainMenuScene.h"
+//
+#ifdef SDKBOX_ENABLED
+#include "PluginSdkboxPlay/PluginSdkboxPlay.h"
+#endif
 
 // #define USE_AUDIO_ENGINE 1
 #define USE_SIMPLE_AUDIO_ENGINE 1
@@ -26,6 +30,7 @@ static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
 
 AppDelegate::AppDelegate()
 {
+	
 }
 
 AppDelegate::~AppDelegate() 
@@ -55,6 +60,11 @@ static int register_all_packages()
 }
 
 bool AppDelegate::applicationDidFinishLaunching() {
+
+#ifdef SDKBOX_ENABLED
+	sdkbox::PluginSdkboxPlay::init();
+#endif
+
     // initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();

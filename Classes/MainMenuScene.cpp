@@ -20,6 +20,11 @@ bool MainMenuScene::init()
 		return false;
 	}
 
+#ifdef ENABLE_CLOUD_SAVE
+	// https://github.com/sdkbox/sdkbox-sample-sdkboxplay/tree/master/cpp
+	sdkbox::PluginSdkboxPlay::loadAllGameData();
+#endif
+
 	/////////////////////////////////////////////////////////////
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();

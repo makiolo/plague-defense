@@ -12,7 +12,14 @@ struct Transform {
 		, position_initial(position_initial_)
 		, scale_initial(scale_initial_)
 	{
+		node->retain();
 		reset();
+	}
+
+	~Transform()
+	{
+		node->removeFromParent();
+		node->release();
 	}
 
 	void reset()
