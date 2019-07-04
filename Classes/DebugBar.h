@@ -9,7 +9,7 @@
 #include "LeftCommand.h"
 #include "RightCommand.h"
 #include "MouseMoveCommand.h"
-#include "CountDownCommnad.h"
+#include "LifeLostEvent.h"
 
 namespace plague {
 
@@ -18,10 +18,9 @@ struct DebugBar : public entityx::Receiver<DebugBar>
 	explicit DebugBar(cocos2d::Scene* scene, entityx::EventManager& events)
 		: _scene(scene)
 	{
-		events.subscribe<plague::MouseMoveCommand>(*this);
-		events.subscribe<plague::CountDownCommand>(*this);
+		events.subscribe<plague::LifeLostEvent>(*this);
 
-		_label = cocos2d::Label::createWithTTF("Hello world", "fonts/Marker Felt.ttf", 24);
+		_label = cocos2d::Label::createWithTTF("Lifes: 0", "fonts/Marker Felt.ttf", 24);
 		_label->retain();
 		if (_label == nullptr)
 		{
@@ -45,21 +44,11 @@ struct DebugBar : public entityx::Receiver<DebugBar>
 		_label->release();
 	}
 
-	void receive(const plague::MouseMoveCommand& command)
+	void receive(const plague::LifeLostEvent& command)
 	{
 		std::stringstream ss;
-		ss << "x: " << command.x << ", y: " << command.y << std::endl;
+		ss << "Lifes: " << command.lifes << std::endl;
 		_label->setString(ss.str());
-	}
-
-	void receive(const plague::CountDownCommand& command)
-	{
-		if (command.countdown > 0.0f)
-		{
-			std::stringstream ss;
-			ss << "countdown: " << command.countdown << std::endl;
-			_label->setString(ss.str());
-		}
 	}
 
 protected:

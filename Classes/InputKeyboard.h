@@ -31,7 +31,7 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node {
 
 	explicit InputSystem(cocos2d::Scene* scene)
 		: _send_right(true)
-		, _touched(false)
+		, _touching(false)
 		, _moved(false)
 		, _scene(scene)
 		, _fire(false)
@@ -91,7 +91,7 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node {
 
 	bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* e)
 	{
-		_touched = true;
+		_touching = true;
 
 		// read touch position
 		cocos2d::CCPoint touchLocation = touch->getLocationInView();
@@ -111,7 +111,7 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node {
 
 	void onTouchEnded(cocos2d::Touch* touch, cocos2d::Event* e)
 	{
-		;
+		_touching = false;
 	}
 
 	/////////////////////// 
@@ -145,6 +145,7 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node {
 	{
 		using namespace cocos2d;
 
+#ifdef _WIN32
 		if (_mapping[EventKeyboard::KeyCode::KEY_D])
 		{
 			events.emit<plague::RightCommand>(true);
@@ -163,22 +164,6 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node {
 			events.emit<plague::LeftCommand>(false);
 		}
 
-		/*
-		if (_touched)
-		{
-			if (_send_right)
-			{
-				events.emit<plague::RightCommand>();
-			}
-			else
-			{
-				events.emit<plague::LeftCommand>();
-			}
-			_send_right = !_send_right;
-			_touched = false;
-		}
-		*/
-
 		if (_moved)
 		{
 			events.emit<plague::MouseMoveCommand>(_mouse_x, _mouse_y);
@@ -190,6 +175,30 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node {
 			events.emit<plague::FireCommand>();
 			_fire = false;
 		}
+#else
+		if (_touching)
+		{
+			auto quinto = cocos2d::Director::getInstance()->getVisibleSize().width / 5;
+			if (_mouse_x > (4*quinto))
+			{
+				events.emit<plague::RightCommand>(true);
+			}
+			else if (_mouse_x < quinto)
+			{
+				events.emit<plague::LeftCommand>(true);
+			}
+			else
+			{
+				events.emit<plague::FireCommand>();
+				_touching = false;  // avoid autofire
+			}
+		}
+		else
+		{
+			events.emit<plague::RightCommand>(false);
+			events.emit<plague::LeftCommand>(false);
+		}
+#endif
 	};
 
 protected:
@@ -200,7 +209,7 @@ protected:
 	bool _send_right;
 	DefaultDict<cocos2d::EventKeyboard::KeyCode, bool> _mapping;
 
-	bool _touched;
+	bool _touching;
 
 	bool _moved;
 	float _mouse_x;

@@ -17,7 +17,7 @@ void make_sprite(entityx::Entity& entity, cocos2d::Scene* scene, const std::stri
 	if (building_sprite == nullptr)
 	{
 #if defined(_HAS_EXCEPTIONS) || defined(__EXCEPTIONS)
-		throw std::exception("Excepcion loading Sprite()");
+		// throw std::exception("Excepcion loading Sprite()");
 #else
 		std::abort();
 #endif
@@ -54,7 +54,7 @@ void make_clouds(cocos2d::Scene* scene, entityx::EntityManager& entities)
 		if (cloud == nullptr)
 		{
 #if defined(_HAS_EXCEPTIONS) || defined(__EXCEPTIONS)
-			throw std::exception("Error loading img/decoration/cloud.png");
+			// throw std::exception("Error loading img/decoration/cloud.png");
 #else
 			std::abort();
 #endif

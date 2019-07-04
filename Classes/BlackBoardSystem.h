@@ -14,6 +14,10 @@
 #include "InsectDeadEvent.h"
 #include "InsectInvasionEvent.h"
 #include "InsectComponent.h"
+#include "ProjectilComponent.h"
+#include "PhysicsBoxComponent.h"
+#include "IntrospectionComponent.h"
+#include "LifeLostEvent.h"
 
 namespace plague {
 
@@ -24,11 +28,12 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		, _spawning(false)
 		, _insect_total(0)
 		, _level(0)
-		, _lifes(20)
+		, _lifes(30)
 		, gen(rd())
 		, step_dist{ 70, 90 }
 		, wait_dist{ 0.2, 0.8 }
 		, offset_dist{ 0.0f, 20.0f }
+		, _send_lifes(false)
 	{
 		;
 	}
@@ -45,6 +50,8 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		cocos2d::Scene* scene = cocos2d::Director::getInstance()->getRunningScene();
 		entityx::Entity spider = es.create();
 		spider.assign<plague::InsectComponent>();
+		spider.assign<plague::PhysicsBoxComponent>(false, cocos2d::Vec2::ZERO, 1);
+		spider.assign<plague::IntrospectionComponent>();
 		float spider_x = 357.0f;
 		float spider_y = 155.0f;
 		cocos2d::Vec2 spawn_point(spider_x, spider_y);
@@ -84,40 +91,151 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 	{
 		if(_active)
 		{
+			_insect_total = 0;
+			es.each<plague::Transform, plague::InsectComponent>([&](entityx::Entity entity, plague::Transform & transform, plague::InsectComponent & insect) {
+				++_insect_total;
+			});
+
+			if (_send_lifes)
+			{
+				events.emit<plague::LifeLostEvent>(_lifes);
+				_send_lifes = false;
+			}
+
 			if(_spawning)
 			{
 				// spawn level
 				if(_level == 1)
 				{
-					for (int stage = 0; stage < 20; ++stage)
+					for (int stage = 0; stage < 3; ++stage)
+					{
+						// spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+					}
+				}
+				else if (_level == 2)
+				{
+					for (int stage = 0; stage < 5; ++stage)
+					{
+						spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+					}
+				}
+				else if (_level == 3)
+				{
+					for (int stage = 0; stage < 6; ++stage)
+					{
+						// spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f, 800.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+					}
+				}
+				else if (_level == 4)
+				{
+					for (int stage = 0; stage < 6; ++stage)
 					{
 						spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						_insect_total += 5;
 					}
 				}
-				else if(_level == 2)
+				else if (_level == 5)
 				{
-					// 5 spiders rojas
-					spwan_spider_normal(es, events, 492.0f, 650.0f, gen, step_dist, wait_dist, offset_dist);
-					spwan_spider_normal(es, events, 680.0f, 650.0f, gen, step_dist, wait_dist, offset_dist);
-					spwan_spider_normal(es, events, 875.0f, 650.0f, gen, step_dist, wait_dist, offset_dist);
-					spwan_spider_normal(es, events, 1052.0f, 650.0f, gen, step_dist, wait_dist, offset_dist);
-					spwan_spider_normal(es, events, 1228.0f, 650.0f, gen, step_dist, wait_dist, offset_dist);
-					_insect_total += 5;
+					for (int stage = 0; stage < 6; ++stage)
+					{
+						// spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1228.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+					}
 				}
-				else if(_level == 3)
+				else if (_level == 6)
 				{
-					// 5 spiders rojas
-					spwan_spider_normal(es, events, 100.0f, 650.0f, gen, step_dist, wait_dist, offset_dist);
-					spwan_spider_normal(es, events, 100.0f, 650.0f, gen, step_dist, wait_dist, offset_dist);
-					spwan_spider_normal(es, events, 200.0f, 650.0f, gen, step_dist, wait_dist, offset_dist);
-					spwan_spider_normal(es, events, 300.0f, 650.0f, gen, step_dist, wait_dist, offset_dist);
-					spwan_spider_normal(es, events, 300.0f, 650.0f, gen, step_dist, wait_dist, offset_dist);
-					_insect_total += 5;
+					for (int stage = 0; stage < 4; ++stage)
+					{
+						// spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+					}
+				}
+				else if (_level == 7)
+				{
+					for (int stage = 0; stage < 7; ++stage)
+					{
+						spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+					}
+				}
+				else if (_level == 8)
+				{
+					for (int stage = 0; stage < 8; ++stage)
+					{
+						// spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f, 800.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+					}
+				}
+				else if (_level == 9)
+				{
+					for (int stage = 0; stage < 8; ++stage)
+					{
+						spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+					}
+				}
+				else if (_level == 10)
+				{
+					for (int stage = 0; stage < 20; ++stage)
+					{
+						spwan_spider_normal(es, events, 492.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1228.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+					}
+				}
+				else if (_level == 11)
+				{
+					for (int stage = 0; stage < 40; ++stage)
+					{
+						spwan_spider_normal(es, events, 492.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1228.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+					}
+				}
+				else if (_level == 12)
+				{
+					for (int stage = 0; stage < 40; ++stage)
+					{
+						spwan_spider_normal(es, events, 492.0f, 350.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f, 350.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f, 350.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1228.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+					}
 				}
 				_spawning = false;
 			}
@@ -144,13 +262,13 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 
 	void receive(const plague::InsectDeadEvent& event)
 	{
-		--_insect_total;
+		
 	}
 
 	void receive(const plague::InsectInvasionEvent& event)
 	{
-		--_insect_total;
 		--_lifes;
+		_send_lifes = true;
 	}
 
 protected:
@@ -159,6 +277,7 @@ protected:
 	int _level;
 	int _lifes;
 	int _insect_total;
+	bool _send_lifes;
 private:
 	std::random_device rd;
 	std::mt19937 gen;

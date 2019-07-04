@@ -16,12 +16,15 @@
 #include "BlackboardSystem.h"
 #include "DetectInvasionSystem.h"
 #include "CharacterSystem.h"
-#include "GravitySystem.h"
 #include "DetectFloorImpactSystem.h"
+#include "PhysicsSystem.h"
+#include "PhysicsBoxSystem.h"
+#include "GravitySystem.h"
 // SCENES
 #include "MainMenuScene.h"
 // SPAWNERS
 #include "utils.h"
+//
 
 USING_NS_CC;
 
@@ -42,29 +45,27 @@ bool Level01::init()
 {
     //////////////////////////////
     // 1. super init first
-    if ( !Scene::init() )
+    // if ( !Scene::init() )
+	if (!Scene::initWithPhysics())
     {
         return false;
     }
 
 	ex = std::unique_ptr<entityx::EntityX>(new entityx::EntityX);
-	
-	auto scenary = ex->entities.create();
 
-	// register receiver
-	scenary.assign<plague::DebugBar>(this, ex->events);
-
-	plague::make_back_button(scenary, this, CC_CALLBACK_1(Level01::menuCloseCallback, this));
 	plague::make_clouds(this, ex->entities);
 	plague::make_sky(this);
-
+	
 	auto building = ex->entities.create();
 	plague::make_sprite(building, this, "img/building/level01.png", cocos2d::Vec2(850, 400), 0.8f);
 
+	auto scenary = ex->entities.create();
+	scenary.assign<plague::DebugBar>(this, ex->events);
+	plague::make_back_button(scenary, this, CC_CALLBACK_1(Level01::menuCloseCallback, this));
+
 	auto character = ex->entities.create();
-	// 488 - 1228
-	plague::make_sprite(character, this, "img/character/character.jpg", cocos2d::Vec2(858, 816), 0.15f);
-	character.assign<plague::CharacterComponent>(255.0f);
+	plague::make_sprite(character, this, "img/character/character.png", cocos2d::Vec2(858, 816), 0.15f);
+	character.assign<plague::CharacterComponent>(450.0f);
 
 	ex->systems.add<plague::MovementSystem>();
 	ex->systems.add<plague::InputSystem>(this);
@@ -73,8 +74,10 @@ bool Level01::init()
 	ex->systems.add<plague::BlackboardSystem>();
 	ex->systems.add<plague::DetectInvasionSystem>();
 	ex->systems.add<plague::CharacterSystem>();
-	ex->systems.add<plague::GravitySystem>();
 	ex->systems.add<plague::DetectFloorImpactSystem>();
+	ex->systems.add<plague::PhysicsSystem>(this);
+	ex->systems.add<plague::PhysicsBoxSystem>();
+	ex->systems.add<plague::GravitySystem>();
 	ex->systems.configure();
 
     return true;

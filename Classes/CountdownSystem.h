@@ -10,7 +10,6 @@
 #include "entityx/entityx.h"
 #include "CountDownReset.h"
 #include "StartGame.h"
-#include "CountDownCommnad.h"
 
 namespace plague {
 
@@ -38,8 +37,6 @@ struct CountDownSystem : public entityx::System<CountDownSystem>, public entityx
 				events.emit<plague::StartGame>();
 				_active = false;
 			}
-			// debug countdown in DebugBar
-			events.emit<plague::CountDownCommand>(_countdown);
 		}
 	}
 

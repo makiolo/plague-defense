@@ -8,9 +8,9 @@
 
 #include <cocos2d.h>
 #include "entityx/entityx.h"
-#include "ProjectilComponent.h"
 #include "AutoDestroy.h"
 #include "Transform.h"
+#include "GravityComponent.h"
 
 namespace plague {
 
@@ -28,7 +28,9 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
 	{
-		es.each<plague::Transform, plague::ProjectilComponent>([=](entityx::Entity entity, plague::Transform& transform, plague::ProjectilComponent& projectil) {
+		es.each<plague::Transform, plague::GravityComponent>([=](entityx::Entity entity, plague::Transform& transform, plague::GravityComponent& gravity)
+		{
+			// projectile is dynamic
 			auto pos = transform.node->getPosition();
 			if (pos.y < 214)
 			{
@@ -37,7 +39,7 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 					entity.assign<plague::AutoDestroy>();
 				}
 			}
-			});
+		});
 	}
 };
 

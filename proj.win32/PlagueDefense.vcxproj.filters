@@ -188,9 +188,6 @@
     <ClInclude Include="..\Classes\StartGame.h">
       <Filter>src\events</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\CountDownCommnad.h">
-      <Filter>src\events</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\InsectDeadEvent.h">
       <Filter>src\events</Filter>
     </ClInclude>
@@ -209,20 +206,32 @@
     <ClInclude Include="..\Classes\ProjectilComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\DetectCollisionSystem.h">
-      <Filter>src\systems</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\DetectFloorImpactSystem.h">
       <Filter>src\systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\FireCommand.h">
       <Filter>src\events</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\GravityComponent.h">
+    <ClInclude Include="..\Classes\PhysicsSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DebugPhysicsCommand.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PhysicsBoxComponent.h">
+      <Filter>src\components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PhysicsBoxSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\IntrospectionComponent.h">
       <Filter>src\components</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\GravitySystem.h">
       <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GravityComponent.h">
+      <Filter>src\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

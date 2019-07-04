@@ -14,6 +14,7 @@ struct Transform {
 	{
 		node->retain();
 		reset();
+		node->setUserData((void*)this);
 	}
 
 	~Transform()
