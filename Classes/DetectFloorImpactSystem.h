@@ -34,9 +34,9 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 			auto pos = transform.node->getPosition();
 			if (pos.y < 214)
 			{
-				if (!entity.has_component<plague::AutoDestroy>())
+				if (!entity.has_component<plague::AutoDestroyDescription>())
 				{
-					entity.assign<plague::AutoDestroy>();
+					entity.assign<plague::AutoDestroyDescription>();
 				}
 			}
 		});

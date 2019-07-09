@@ -6,8 +6,8 @@
 
 namespace plague {
 
-struct AutoDestroy {
-	explicit AutoDestroy(float life_ = 0.0f)
+struct AutoDestroyDescription {
+	explicit AutoDestroyDescription(float life_ = 0.0f)
 		: life(life_)
 	{
 		;

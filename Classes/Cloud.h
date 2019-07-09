@@ -6,8 +6,8 @@
 
 namespace plague {
 
-struct Cloud {
-	explicit Cloud()
+struct CloudComponent {
+	explicit CloudComponent()
 	{
 		;
 	}

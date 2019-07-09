@@ -24,7 +24,7 @@ struct MovementSystem : public entityx::System<MovementSystem> {
 
 		const auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
 	
-		es.each<plague::Transform, plague::Cloud>([=](entityx::Entity entity, plague::Transform& transform, plague::Cloud& cloud) {
+		es.each<plague::Transform, plague::CloudComponent>([=](entityx::Entity entity, plague::Transform& transform, plague::CloudComponent& cloud) {
 
 			cocos2d::Vec2 position = transform.node->getPosition();
 			float scale = transform.node->getScale();

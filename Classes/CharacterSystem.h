@@ -42,10 +42,11 @@ struct CharacterSystem : public entityx::System<CharacterSystem>, public entityx
 		cocos2d::Scene* scene = cocos2d::Director::getInstance()->getRunningScene();
 		entityx::Entity projectil = es.create();
 		projectil.assign<plague::ProjectilComponent>();
-		projectil.assign<plague::PhysicsBoxComponent>(true, cocos2d::Vec2(0, -400), 2);
-		projectil.assign<plague::IntrospectionComponent>();
+		projectil.assign<plague::PhysicsDescription>();
+		projectil.assign<plague::PhysicsIntrospectionComponent>();
 		projectil.assign<plague::GravityComponent>(400, 300);
-		plague::make_sprite(projectil, scene, "img/character/piedra.png", spawn_point, 0.2f);
+		projectil.assign<plague::AutoDestroyDescription>(0.7f);
+		plague::make_sprite(projectil, scene, "img/character/piedra.png", spawn_point, 0.4f);
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
@@ -88,10 +89,7 @@ struct CharacterSystem : public entityx::System<CharacterSystem>, public entityx
 
 			if (_fire)
 			{
-				// if (_projectil_total < 5)
-				{
-					spwan_projectil(es, events, position + cocos2d::Vec2(0, -50));
-				}
+				spwan_projectil(es, events, position + cocos2d::Vec2(0, -60));
 				_fire = false;
 			}
 		});	

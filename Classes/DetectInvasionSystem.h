@@ -32,9 +32,9 @@ struct DetectInvasionSystem : public entityx::System<DetectInvasionSystem>
 			auto pos = transform.node->getPosition();
 			if(pos.y > 680)
 			{
-				if (!entity.has_component<plague::AutoDestroy>())
+				if (!entity.has_component<plague::AutoDestroyDescription>())
 				{
-					entity.assign<plague::AutoDestroy>();
+					entity.assign<plague::AutoDestroyDescription>();
 					events.emit<plague::InsectInvasionEvent>();
 				}
 			}

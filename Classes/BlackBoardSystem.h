@@ -50,8 +50,8 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		cocos2d::Scene* scene = cocos2d::Director::getInstance()->getRunningScene();
 		entityx::Entity spider = es.create();
 		spider.assign<plague::InsectComponent>();
-		spider.assign<plague::PhysicsBoxComponent>(false, cocos2d::Vec2::ZERO, 1);
-		spider.assign<plague::IntrospectionComponent>();
+		spider.assign<plague::PhysicsDescription>(false);
+		spider.assign<plague::PhysicsIntrospectionComponent>();
 		float spider_x = 357.0f;
 		float spider_y = 155.0f;
 		cocos2d::Vec2 spawn_point(spider_x, spider_y);
@@ -255,9 +255,12 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 
 	void receive(const plague::StartGame& event)
 	{
-		_active = true;
-		_spawning = true;
-		++_level;
+		if (!_active)
+		{
+			_active = true;
+			_spawning = true;
+			++_level;
+		}
 	}
 
 	void receive(const plague::InsectDeadEvent& event)

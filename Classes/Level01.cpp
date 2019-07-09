@@ -67,17 +67,28 @@ bool Level01::init()
 	plague::make_sprite(character, this, "img/character/character.png", cocos2d::Vec2(858, 816), 0.15f);
 	character.assign<plague::CharacterComponent>(450.0f);
 
+	// Movimiento de nubes
 	ex->systems.add<plague::MovementSystem>();
+	// Sistema de entrada (teclado/raton/touch)
 	ex->systems.add<plague::InputSystem>(this);
+	// Destructor de entidades
 	ex->systems.add<plague::AutoDestroySystem>();
+	// Cuenta atras del comienzo de la oleada
 	ex->systems.add<plague::CountDownSystem>();
+	// director de oleadas
 	ex->systems.add<plague::BlackboardSystem>();
-	ex->systems.add<plague::DetectInvasionSystem>();
+	// personaje
 	ex->systems.add<plague::CharacterSystem>();
-	ex->systems.add<plague::DetectFloorImpactSystem>();
+	// detección superior (fuera de mapa)
+	ex->systems.add<plague::DetectInvasionSystem>();
+	// detección inferior (fuera de mapa)
+	// ex->systems.add<plague::DetectFloorImpactSystem>();
+	// sistema físico
 	ex->systems.add<plague::PhysicsSystem>(this);
-	ex->systems.add<plague::PhysicsBoxSystem>();
-	ex->systems.add<plague::GravitySystem>();
+	// generador de física
+	ex->systems.add<plague::PhysicsAssemblySystem>();
+	// Gravedad simulada
+	// ex->systems.add<plague::GravitySystem>();
 	ex->systems.configure();
 
     return true;

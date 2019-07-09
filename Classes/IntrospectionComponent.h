@@ -1,4 +1,4 @@
-/* Component class IntrospectionComponent
+/* Component class PhysicsIntrospectionComponent
 *
 *  Ricardo Marmolejo García 2019
 */
@@ -11,12 +11,13 @@
 
 namespace plague {
 
-struct IntrospectionComponent {
-	explicit IntrospectionComponent()
+struct PhysicsIntrospectionComponent {
+	explicit PhysicsIntrospectionComponent()
 	{
 		
 	}
 
+	std::string type;
 	entityx::Entity::Id id;
 };
 

@@ -32,12 +32,16 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 		A PhysicsBody holds the physical properties of an object. These include mass, position, rotation, velocity and damping.
 		PhysicsBody objects are the backbone for shapes. A PhysicsBody does not have a shape until you attach a shape to it.
 		*/
-		_scene->getPhysicsWorld()->setDebugDrawMask(cocos2d::PhysicsWorld::DEBUGDRAW_ALL);
+		// _scene->getPhysicsWorld()->setDebugDrawMask(cocos2d::PhysicsWorld::DEBUGDRAW_ALL);
 		_scene->getPhysicsWorld()->setAutoStep(false);
-		_scene->getPhysicsWorld()->setSubsteps(3);
+		_scene->getPhysicsWorld()->setSubsteps(4);
+		_scene->getPhysicsWorld()->setGravity(cocos2d::Vec2(0, -2000));
 
 		_listener = cocos2d::EventListenerPhysicsContact::create();
 		_listener->onContactBegin = CC_CALLBACK_1(PhysicsSystem::onContactBegin, this);
+		_listener->onContactPreSolve = CC_CALLBACK_2(PhysicsSystem::onContactPreSolve, this);
+		_listener->onContactPostSolve = CC_CALLBACK_2(PhysicsSystem::onContactPostSolve, this);		
+
 		_scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_listener, _scene);
 	}
 
@@ -58,15 +62,31 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 		auto nodeA = bodyA->getNode();
 		auto nodeB = bodyB->getNode();
 
-		PhysicsBoxSystem::update_collision_bitmask(bodyA, DEAD);
-		PhysicsBoxSystem::update_collision_bitmask(bodyB, DEAD);
+		plague::PhysicsIntrospectionComponent* objA = static_cast<plague::PhysicsIntrospectionComponent*>(nodeA->getUserData());
+		plague::PhysicsIntrospectionComponent* objB = static_cast<plague::PhysicsIntrospectionComponent*>(nodeB->getUserData());
 
-		plague::IntrospectionComponent* objA = (plague::IntrospectionComponent*)nodeA->getUserData();
-		plague::IntrospectionComponent* objB = (plague::IntrospectionComponent*)nodeB->getUserData();
+		if (objA->type == "projectil" && objB->type == "insect")
+		{
+			_destroy.push_back(std::make_tuple(objA->id, objB->id));
+			return false;
+		}
+		else if (objB->type == "projectil" && objA->type == "insect")
+		{
+			_destroy.push_back(std::make_tuple(objB->id, objA->id));
+			return false;
+		}
+ 		return false;
+	}
 
-		_destroy.push_back(std::make_tuple(objA->id, objB->id));
+	bool onContactPreSolve(cocos2d::PhysicsContact& contact, cocos2d::PhysicsContactPreSolve& solve)
+	{
 
- 		return true;
+		return true;
+	}
+
+	void onContactPostSolve(cocos2d::PhysicsContact & contact, const cocos2d::PhysicsContactPostSolve & solve)
+	{
+
 	}
 
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
@@ -87,10 +107,10 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 				auto projectile = es.get(idA);
 				auto insect = es.get(idB);
 #if 1
-				if (!insect.has_component<plague::AutoDestroy>() && !insect.has_component<plague::GravityComponent>() && insect.has_component<plague::InsectComponent>() && (projectile != insect))
+				if (!insect.has_component<plague::AutoDestroyDescription>())
 				{
-					auto gravity_component = projectile.component<plague::GravityComponent>().get();
-					insect.assign<plague::GravityComponent>(gravity_component->vel, gravity_component->acc);
+					// auto gravity_component = projectile.component<plague::GravityComponent>().get();
+					// insect.assign<plague::GravityComponent>(gravity_component->vel, gravity_component->acc);
 
 					auto transform_component = insect.component<plague::Transform>().get();
 					transform_component->node->setScaleY(transform_component->node->getScaleY() * -1);
@@ -98,12 +118,17 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 					auto sprite_component = insect.component<plague::Sprite>().get();
 					sprite_component->sprite->stopAllActions();
 
+					auto physics_box_component = insect.component<plague::PhysicsComponent>().get();
+					physics_box_component->update_collision_bitmask(DYNAMIC);
+
+					insect.assign<plague::AutoDestroyDescription>(0.5f);
+
 					events.emit<plague::InsectDeadEvent>();
 				}
 #else
-				if (!insect.has_component<plague::AutoDestroy>() && insect.has_component<plague::InsectComponent>())
+				if (!insect.has_component<plague::AutoDestroyDescription>() && insect.has_component<plague::InsectComponent>())
 				{
-					insect.assign<plague::AutoDestroy>();
+					insect.assign<plague::AutoDestroyDescription>();
 					events.emit<plague::InsectDeadEvent>();
 				}
 #endif

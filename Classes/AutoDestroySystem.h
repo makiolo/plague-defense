@@ -16,12 +16,12 @@ struct AutoDestroySystem : public entityx::System<AutoDestroySystem> {
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override {
-		es.each<plague::AutoDestroy, plague::Sprite>([&](entityx::Entity entity, plague::AutoDestroy& autodestroy, plague::Sprite& sprite) {
+		es.each<plague::AutoDestroyDescription, plague::Sprite>([&](entityx::Entity entity, plague::AutoDestroyDescription& autodestroy, plague::Sprite& sprite) {
 			autodestroy.life -= dt;
 			if (autodestroy.life <= 0)
 			{
 				// remove component
-				entity.component<plague::AutoDestroy>().remove();
+				entity.component<plague::AutoDestroyDescription>().remove();
 
 				// animate and destroy
 				auto entity_id = entity.id();

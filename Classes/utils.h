@@ -76,7 +76,7 @@ void make_clouds(cocos2d::Scene* scene, entityx::EntityManager& entities)
 			cloud_node->addChild(cloud);
 
 			// add cloud
-			entity.assign<plague::Cloud>();
+			entity.assign<plague::CloudComponent>();
 		}
 	}
 }
