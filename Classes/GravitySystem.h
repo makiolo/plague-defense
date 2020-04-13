@@ -20,6 +20,11 @@ struct GravitySystem : public entityx::System<GravitySystem>
 		
 	}
 
+	virtual ~GravitySystem()
+	{
+
+	}
+
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
 		
@@ -27,12 +32,14 @@ struct GravitySystem : public entityx::System<GravitySystem>
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
 	{
+		/*
 		es.each<plague::Transform, plague::GravityComponent>([=](entityx::Entity entity, plague::Transform& transform, plague::GravityComponent& gravity) {
 			cocos2d::Vec2 position = transform.node->getPosition();
 			gravity.vel += gravity.acc * dt;
 			position.y -= gravity.vel * dt;
 			transform.node->setPosition(position);
-		});		
+		});
+		*/
 	}
 };
 

@@ -15,6 +15,11 @@ struct AutoDestroySystem : public entityx::System<AutoDestroySystem> {
 		;
 	}
 
+	virtual ~AutoDestroySystem()
+	{
+
+	}
+
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override {
 		es.each<plague::AutoDestroyDescription, plague::Sprite>([&](entityx::Entity entity, plague::AutoDestroyDescription& autodestroy, plague::Sprite& sprite) {
 			autodestroy.life -= dt;

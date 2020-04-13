@@ -21,9 +21,9 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 		
 	}
 
-	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
+	virtual ~DetectFloorImpactSystem()
 	{
-		
+
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override

@@ -38,10 +38,11 @@ struct DebugBar : public entityx::Receiver<DebugBar>
 		}
 	}
 
-	~DebugBar()
+	virtual ~DebugBar()
 	{
 		_label->removeFromParent();
-		_label->release();
+		_label->setVisible(false);
+		_label->autorelease();
 	}
 
 	void receive(const plague::LifeLostEvent& command)

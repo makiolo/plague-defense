@@ -18,6 +18,11 @@ struct CharacterComponent {
 		
 	}
 
+	virtual ~CharacterComponent()
+	{
+
+	}
+
 	float velocity;
 };
 

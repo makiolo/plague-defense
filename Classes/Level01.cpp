@@ -31,6 +31,19 @@
 
 USING_NS_CC;
 
+Level01::Level01()
+{
+	
+}
+Level01::~Level01()
+{
+	if (ex)
+	{
+		ex.reset();
+	}
+}
+
+
 Scene* Level01::createScene()
 {
     return Level01::create();
@@ -66,7 +79,7 @@ bool Level01::init()
 
 
 
-	auto nav = cocos2d::NavMesh::create("tile.nav", "tile.geo");
+	// auto nav = cocos2d::NavMesh::create("tile.nav", "tile.geo");
 
 
 	
@@ -96,7 +109,7 @@ bool Level01::init()
 	// detección superior (fuera de mapa)
 	ex->systems.add<plague::DetectInvasionSystem>();
 	// detección inferior (fuera de mapa)
-	// ex->systems.add<plague::DetectFloorImpactSystem>();
+	ex->systems.add<plague::DetectFloorImpactSystem>();
 	// sistema físico
 	ex->systems.add<plague::PhysicsSystem>(this);
 	// generador de física

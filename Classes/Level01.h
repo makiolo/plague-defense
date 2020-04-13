@@ -10,6 +10,9 @@ namespace entityx {
 class Level01 : public cocos2d::Scene
 {
 public:
+    Level01();
+    virtual ~Level01();
+
     static cocos2d::Scene* createScene();
 
     virtual bool init();

@@ -38,6 +38,11 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		;
 	}
 
+	virtual ~BlackboardSystem()
+	{
+
+	}
+
 	void configure(entityx::EntityManager& entities, entityx::EventManager& events) override
 	{
 		events.subscribe<plague::StartGame>(*this);

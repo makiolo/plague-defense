@@ -7,6 +7,7 @@
 #ifdef SDKBOX_ENABLED
 #include "PluginAdMob/PluginAdMob.h"
 #endif
+#include "cocostudio/CocoStudio.h"
 
 USING_NS_CC;
 
@@ -28,6 +29,14 @@ namespace plague {
 	}
 */
 
+MainMenuScene::MainMenuScene()
+{
+
+}
+MainMenuScene::~MainMenuScene()
+{
+	
+}
 
 Scene* MainMenuScene::createScene()
 {
@@ -52,6 +61,8 @@ bool MainMenuScene::init()
 	// sdkbox::PluginSdkboxPlay::loadAllGameData();
 #endif
 
+	
+
 	/////////////////////////////////////////////////////////////
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -64,6 +75,10 @@ bool MainMenuScene::init()
 		"img/menu/play_hover.png",
 		[&](Ref* sender) {
 			Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, Level01::create()));
+
+			auto rootNode = CSLoader::createNode("MainScene.csb");
+
+			this->addChild(rootNode, 10);			
 		});
 
 	float x = origin.x + (visibleSize.width / 2);

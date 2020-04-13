@@ -10,12 +10,12 @@
 
 namespace plague {
 
-	struct ExitGameCommand {
-		explicit ExitGameCommand()
-		{
+struct ExitGameCommand {
+	explicit ExitGameCommand()
+	{
 
-		}
-	};
+	}
+};
 
 }
 

@@ -16,7 +16,8 @@ struct Sprite {
 	~Sprite()
 	{
 		sprite->removeFromParent();
-		sprite->release();
+		sprite->setVisible(false);
+		sprite->autorelease();
 	}
 
 	cocos2d::Sprite* sprite;

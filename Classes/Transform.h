@@ -19,7 +19,8 @@ struct Transform {
 	~Transform()
 	{
 		node->removeFromParent();
-		node->release();
+		node->setVisible(false);
+		node->autorelease();
 	}
 
 	void reset()

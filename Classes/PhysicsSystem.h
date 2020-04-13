@@ -104,7 +104,7 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 			{
 				entityx::Entity::Id idA, idB;
 				std::tie(idA, idB) = tuple;
-				auto projectile = es.get(idA);
+				const auto projectile = es.get(idA);
 				auto insect = es.get(idB);
 #if 1
 				if (!insect.has_component<plague::AutoDestroyDescription>())

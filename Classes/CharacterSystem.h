@@ -30,6 +30,11 @@ struct CharacterSystem : public entityx::System<CharacterSystem>, public entityx
 		;
 	}
 
+	virtual ~CharacterSystem()
+	{
+
+	}
+
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
 		events.subscribe<plague::LeftCommand>(*this);
@@ -46,7 +51,7 @@ struct CharacterSystem : public entityx::System<CharacterSystem>, public entityx
 		projectil.assign<plague::PhysicsIntrospectionComponent>();
 		projectil.assign<plague::GravityComponent>(400, 300);
 		projectil.assign<plague::AutoDestroyDescription>(0.7f);
-		plague::make_sprite(projectil, scene, "img/character/piedra.png", spawn_point, 0.4f);
+		plague::make_sprite(projectil, scene, "img/character/piedra.png", spawn_point, 0.2f);
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override

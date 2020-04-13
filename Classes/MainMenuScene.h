@@ -8,6 +8,9 @@ namespace plague {
 class MainMenuScene : public cocos2d::Scene
 {
 public:
+	MainMenuScene();
+	virtual ~MainMenuScene();
+
 	static cocos2d::Scene* createScene();
 
 	virtual bool init();

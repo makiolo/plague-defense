@@ -21,6 +21,11 @@ struct PhysicsAssemblySystem : public entityx::System<PhysicsAssemblySystem>
 		
 	}
 
+	virtual ~PhysicsAssemblySystem()
+	{
+
+	}
+
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
 		

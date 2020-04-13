@@ -20,6 +20,11 @@ struct MovementSystem : public entityx::System<MovementSystem> {
 		;
 	}
 
+	virtual ~MovementSystem()
+	{
+		
+	}
+
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override {
 
 		const auto visibleSize = cocos2d::Director::getInstance()->getVisibleSize();

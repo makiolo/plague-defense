@@ -21,9 +21,9 @@ struct DetectInvasionSystem : public entityx::System<DetectInvasionSystem>
 		
 	}
 
-	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
+	virtual ~DetectInvasionSystem()
 	{
-		
+
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override

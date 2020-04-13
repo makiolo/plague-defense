@@ -81,7 +81,7 @@ struct PhysicsComponent {
 	~PhysicsComponent()
 	{
 		physicsBody->removeFromWorld();
-		physicsBody->release();
+		physicsBody->autorelease();
 	}
 
 	void update_collision_bitmask(PhysicsMask mask)

@@ -21,6 +21,11 @@ struct CountDownSystem : public entityx::System<CountDownSystem>, public entityx
 
 	}
 
+	virtual ~CountDownSystem()
+	{
+
+	}
+
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override {
 		events.subscribe<plague::CountDownReset>(*this);
 		// initial reset

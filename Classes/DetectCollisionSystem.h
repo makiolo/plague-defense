@@ -18,6 +18,11 @@ struct DetectCollisionSystem : public entityx::System<DetectCollisionSystem>
 		
 	}
 
+	virtual ~DetectCollisionSystem()
+	{
+
+	}
+
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
 		
