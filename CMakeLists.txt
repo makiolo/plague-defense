@@ -68,6 +68,8 @@ if(ANDROID)
          proj.android/app/jni/hellocpp/main.cpp
          )
 elseif(LINUX)
+    # https://discuss.cocos2d-x.org/t/error-while-building-for-linux-libfmod-so-6/26553/31?u=doyoque
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -no-pie -fexceptions -std=c++11 -Wno-deprecated-declarations -Wno-reorder")
     list(APPEND GAME_SOURCE
          proj.linux/main.cpp
          )

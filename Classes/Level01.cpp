@@ -13,7 +13,7 @@
 #include "InputKeyboard.h"
 #include "AutoDestroySystem.h"
 #include "CountdownSystem.h"
-#include "BlackboardSystem.h"
+#include "BlackBoardSystem.h"
 #include "DetectInvasionSystem.h"
 #include "CharacterSystem.h"
 #include "DetectFloorImpactSystem.h"

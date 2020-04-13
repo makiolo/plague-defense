@@ -153,7 +153,7 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 	{
 		using namespace cocos2d;
 
-#ifdef _WIN32
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 		if (_mapping[EventKeyboard::KeyCode::KEY_D])
 		{
 			events.emit<plague::RightCommand>(true);
