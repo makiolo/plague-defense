@@ -76,6 +76,7 @@ bool MainMenuScene::init()
 	//this to load images from there instead:
 	// auto spriter = Spriter2dX::AnimationNode::create(scml, Spriter2dX::AnimationNode::cacheLoader());
 
+
 	//createEntity gives you a SpriterEngine::EntityInstance that you can manipulate.
 	//(refer to SpriterPlusPlus API)
 	//You can keep an EntityInstance* as long as your AnimationNode instance is
@@ -83,7 +84,7 @@ bool MainMenuScene::init()
 	auto entity = spriter->play("Player");
 	if (entity)
 	{
-		entity->setCurrentAnimation("Walk");
+		entity->setCurrentAnimation("walk");
 		// entity->setTimeRatio(1.0f / 60.0f);
 		spriter->setPosition(Vec2(300, 300));
 		spriter->setScale(2);
