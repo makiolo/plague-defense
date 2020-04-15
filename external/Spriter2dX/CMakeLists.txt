@@ -21,11 +21,11 @@ set(SOURCE_FILES
         src/tinyxmlspriterfiledocumentwrapper.cpp
         src/tinyxmlspriterfileelementwrapper.cpp
         src/AnimationNode.cpp
-        SpriterPlusPlus/tinyxml2/tinyxml2.cpp
 )
 
-find_package(Cocos2dX REQUIRED)
-include_directories(${PROJECT_SOURCE_DIR}/SpriterPlusPlus/spriterengine ${PROJECT_SOURCE_DIR}/SpriterPlusPlus/tinyxml2 ${COCOS2D_INCLUDE_DIR})
+# find_package(Cocos2dX REQUIRED)
+
+include_directories(${PROJECT_SOURCE_DIR}/SpriterPlusPlus/spriterengine ${COCOS2DX_ROOT_PATH})
 
 add_library(spriter2dx STATIC ${SOURCE_FILES})
 

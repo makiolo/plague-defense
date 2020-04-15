@@ -7,7 +7,7 @@
 #ifdef SDKBOX_ENABLED
 #include "PluginAdMob/PluginAdMob.h"
 #endif
-#include "cocostudio/CocoStudio.h"
+#include <AnimationNode.h>
 
 USING_NS_CC;
 
@@ -61,12 +61,37 @@ bool MainMenuScene::init()
 	// sdkbox::PluginSdkboxPlay::loadAllGameData();
 #endif
 
-	
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+
+	//path to your scml in your Resources folder
+	auto scml = FileUtils::getInstance()->fullPathForFilename("spriterpro/PlatformerPack/player.scml");
+
+	//AnimationNode is a container which can play multiple animations sourced from a single model.
+	auto spriter = Spriter2dX::AnimationNode::create(scml);
+
+	//If the images used in your animation are in a spritesheet you've 
+	//loaded into the Cocos2d frame cache, instantiate the AnimationNode like
+	//this to load images from there instead:
+	// auto spriter = Spriter2dX::AnimationNode::create(scml, Spriter2dX::AnimationNode::cacheLoader());
+
+	//createEntity gives you a SpriterEngine::EntityInstance that you can manipulate.
+	//(refer to SpriterPlusPlus API)
+	//You can keep an EntityInstance* as long as your AnimationNode instance is
+	//retained; it will delete them when it is deleted.
+	auto entity = spriter->play("Player");
+	if (entity)
+	{
+		entity->setCurrentAnimation("Walk");
+		// entity->setTimeRatio(1.0f / 60.0f);
+		spriter->setPosition(Vec2(300, 300));
+		spriter->setScale(2);
+		this->addChild(spriter, 5);
+	}
 
 	/////////////////////////////////////////////////////////////
 
-	auto visibleSize = Director::getInstance()->getVisibleSize();
-	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 	Vector<MenuItem*> MenuItems;
 
@@ -75,10 +100,6 @@ bool MainMenuScene::init()
 		"img/menu/play_hover.png",
 		[&](Ref* sender) {
 			Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, Level01::create()));
-
-			auto rootNode = CSLoader::createNode("MainScene.csb");
-
-			this->addChild(rootNode, 10);			
 		});
 
 	float x = origin.x + (visibleSize.width / 2);

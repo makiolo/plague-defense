@@ -103,7 +103,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 	*/
 	director->setContentScaleFactor(MIN(frameSize.height / designResolutionSize.height, frameSize.width / designResolutionSize.width));
 
-    FileUtils::getInstance()->addSearchPath("res");
+    // FileUtils::getInstance()->addSearchPath("res");
 
     register_all_packages();
 

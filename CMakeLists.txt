@@ -135,6 +135,8 @@ target_include_directories(${APP_NAME}
         PRIVATE Classes
         PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
 	PRIVATE ${CMAKE_SOURCE_DIR}/external/Spriter2dX/src
+	PRIVATE ${CMAKE_SOURCE_DIR}/external/Spriter2dX/SpriterPlusPlus/spriterengine
+	PRIVATE ${CMAKE_SOURCE_DIR}/external/Spriter2dX/SpriterPlusPlus/tinyxml2
 )
 
 # mark app resources
