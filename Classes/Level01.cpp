@@ -88,7 +88,8 @@ bool Level01::init()
 
 	auto scenary = ex->entities.create();
 	scenary.assign<plague::DebugBar>(this, ex->events);
-	plague::make_back_button(scenary, this, CC_CALLBACK_1(Level01::menuCloseCallback, this));
+
+	// plague::make_back_button(scenary, this, CC_CALLBACK_1(Level01::menuCloseCallback, this));
 
 	auto character = ex->entities.create();
 	plague::make_sprite(character, this, "img/character/character.png", cocos2d::Vec2(858, 920), 0.15f);
@@ -128,6 +129,7 @@ void Level01::render(cocos2d::Renderer* renderer, const cocos2d::Mat4& eyeTransf
 	ex->systems.update_all(1.0f / 60.0f);
 }
 
+/*
 void Level01::menuCloseCallback(cocos2d::Ref* pSender)
 {
 	Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, plague::MainMenuScene::create()));
@@ -136,8 +138,10 @@ void Level01::menuCloseCallback(cocos2d::Ref* pSender)
 	//Close the cocos2d-x game scene and quit the application
 	// Director::getInstance()->end();
 
-	/*To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() as given above,instead trigger a custom event created in RootViewController.mm as below*/
+	// To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() as given above,instead trigger a custom event created in RootViewController.mm as below
 
 	//EventCustom customEndEvent("game_scene_close_event");
 	//_eventDispatcher->dispatchEvent(&customEndEvent);
 }
+*/
+

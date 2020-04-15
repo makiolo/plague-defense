@@ -8,7 +8,7 @@
 
 #include <cocos2d.h>
 #include "entityx/entityx.h"
-#include "AutoDestroy.h"
+#include "AutoDestroyDescription.h"
 #include "Transform.h"
 #include "GravityComponent.h"
 

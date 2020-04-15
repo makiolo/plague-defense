@@ -15,7 +15,7 @@
 #include "entityx/entityx.h"
 #include "DebugPhysicsCommand.h"
 #include "IntrospectionComponent.h"
-#include "AutoDestroy.h"
+#include "AutoDestroyDescription.h"
 #include "PhysicsBoxSystem.h"
 #include "InsectDeadEvent.h"
 #include "ProjectilComponent.h"

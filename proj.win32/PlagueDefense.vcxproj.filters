@@ -16,9 +16,6 @@
     <Filter Include="src\scenes">
       <UniqueIdentifier>{7b2a83ed-52aa-4f70-bd1f-cc26316cab7c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\prefabs">
-      <UniqueIdentifier>{d0169b9e-f2c0-4560-b0f3-dd8e1bdf94bd}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\events">
       <UniqueIdentifier>{3b5dd7ee-9b76-4d86-9940-31edb42947ff}</UniqueIdentifier>
     </Filter>
@@ -46,6 +43,18 @@
     <Filter Include="entityx\tags">
       <UniqueIdentifier>{48467c3c-85b7-44de-bdb4-20a58b037a71}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\components\description">
+      <UniqueIdentifier>{7d139859-f18b-4435-a2bc-942185e70486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\components\property">
+      <UniqueIdentifier>{58683f72-2274-4e80-b28f-d4704468b25a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\systems\trigger">
+      <UniqueIdentifier>{cde88ac1-50ef-41f8-8d12-875a979c7cbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\systems\description_consumer">
+      <UniqueIdentifier>{35720c4b-7c33-4087-9dba-705b421bffdd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -69,11 +78,11 @@
     <ClCompile Include="..\Classes\entityx\help\Pool.cc">
       <Filter>entityx\help</Filter>
     </ClCompile>
-    <ClCompile Include="..\Classes\Level01.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\Classes\MainMenuScene.cpp">
-      <Filter>src</Filter>
+      <Filter>src\scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Level01.cpp">
+      <Filter>src\scenes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -134,116 +143,116 @@
     <ClInclude Include="..\Classes\nlohmann\json.hpp">
       <Filter>nlohmann</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\DetectInvasionSystem.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\ExitGameCommand.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\FireCommand.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\GravityComponent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\GravitySystem.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\InputKeyboard.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\InsectComponent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\InsectDeadEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\InsectInvasionEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\IntrospectionComponent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\LeftCommand.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Level01.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\LifeLostEvent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\MainMenuScene.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\MouseMoveCommand.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\MovementClouds.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\PhysicsBoxComponent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\PhysicsBoxSystem.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\PhysicsSystem.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\ProjectilComponent.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\RightCommand.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Sprite.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\StartGame.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\Transform.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\utils.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\AutoDestroy.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\AutoDestroySystem.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="..\Classes\BlackBoardSystem.h">
-      <Filter>src</Filter>
+      <Filter>src\systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\CharacterComponent.h">
-      <Filter>src</Filter>
+      <Filter>src\components\property</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\CharacterSystem.h">
-      <Filter>src</Filter>
+      <Filter>src\systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\Cloud.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Classes\CountDownReset.h">
-      <Filter>src</Filter>
+      <Filter>src\components\property</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\CountdownSystem.h">
-      <Filter>src</Filter>
+      <Filter>src\systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\DebugBar.h">
-      <Filter>src</Filter>
+      <Filter>src\components\property</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MainMenuScene.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Level01.h">
+      <Filter>src\scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\StartGame.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AutoDestroyDescription.h">
+      <Filter>src\components\description</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\CountDownReset.h">
+      <Filter>src\events</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\DebugPhysicsCommand.h">
-      <Filter>src</Filter>
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ProjectilComponent.h">
+      <Filter>src\components\property</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PhysicsBoxComponent.h">
+      <Filter>src\components\description</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\LifeLostEvent.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\AutoDestroySystem.h">
+      <Filter>src\systems\description_consumer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PhysicsBoxSystem.h">
+      <Filter>src\systems\description_consumer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Sprite.h">
+      <Filter>src\components\property</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Transform.h">
+      <Filter>src\components\property</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\RightCommand.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\LeftCommand.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\FireCommand.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InputKeyboard.h">
+      <Filter>src\systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\DetectCollisionSystem.h">
-      <Filter>src</Filter>
+      <Filter>src\systems</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\DetectFloorImpactSystem.h">
-      <Filter>src</Filter>
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\DetectInvasionSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\ExitGameCommand.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\PhysicsSystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MovementClouds.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\MouseMoveCommand.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GravityComponent.h">
+      <Filter>src\components\property</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\GravitySystem.h">
+      <Filter>src\systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InsectComponent.h">
+      <Filter>src\components\property</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InsectDeadEvent.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\InsectInvasionEvent.h">
+      <Filter>src\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\IntrospectionComponent.h">
+      <Filter>src\components\property</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

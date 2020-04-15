@@ -8,7 +8,7 @@
 #include "LeftCommand.h"
 #include "MouseMoveCommand.h"
 #include "utils.h"
-#include "AutoDestroy.h"
+#include "AutoDestroyDescription.h"
 #include "FireCommand.h"
 #include "ExitGameCommand.h"
 #include "MainMenuScene.h"
