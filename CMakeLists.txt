@@ -128,10 +128,13 @@ else()
     target_link_libraries(${APP_NAME} -Wl,--whole-archive cpp_android_spec -Wl,--no-whole-archive)
 endif()
 
-target_link_libraries(${APP_NAME} cocos2d)
+add_subdirectory(${CMAKE_SOURCE_DIR}/external/Spriter2dX)
+
+target_link_libraries(${APP_NAME} spriter2dx cocos2d)
 target_include_directories(${APP_NAME}
         PRIVATE Classes
         PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
+	PRIVATE ${CMAKE_SOURCE_DIR}/external/Spriter2dX/src
 )
 
 # mark app resources
