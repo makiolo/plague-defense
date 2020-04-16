@@ -48,7 +48,7 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 	virtual ~PhysicsSystem()
 	{
 		_scene->getEventDispatcher()->removeEventListener(_listener);
-		CC_SAFE_RELEASE_NULL(_listener);
+		// CC_SAFE_RELEASE_NULL(_listener);
 	}
 
 	bool onContactBegin(cocos2d::PhysicsContact& contact)

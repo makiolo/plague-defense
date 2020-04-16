@@ -69,9 +69,9 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 		_scene->getEventDispatcher()->removeEventListener(_listener_touch);
 		_scene->getEventDispatcher()->removeEventListener(_listener_mouse);
 		
-		CC_SAFE_RELEASE_NULL(_listener);
-		CC_SAFE_RELEASE_NULL(_listener_touch);
-		CC_SAFE_RELEASE_NULL(_listener_mouse);
+		// CC_SAFE_RELEASE_NULL(_listener);
+		// CC_SAFE_RELEASE_NULL(_listener_touch);
+		// CC_SAFE_RELEASE_NULL(_listener_mouse);
 	}
 
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override {
