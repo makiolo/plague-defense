@@ -17,7 +17,6 @@ public:
 
     virtual bool init();
 	void render(cocos2d::Renderer* renderer, const cocos2d::Mat4& eyeTransform, const cocos2d::Mat4* eyeProjection = nullptr) override;    
-    // void menuCloseCallback(cocos2d::Ref* pSender);
     
     CREATE_FUNC(Level01);
 protected:

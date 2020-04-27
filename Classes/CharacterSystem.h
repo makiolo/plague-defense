@@ -80,11 +80,11 @@ struct CharacterSystem : public entityx::System<CharacterSystem>, public entityx
 				scale_x *= -1;
 			}
 
-			if(position.x <= 488)
-				position.x = 488;
+			if(position.x <= 0)
+				position.x = 0;
 
-			if(position.x >= 1228)
-				position.x = 1228;
+			if(position.x >= 1080)
+				position.x = 1080;
 
 			if (_left || _right)
 			{

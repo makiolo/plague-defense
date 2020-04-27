@@ -88,11 +88,13 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 
 	void onKeyPressed(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)
 	{
+		_mappingPrevious[keyCode] = _mapping[keyCode];
 		_mapping[keyCode] = true;
 	}
 
 	void onKeyReleased(cocos2d::EventKeyboard::KeyCode keyCode, cocos2d::Event* event)
 	{
+		_mappingPrevious[keyCode] = _mapping[keyCode];
 		_mapping[keyCode] = false;
 	}
 
@@ -155,22 +157,18 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 		using namespace cocos2d;
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-		if (_mapping[EventKeyboard::KeyCode::KEY_D])
+		bool value;
+
+		value = _mapping[EventKeyboard::KeyCode::KEY_D];
+		if (value != _mappingPrevious[EventKeyboard::KeyCode::KEY_D])
 		{
-			events.emit<plague::RightCommand>(true);
-		}
-		else
-		{
-			events.emit<plague::RightCommand>(false);
+			events.emit<plague::RightCommand>(value);
 		}
 
-		if (_mapping[EventKeyboard::KeyCode::KEY_A])
+		value = _mapping[EventKeyboard::KeyCode::KEY_A];
+		if (value != _mappingPrevious[EventKeyboard::KeyCode::KEY_A])
 		{
-			events.emit<plague::LeftCommand>(true);
-		}
-		else
-		{
-			events.emit<plague::LeftCommand>(false);
+			events.emit<plague::LeftCommand>(value);
 		}
 
 		if (_moved)
@@ -223,6 +221,7 @@ protected:
 	cocos2d::EventListenerMouse* _listener_mouse;
 
 	bool _send_right;
+	DefaultDict<cocos2d::EventKeyboard::KeyCode, bool> _mappingPrevious;
 	DefaultDict<cocos2d::EventKeyboard::KeyCode, bool> _mapping;
 
 	bool _touching;

@@ -8,6 +8,7 @@
 #include "Transform.h"
 #include "DebugBar.h"
 #include "CharacterComponent.h"
+#include "BrainComponent.h"
 // SYSTEMS
 #include "MovementClouds.h"
 #include "InputKeyboard.h"
@@ -20,6 +21,7 @@
 #include "PhysicsSystem.h"
 #include "PhysicsBoxSystem.h"
 #include "GravitySystem.h"
+#include "BrainSystem.h"
 // SCENES
 #include "MainMenuScene.h"
 // SPAWNERS
@@ -28,6 +30,7 @@
 #ifdef SDKBOX_ENABLED
 #include "PluginAdMob/PluginAdMob.h"
 #endif
+#include "myBT/myBT.h"
 
 USING_NS_CC;
 
@@ -59,17 +62,17 @@ static void problemLoading(const char* filename)
 // on "init" you need to initialize your instance
 bool Level01::init()
 {
-    //////////////////////////////
-    // 1. super init first
-    // if ( !Scene::init() )
+	//////////////////////////////
+	// 1. super init first
+	// if ( !Scene::init() )
 	if (!Scene::initWithPhysics())
-    {
-        return false;
-    }
+	{
+		return false;
+	}
 
 #ifdef SDKBOX_ENABLED
 	sdkbox::PluginAdMob::init();
-	sdkbox::PluginAdMob::show("home");
+	// sdkbox::PluginAdMob::show("home");
 #endif
 
 	ex = std::unique_ptr<entityx::EntityX>(new entityx::EntityX);
@@ -77,23 +80,16 @@ bool Level01::init()
 	plague::make_clouds(this, ex->entities);
 	plague::make_sky(this);
 
-
-
-	// auto nav = cocos2d::NavMesh::create("tile.nav", "tile.geo");
-
-
-	
 	auto building = ex->entities.create();
-	plague::make_sprite(building, this, "img/building/level01.png", cocos2d::Vec2(850, 400), 0.8f);
+	plague::make_sprite(building, this, "img/building/level01.png", cocos2d::Vec2(450, 400), 0.7f);
 
 	auto scenary = ex->entities.create();
 	scenary.assign<plague::DebugBar>(this, ex->events);
 
-	// plague::make_back_button(scenary, this, CC_CALLBACK_1(Level01::menuCloseCallback, this));
-
 	auto character = ex->entities.create();
-	plague::make_sprite(character, this, "img/character/character.png", cocos2d::Vec2(858, 920), 0.15f);
+	plague::make_sprite(character, this, "img/character/character.png", cocos2d::Vec2(858, 860), 0.15f);
 	character.assign<plague::CharacterComponent>(450.0f);
+	character.assign<plague::BrainComponent>("brain");
 
 	// Movimiento de nubes
 	ex->systems.add<plague::MovementSystem>();
@@ -115,8 +111,8 @@ bool Level01::init()
 	ex->systems.add<plague::PhysicsSystem>(this);
 	// generador de física
 	ex->systems.add<plague::PhysicsAssemblySystem>();
-	// Gravedad simulada
-	// ex->systems.add<plague::GravitySystem>();
+	// actualizar IA
+	ex->systems.add<plague::BrainSystem>();
 	ex->systems.configure();
 
     return true;
@@ -128,20 +124,4 @@ void Level01::render(cocos2d::Renderer* renderer, const cocos2d::Mat4& eyeTransf
 	cocos2d::Scene::render(renderer, eyeTransform, eyeProjection);
 	ex->systems.update_all(1.0f / 60.0f);
 }
-
-/*
-void Level01::menuCloseCallback(cocos2d::Ref* pSender)
-{
-	Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, plague::MainMenuScene::create()));
-	// cocos2d::Director::getInstance()->replaceScene(plague::MainMenuScene::create());
-
-	//Close the cocos2d-x game scene and quit the application
-	// Director::getInstance()->end();
-
-	// To navigate back to native iOS screen(if present) without quitting the application  ,do not use Director::getInstance()->end() as given above,instead trigger a custom event created in RootViewController.mm as below
-
-	//EventCustom customEndEvent("game_scene_close_event");
-	//_eventDispatcher->dispatchEvent(&customEndEvent);
-}
-*/
 

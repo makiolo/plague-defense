@@ -109,137 +109,139 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 
 			if(_spawning)
 			{
+				const int offset = 450;
+
 				// spawn level
 				if(_level == 1)
 				{
 					for (int stage = 0; stage < 3; ++stage)
 					{
-						// spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 2)
 				{
 					for (int stage = 0; stage < 5; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 3)
 				{
 					for (int stage = 0; stage < 6; ++stage)
 					{
-						// spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f, 800.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f - offset, 800.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 4)
 				{
 					for (int stage = 0; stage < 6; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 5)
 				{
 					for (int stage = 0; stage < 6; ++stage)
 					{
-						// spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1228.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1228.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 6)
 				{
 					for (int stage = 0; stage < 4; ++stage)
 					{
-						// spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 7)
 				{
 					for (int stage = 0; stage < 7; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 8)
 				{
 					for (int stage = 0; stage < 8; ++stage)
 					{
-						// spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f, 800.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f - offset, 800.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 9)
 				{
 					for (int stage = 0; stage < 8; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1052.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 10)
 				{
 					for (int stage = 0; stage < 20; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1228.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 492.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1228.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 11)
 				{
 					for (int stage = 0; stage < 40; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1228.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 492.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1228.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 12)
 				{
 					for (int stage = 0; stage < 40; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f, 350.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f, 350.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f, 350.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1228.0f, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 492.0f - offset, 350.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 680.0f - offset, 350.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 875.0f - offset, 350.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1052.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, 1228.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				_spawning = false;
