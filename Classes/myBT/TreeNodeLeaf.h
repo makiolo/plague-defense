@@ -18,9 +18,9 @@ namespace myBT {
 class TreeNodeLeaf : public TreeNode
 {
 public:
-	TreeNodeLeaf(const std::string& _name = "")
+	explicit TreeNodeLeaf(const std::string& _name = "")
 		: TreeNode(_name)
-		// para indicar que no esta asignado a ningún flujo
+		, _status(INITIAL)
 		, _id_flow_initial("none")
 		, _id_flow("none")
 	{ ; }
@@ -54,7 +54,10 @@ public:
 	/**
 	Devuelve el estado del nodo hoja
 	*/
-	virtual size_t getStatus() = 0;
+	virtual size_t get_status()
+	{
+		return this->_status;
+	}
 
 	virtual void add(TreeNode* child) final
 	{
@@ -84,6 +87,28 @@ public:
 
 		// Puede indicar que un proceso no devuelve ninguna accion y condicion
 		assert(_id_flow == id_flow && "La accion/condicion ha cambiado de canal de flujo");
+	}
+
+	virtual void serialize(nlohmann::json& pipe) final
+	{
+		this->_serialize(pipe);
+	}
+
+	virtual void unserialize(nlohmann::json& pipe, const std::map<std::string, std::tuple< std::function<bool(double)> > >& conditions, const std::map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void(bool)> > >& actions) final
+	{
+		this->_unserialize(pipe);
+	}
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		TreeNode::_serialize(pipe);
+		// pipe["status"] = _status;
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		TreeNode::_unserialize(pipe);
+		// _status = pipe["status"];
 	}
 
 protected:

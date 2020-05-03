@@ -7,9 +7,10 @@ namespace myBT {
 class Aborted : public Action
 {
 public:
-	Aborted(const std::string& what) : Action(what) {}
+	explicit Aborted(const std::string& what) : Action(what) {}
 	virtual ~Aborted() {}
-	virtual bool is_trivial() const { return true; }
+
+	virtual Type getType() const { return TYPE_ABORTED; }
 
 	virtual size_t update(double deltatime)
 	{

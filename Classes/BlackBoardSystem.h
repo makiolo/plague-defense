@@ -18,6 +18,7 @@
 #include "PhysicsBoxComponent.h"
 #include "IntrospectionComponent.h"
 #include "LifeLostEvent.h"
+#include "Level01Constants.h"
 
 namespace plague {
 
@@ -33,7 +34,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		, step_dist{ 70, 90 }
 		, wait_dist{ 0.2, 0.8 }
 		, offset_dist{ 0.0f, 20.0f }
-		, _send_lifes(false)
+		, _send_lifes(true)
 	{
 		;
 	}
@@ -48,6 +49,8 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		events.subscribe<plague::StartGame>(*this);
 		events.subscribe<plague::InsectDeadEvent>(*this);
 		events.subscribe<plague::InsectInvasionEvent>(*this);
+
+		CocosDenshion::SimpleAudioEngine::getInstance()->preloadEffect("sounds/Rip.wav");
 	}
 
 	void spwan_spider_normal(entityx::EntityManager& es, entityx::EventManager& events, float start_x, float velocity, std::mt19937& gen, std::uniform_int_distribution<> step_dist, std::uniform_real_distribution<> wait_dist, std::normal_distribution<> offset_dist)
@@ -59,8 +62,8 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		spider.assign<plague::PhysicsIntrospectionComponent>();
 		float spider_x = 357.0f;
 		float spider_y = 155.0f;
-		cocos2d::Vec2 spawn_point(spider_x, spider_y);
-		cocos2d::Vec2 start_point(start_x + offset_dist(gen), spider_y);
+		cocos2d::Vec2 spawn_point = level01::enemies;
+		cocos2d::Vec2 start_point(start_x + offset_dist(gen), spawn_point.y);
 		float start_time = spawn_point.distance(start_point) / velocity;
 		float wait_time = wait_dist(gen);
 		
@@ -82,11 +85,11 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 					cocos2d::MoveBy::create(step_time, step),
 					cocos2d::DelayTime::create(wait_time),
 					nullptr
-				), 10),
+				), 999),
 
-				cocos2d::CallFunc::create([&events]() {
-					events.emit<plague::InsectInvasionEvent>();
-				}),
+				//cocos2d::CallFunc::create([&events]() {
+				//	events.emit<plague::InsectInvasionEvent>();
+				//}),
 				nullptr
 			)
 		);
@@ -109,139 +112,137 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 
 			if(_spawning)
 			{
-				const int offset = 450;
-
 				// spawn level
 				if(_level == 1)
 				{
 					for (int stage = 0; stage < 3; ++stage)
 					{
-						// spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 2)
 				{
 					for (int stage = 0; stage < 5; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 3)
 				{
 					for (int stage = 0; stage < 6; ++stage)
 					{
-						// spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f - offset, 800.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 800.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 4)
 				{
 					for (int stage = 0; stage < 6; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 5)
 				{
 					for (int stage = 0; stage < 6; ++stage)
 					{
-						// spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1228.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column4, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column5, 330.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 6)
 				{
 					for (int stage = 0; stage < 4; ++stage)
 					{
-						// spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 7)
 				{
 					for (int stage = 0; stage < 7; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 8)
 				{
 					for (int stage = 0; stage < 8; ++stage)
 					{
-						// spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f - offset, 800.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 800.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 9)
 				{
 					for (int stage = 0; stage < 8; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1052.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, 1228.0f - offset, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						// spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 10)
 				{
 					for (int stage = 0; stage < 20; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1228.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column1, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column4, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column5, 330.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 11)
 				{
 					for (int stage = 0; stage < 40; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f - offset, 250.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1228.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column1, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 250.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column4, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column5, 330.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 12)
 				{
 					for (int stage = 0; stage < 40; ++stage)
 					{
-						spwan_spider_normal(es, events, 492.0f - offset, 350.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 680.0f - offset, 350.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 875.0f - offset, 350.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1052.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, 1228.0f - offset, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column1, 350.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 350.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 350.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column4, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column5, 330.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				_spawning = false;
@@ -272,7 +273,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 
 	void receive(const plague::InsectDeadEvent& event)
 	{
-		
+		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/Rip.wav");
 	}
 
 	void receive(const plague::InsectInvasionEvent& event)

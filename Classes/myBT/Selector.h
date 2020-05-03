@@ -21,7 +21,7 @@ class Selector : public TreeNodeComposite
 	PROPERTY(bool, Priority)
 
 public:
-	Selector(const std::string& _name = "")
+	explicit Selector(const std::string& _name = "")
 		 : TreeNodeComposite(_name)
 		 , m_ReturnCodeFinish(FAILED)
 		 , m_Random(false)
@@ -133,6 +133,24 @@ public:
 	virtual void reset()
 	{
 		_init = false;
+	}
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_serialize(pipe);
+		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
+		pipe["Random"] = m_Random;
+		pipe["AutoReset"] = m_AutoReset;
+		pipe["Priority"] = m_Priority;
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_unserialize(pipe);
+		m_ReturnCodeFinish = pipe["ReturnCodeFinish"];
+		m_Random = pipe["Random"];
+		m_AutoReset = pipe["AutoReset"];
+		m_Priority = pipe["Priority"];
 	}
 
 protected:

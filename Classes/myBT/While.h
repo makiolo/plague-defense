@@ -17,7 +17,7 @@ namespace myBT {
 class While : public Assert
 {
 public:
-	While(const std::string& _name = "")
+	explicit While(const std::string& _name = "")
 		: Assert(_name)
 	{
 		Assert::m_AutoReset = true;

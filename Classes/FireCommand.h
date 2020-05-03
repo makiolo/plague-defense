@@ -12,10 +12,16 @@
 namespace plague {
 
 struct FireCommand {
-	explicit FireCommand()
+	explicit FireCommand(entityx::Entity from_, entityx::Entity to_)
+		: from(from_)
+		, to(to_)
+
 	{
 		
 	}
+
+	entityx::Entity from;
+	entityx::Entity to;
 };
 
 }

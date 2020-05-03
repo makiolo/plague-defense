@@ -13,18 +13,19 @@
 
 namespace myBT {
 
+// TODO: hacer un selector EQUI probable?
+
 class SelectorProbability : public TreeNodeComposite
 {
 public:
-	SelectorProbability(const std::string& _name = "")
+	explicit SelectorProbability(const std::string& _name = "")
 			: TreeNodeComposite(_name)
 	{ reset(); }
 
 	virtual ~SelectorProbability()
 	{ ; }
 
-	virtual Type getType() const
-	{return TYPE_SELECTOR_PROBABILITY;}
+	virtual Type getType() const {return TYPE_SELECTOR_PROBABILITY;}
 
 	void setWeight(size_t numChild, double weight)
 	{
@@ -97,6 +98,18 @@ public:
 	{
 		_iter = 0;
 		_request_lotto = true;
+	}
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_serialize(pipe);
+		// TODO ?
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_unserialize(pipe);
+		// TODO ?
 	}
 
 protected:

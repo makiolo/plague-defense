@@ -7,11 +7,11 @@ namespace myBT {
 class Failed : public Action
 {
 public:
-	Failed(const std::string& what) : Action(what) {}
+	explicit Failed(const std::string& what) : Action(what) {}
 	virtual ~Failed() {}
-	virtual bool is_trivial() const { return true; }
 
-public:
+	virtual Type getType() const { return TYPE_FAILED; }
+
 	virtual size_t update(double deltatime)
 	{
 		return FAILED;

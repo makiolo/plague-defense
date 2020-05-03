@@ -53,6 +53,7 @@ list(APPEND GAME_SOURCE
         Classes/entityx/System.cc
         Classes/entityx/help/Pool.cc
         Classes/entityx/help/Timer.cc
+        Classes/myBT/TreeNodeComposite.cpp
         Classes/AppDelegate.cpp
         Classes/Level01.cpp
         Classes/MainMenuScene.cpp

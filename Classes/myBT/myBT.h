@@ -13,6 +13,7 @@ fuera de la librería. Cumple la regla ODR.
 #define _MYBT_H_
 
 // ODR
+#include "nlohmann/json.hpp"
 #include "Common.h"
 #include "For.h"
 #include "ForTime.h"
@@ -34,12 +35,6 @@ fuera de la librería. Cumple la regla ODR.
 #include "Actions/Wait.h"
 #include "Conditions/AlwaysTrue.h"
 #include "Conditions/AlwaysFalse.h"
-#include "Conditions/__eq__.h"
-#include "Conditions/__eq_str__.h"
-#include "Conditions/__ge__.h"
-#include "Conditions/__gt__.h"
-#include "Conditions/__le__.h"
-#include "Conditions/__lt__.h"
 
 #endif
 

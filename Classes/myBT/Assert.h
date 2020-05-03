@@ -17,10 +17,6 @@ class Assert : public TreeNodeComposite
 {
 	PROPERTY(bool, AutoReset)
 	PROPERTY(int, ReturnCodeFinish)
-	/*
-	Assert: mientras se cumple una condicion -> se ejecuta lo que tiene por debajo hasta que termina (o se autoresete, acabando en infinito), sino devuelve failed
-	While: mientras se cumple una condicion -> se ejecuta lo que tiene por debajo hasta que termina (o se autoresete, acabando en infinito), sino devuelve completed
-	*/
 
 public:
 	explicit Assert(const std::string& name = "")
@@ -130,6 +126,20 @@ public:
 	virtual void reset()
 	{
 		
+	}
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_serialize(pipe);
+		pipe["AutoReset"] = m_AutoReset;
+		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_unserialize(pipe);
+		m_AutoReset = pipe["AutoReset"];
+		m_ReturnCodeFinish = pipe["ReturnCodeFinish"];
 	}
 };
 

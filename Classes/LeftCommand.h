@@ -7,12 +7,16 @@
 namespace plague {
 
 struct LeftCommand {
-	explicit LeftCommand(bool active_)
-		: active(active_)
+	explicit LeftCommand(entityx::Entity from_, entityx::Entity to_, bool active_)
+		: from(from_)
+		, to(to_)
+		, active(active_)
 	{
 		
 	}
 
+	entityx::Entity from;
+	entityx::Entity to;
 	bool active;
 };
 

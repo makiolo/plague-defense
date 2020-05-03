@@ -11,18 +11,23 @@ Nodo abstracto de un arbol de comportamiento
 #ifndef _TREENODE_H_
 #define _TREENODE_H_
 
+#include <string>
+#include "nlohmann/json.hpp"
+
 namespace myBT {
 
 enum Status {
-	RUNNING = 0,
-	COMPLETED = 1,
-	FAILED = 2,
-	ABORTED = 3,
-	PANIC_ERROR = 4
+	INITIAL = 0,
+	RUNNING = 1,
+	COMPLETED = 2,
+	FAILED = 3,
+	ABORTED = 4,
+	PANIC_ERROR = 5
 };
 
 enum Type {
 	TYPE_ACTION,
+	TYPE_TRIVIAL_ACTION,
 	TYPE_ASSERT,
 	TYPE_CONDITION,
 	TYPE_FOR,
@@ -37,13 +42,15 @@ enum Type {
 	TYPE_FALSE,
 	TYPE_AND,
 	TYPE_OR,
-	TYPE_EQ_STR,
-	TYPE_EQ,
-	TYPE_GE,
-	TYPE_GT,
-	TYPE_LE,
-	TYPE_LT
+	TYPE_ABORTED,
+	TYPE_COMPLETED,
+	TYPE_FAILED,
+	TYPE_RUNNING,
+	TYPE_WAIT,
 };
+
+using ActionRepository = std::map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void(bool)> > >;
+using ConditionRepository = std::map<std::string, std::tuple< std::function<bool(double)> > >;
 
 class TreeNode
 {
@@ -55,6 +62,9 @@ public:
 		{
 		case TYPE_ACTION:
 			return "Action";
+
+		case TYPE_TRIVIAL_ACTION:
+			return "TrivialAction";
 			
 		case TYPE_ASSERT:
 			return "Assert";
@@ -98,30 +108,27 @@ public:
 		case TYPE_FALSE:
 			return "False";
 
-		case TYPE_EQ_STR:
-			return "Eq Str";
+		case TYPE_ABORTED:
+			return "Aborted";
 
-		case TYPE_EQ:
-			return "Eq";
+		case TYPE_COMPLETED:
+			return "Completed";
 
-		case TYPE_GE:
-			return "Ge";
+		case TYPE_FAILED:
+			return "Failed";
 
-		case TYPE_GT:
-			return "Gt";
+		case TYPE_RUNNING:
+			return "Running";
 
-		case TYPE_LE:
-			return "Le";
-
-		case TYPE_LT:
-			return "Lt";
+		case TYPE_WAIT:
+			return "Wait";
 			
 		default:
 			return "UNKNOWN";
 		}
 	}
 
-	TreeNode(const std::string& name = "")
+	explicit TreeNode(const std::string& name = "")
 		: _parent(nullptr)
 		, _name(name)
 	{
@@ -147,12 +154,11 @@ public:
 
 	////////////////////////////////////////////////
 
-	inline std::string& get_name() {return _name;}
 	inline const std::string& get_name() const {return _name;}
 
 	virtual void init() {}
 	virtual size_t update(const std::string& id_flow, double deltatime) = 0;
-	virtual void terminate() {}
+	virtual void terminate(bool interrupted) {}
 	virtual void free_childs() {}
 	virtual bool is_trivial() const { return false; }
 
@@ -174,6 +180,20 @@ public:
 	void set_name(const std::string& name)
 	{
 		_name = name;
+	}
+
+	virtual void serialize(nlohmann::json& pipe) = 0;
+	virtual void unserialize(nlohmann::json& pipe, const std::map<std::string, std::tuple< std::function<bool(double)> > >& conditions, const std::map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void(bool)> > >& actions) = 0;
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		pipe["type"] = getTypeStr();
+		pipe["name"] = _name;
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		_name = pipe["name"].get<std::string>();
 	}
 
 protected:

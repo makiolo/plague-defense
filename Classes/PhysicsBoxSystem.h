@@ -35,7 +35,8 @@ struct PhysicsAssemblySystem : public entityx::System<PhysicsAssemblySystem>
 	{
 		es.each<plague::Sprite, plague::PhysicsDescription, plague::PhysicsIntrospectionComponent>([=](entityx::Entity entity, plague::Sprite& sprite, plague::PhysicsDescription& physics, plague::PhysicsIntrospectionComponent& introspection) {
 			entity.component<plague::PhysicsDescription>().remove();
-			entity.assign<plague::PhysicsComponent>(entity.id(), &sprite, &physics, &introspection, entity.has_component<plague::ProjectilComponent>());
+			bool is_projectile = entity.has_component<plague::ProjectilComponent>();
+			entity.assign<plague::PhysicsComponent>(entity.id(), sprite, physics, introspection, is_projectile);
 		});
 	}
 };

@@ -9,6 +9,8 @@
 #ifndef _FOR_H_
 #define _FOR_H_
 
+#include <random>
+//
 #include "TreeNodeComposite.h"
 
 namespace myBT {
@@ -110,6 +112,24 @@ public:
 	virtual void reset()
 	{
 		m_Init = false;
+	}
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_serialize(pipe);
+		pipe["Count"] = m_Count;
+		pipe["UseRange"] = m_UseRange;
+		pipe["CountMin"] = m_CountMin;
+		pipe["CountMax"] = m_CountMax;
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_unserialize(pipe);
+		m_Count = pipe["Count"];
+		m_UseRange = pipe["UseRange"];
+		m_CountMin = pipe["CountMin"];
+		m_CountMax = pipe["CountMax"];
 	}
 
 protected:

@@ -7,12 +7,16 @@
 namespace plague {
 
 struct RightCommand {
-	explicit RightCommand(bool active_)
-		: active(active_)
+	explicit RightCommand(entityx::Entity from_, entityx::Entity to_, bool active_)
+		: from(from_)
+		, to(to_)
+		, active(active_)
 	{
 		
 	}
 
+	entityx::Entity from;
+	entityx::Entity to;
 	bool active;
 };
 

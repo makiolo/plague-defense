@@ -11,6 +11,8 @@
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
 
+/*
+
 namespace myBT {
 
 class Resource
@@ -80,7 +82,9 @@ protected:
 	int m_ValueMax;
 };
 
-} /* namespace myBT */
+}
+
+*/
 
 #endif /* #define _RESOURCE_H_
  */

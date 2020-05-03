@@ -15,7 +15,6 @@ namespace myBT {
 
 class ForTime : public TreeNodeComposite
 {
-	// PROPERTY(bool, AutoReset)
 	PROPERTY(double, ValueSecs)
 	PROPERTY(bool, UseRange)
 	PROPERTY(double, ValueMin)
@@ -24,7 +23,6 @@ class ForTime : public TreeNodeComposite
 public:
 	explicit ForTime(const std::string& _name = "")
 		: TreeNodeComposite(_name)
-		// , m_AutoReset(false)
 		, m_ValueSecs(1.0f)
 		, m_UseRange(false)
 		, m_ValueMin(1.0f)
@@ -113,6 +111,24 @@ public:
 	virtual void reset()
 	{
 		m_Init = false;
+	}
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_serialize(pipe);
+		pipe["ValueSecs"] = m_ValueSecs;
+		pipe["UseRange"] = m_UseRange;
+		pipe["ValueMin"] = m_ValueMin;
+		pipe["ValueMax"] = m_ValueMax;
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_unserialize(pipe);
+		m_ValueSecs = pipe["ValueSecs"];
+		m_UseRange = pipe["UseRange"];
+		m_ValueMin = pipe["ValueMin"];
+		m_ValueMax = pipe["ValueMax"];
 	}
 	
 protected:

@@ -9,6 +9,9 @@
 #ifndef _TREENODECOMPOSITE_H_
 #define _TREENODECOMPOSITE_H_
 
+#include <sstream>
+#include <iomanip>
+//
 #include "TreeNode.h"
 
 namespace myBT {
@@ -18,7 +21,7 @@ class TreeNodeComposite : public TreeNode
 public:
 	typedef typename std::vector<TreeNode*> TreeNodeChilds;
 
-	TreeNodeComposite(const std::string& name = "") : TreeNode(name)
+	explicit TreeNodeComposite(const std::string& name = "") : TreeNode(name)
 	{
 		;	
 	}
@@ -90,12 +93,12 @@ public:
 	/*
 	Crear un nodo (cualquier tipo de TreeNode)
 	*/
-	template <typename TN>
-	TN* make_node(const std::string& what = "")
+	template <typename T, typename ... Args>
+	T* make_node(const std::string& what, Args&& ... args)
 	{
-		TreeNode* newtreenode = new TN(what);
+		TreeNode* newtreenode = new T(what, std::forward<Args>(args)...);
 		this->add(newtreenode);
-		return static_cast<TN*>(newtreenode);
+		return static_cast<T*>(newtreenode);
 	}
 
 	/*
@@ -147,7 +150,7 @@ public:
 		}
 	}
 
-	void terminate()
+	void terminate(bool interrupted) final
 	{
 		auto it = _childs.begin();
 		auto ite = _childs.end();
@@ -157,9 +160,31 @@ public:
 		for(; it != ite; ++it)
 		{
 			child = *it;
-			child->terminate();
+			child->terminate(interrupted);
 		}
 	}
+
+	virtual void serialize(nlohmann::json& pipe) final
+	{
+		this->_serialize(pipe);
+		size_t i = 0;
+		for (auto& child : _childs)
+		{
+			std::stringstream ss;
+			ss << std::setfill('0') << std::setw(2) << i << "_" << child->getTypeStr();
+			std::string name = child->get_name();
+			if (name != "")
+			{
+				ss << "_" << name;
+			}
+			child->serialize(pipe["childs"][ss.str()]);
+			++i;
+		}
+	}
+
+	virtual void unserialize(nlohmann::json& pipe, const ConditionRepository& conditions, const ActionRepository& actions) final;
+	void write_ai(const std::string& filename, const ConditionRepository& conditions, const ActionRepository& actions);
+	void read_ai(const std::string& filename, const ConditionRepository& conditions, const ActionRepository& actions);
 
 protected:
 	TreeNodeChilds _childs;

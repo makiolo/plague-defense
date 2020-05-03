@@ -236,11 +236,13 @@ constexpr auto _head(Tuple t) {
 
 */
 
+/*
 template <class Tuple>
 constexpr auto head(Tuple t)
 {
     return std::get<0>(_head(t));
 }
+*/
 
 /*
 
@@ -271,6 +273,7 @@ constexpr auto apply(Function&& f, Tuple&& t) {
 
 */
 
+/*
 // http://talesofcpp.fusionfenix.com/post-14/true-story-moving-past-bind
 template <typename F, typename ...Args>
 auto bind(F&& f, Args&&... args) {
@@ -281,6 +284,7 @@ auto bind(F&& f, Args&&... args) {
 		return apply(std::move(f), std::move(args));
 	};
 }
+*/
 
 } // end namespace mc
 

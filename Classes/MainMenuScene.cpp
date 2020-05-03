@@ -9,14 +9,24 @@
 #ifdef SDKBOX_ENABLED
 #include "PluginAdMob/PluginAdMob.h"
 #endif
-#include <AnimationNode.h>
+// Spriter-Pro
+#include "AnimationNode.h"
+// Sonido
+// #define USE_AUDIO_ENGINE 1
+#define USE_SIMPLE_AUDIO_ENGINE 1
+#if USE_AUDIO_ENGINE
+#include "audio/include/AudioEngine.h"
+using namespace cocos2d::experimental;
+#elif USE_SIMPLE_AUDIO_ENGINE
+#include "audio/include/SimpleAudioEngine.h"
+using namespace CocosDenshion;
+#endif
 
 USING_NS_CC;
 
 namespace plague {
 
 /*
-	/*
 	if (playButton == nullptr ||
 		playButton->getContentSize().width <= 0 ||
 		playButton->getContentSize().height <= 0)
@@ -63,12 +73,15 @@ bool MainMenuScene::init()
 	// sdkbox::PluginSdkboxPlay::loadAllGameData();
 #endif
 
+	SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/negro.mp3", true);
+	SimpleAudioEngine::getInstance()->preloadEffect("sounds/anilla.mp3");
+
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 
 	//path to your scml in your Resources folder
-	auto scml = FileUtils::getInstance()->fullPathForFilename("spriterpro/PlatformerPack/player.scml");
+	auto scml = FileUtils::getInstance()->fullPathForFilename("img/enemy/spider/spider.scml");
 
 	//AnimationNode is a container which can play multiple animations sourced from a single model.
 	auto spriter = Spriter2dX::AnimationNode::create(scml);
@@ -89,7 +102,7 @@ bool MainMenuScene::init()
 		entity->setCurrentAnimation("walk");
 		// entity->setTimeRatio(1.0f / 60.0f);
 		spriter->setPosition(Vec2(300, 300));
-		spriter->setScale(2);
+		spriter->setScale(0.3);
 		this->addChild(spriter, 5);
 	}
 
@@ -102,6 +115,7 @@ bool MainMenuScene::init()
 		"img/menu/play.png",
 		"img/menu/play_hover.png",
 		[&](Ref* sender) {
+			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/anilla.mp3");
 			Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, Level01::create()));
 		});
 

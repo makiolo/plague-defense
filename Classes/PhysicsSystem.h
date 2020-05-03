@@ -35,7 +35,7 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 		// _scene->getPhysicsWorld()->setDebugDrawMask(cocos2d::PhysicsWorld::DEBUGDRAW_ALL);
 		_scene->getPhysicsWorld()->setAutoStep(false);
 		_scene->getPhysicsWorld()->setSubsteps(4);
-		_scene->getPhysicsWorld()->setGravity(cocos2d::Vec2(0, -2000));
+		_scene->getPhysicsWorld()->setGravity(cocos2d::Vec2(0, -1000));
 
 		_listener = cocos2d::EventListenerPhysicsContact::create();
 		_listener->onContactBegin = CC_CALLBACK_1(PhysicsSystem::onContactBegin, this);
@@ -48,7 +48,6 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 	virtual ~PhysicsSystem()
 	{
 		_scene->getEventDispatcher()->removeEventListener(_listener);
-		// CC_SAFE_RELEASE_NULL(_listener);
 	}
 
 	bool onContactBegin(cocos2d::PhysicsContact& contact)
@@ -104,34 +103,34 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 			{
 				entityx::Entity::Id idA, idB;
 				std::tie(idA, idB) = tuple;
-				const auto projectile = es.get(idA);
+				auto projectile = es.get(idA);
 				auto insect = es.get(idB);
-#if 1
-				if (!insect.has_component<plague::AutoDestroyDescription>())
-				{
-					// auto gravity_component = projectile.component<plague::GravityComponent>().get();
-					// insect.assign<plague::GravityComponent>(gravity_component->vel, gravity_component->acc);
 
+				if (!insect.has_component<plague::GravityComponent>())
+				{
 					auto transform_component = insect.component<plague::Transform>().get();
-					transform_component->node->setScaleY(transform_component->node->getScaleY() * -1);
+					float scaley = transform_component->node->getScaleY();
+					if (scaley > 0)
+					{
+						// se da la vuelta al enemigo
+						transform_component->node->setScaleY(scaley * -1);
 
-					auto sprite_component = insect.component<plague::Sprite>().get();
-					sprite_component->sprite->stopAllActions();
+						// Se le marca como estanpable (TODO: Cambiar nombre de la componente)
+						 auto gravity_component = projectile.component<plague::GravityComponent>().get();
+						insect.assign<plague::GravityComponent>(gravity_component->vel, gravity_component->acc);
 
-					auto physics_box_component = insect.component<plague::PhysicsComponent>().get();
-					physics_box_component->update_collision_bitmask(DYNAMIC);
+						// para su comportamiento (IA?)
+						auto sprite_component = insect.component<plague::Sprite>().get();
+						sprite_component->sprite->stopAllActions();
 
-					insect.assign<plague::AutoDestroyDescription>(0.5f);
+						// su fisica se convierte en dinamica
+						auto physics_box_component = insect.component<plague::PhysicsComponent>().get();
+						physics_box_component->update_collision_bitmask(DYNAMIC);
 
-					events.emit<plague::InsectDeadEvent>();
+						// evento de enemigo muerto
+						events.emit<plague::InsectDeadEvent>();
+					}
 				}
-#else
-				if (!insect.has_component<plague::AutoDestroyDescription>() && insect.has_component<plague::InsectComponent>())
-				{
-					insect.assign<plague::AutoDestroyDescription>();
-					events.emit<plague::InsectDeadEvent>();
-				}
-#endif
 			}
 			_destroy.clear();
 		}

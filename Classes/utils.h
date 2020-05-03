@@ -11,13 +11,24 @@
 
 namespace plague {
 
-void make_sprite(entityx::Entity& entity, cocos2d::Scene* scene, const std::string& resource, cocos2d::Vec2 position, float scale)
+void make_sprite(entityx::Entity& entity, cocos2d::Scene* scene, const std::string& resource, cocos2d::Vec2 position = cocos2d::Vec2::ZERO, float scale = 1, bool down = false, bool left = false)
 {
 	auto building_sprite = cocos2d::Sprite::create(resource);
+	if (down)
+	{
+		if (!left)
+		{
+			building_sprite->setAnchorPoint(cocos2d::Vec2(0.5, 0.0));
+		}
+		else
+		{
+			building_sprite->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
+		}
+	}
 	if (building_sprite == nullptr)
 	{
-#if defined(_HAS_EXCEPTIONS) || defined(__EXCEPTIONS)
-		// throw std::exception("Excepcion loading Sprite()");
+#if defined(_HAS_EXCEPTIONS) && defined(__EXCEPTIONS)
+		throw std::exception("Excepcion loading Sprite()");
 #else
 		std::abort();
 #endif

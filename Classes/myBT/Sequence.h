@@ -20,7 +20,7 @@ class Sequence : public TreeNodeComposite
 	PROPERTY(bool, AutoReset)
 
 public:
-	Sequence(const std::string& _name = "")
+	explicit Sequence(const std::string& _name = "")
 		: TreeNodeComposite(_name)
 		, m_ReturnCodeFinish(COMPLETED)
 		, m_Random(false)
@@ -107,6 +107,22 @@ public:
 	virtual void reset()
 	{
 		m_Init = false;
+	}
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_serialize(pipe);
+		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
+		pipe["Random"] = m_Random;
+		pipe["AutoReset"] = m_AutoReset;
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_unserialize(pipe);
+		m_ReturnCodeFinish = pipe["ReturnCodeFinish"];
+		m_Random = pipe["Random"];
+		m_AutoReset = pipe["AutoReset"];
 	}
 
 protected:

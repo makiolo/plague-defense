@@ -7,11 +7,11 @@ namespace myBT {
 class Running : public Action
 {
 public:
-	Running(const std::string& what) : Action(what) {}
+	explicit Running(const std::string& what) : Action(what) {}
 	virtual ~Running() {}
-	virtual bool is_trivial() const { return true; }
 
-public:
+	virtual Type getType() const { return TYPE_RUNNING; }
+
 	virtual size_t update(double deltatime)
 	{
 		return RUNNING;

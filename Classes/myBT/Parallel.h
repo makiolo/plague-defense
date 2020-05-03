@@ -30,7 +30,7 @@ class Parallel : public TreeNodeComposite
 	PROPERTY(size_t, AbortedMode)
 
 public:
-	Parallel(const std::string& name = "")
+	explicit Parallel(const std::string& name = "")
 		: TreeNodeComposite(name)
 		, m_FailedMode(NONE)
 		, m_CompletedMode(NONE)
@@ -138,6 +138,22 @@ public:
 	virtual void reset()
 	{
 		
+	}
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_serialize(pipe);
+		pipe["FailedMode"] = m_FailedMode;
+		pipe["CompletedMode"] = m_CompletedMode;
+		pipe["AbortedMode"] = m_AbortedMode;
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_unserialize(pipe);
+		m_FailedMode = pipe["FailedMode"];
+		m_CompletedMode = pipe["CompletedMode"];
+		m_AbortedMode = pipe["AbortedMode"];
 	}
 
 private:

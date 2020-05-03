@@ -25,6 +25,20 @@ public:
 		, m_Inverse(false)
 	{ reset(); }
 
+	explicit Condition(const std::string& name, std::function<bool(double)> callbackCondition)
+		: TreeNodeLeaf(name)
+		, m_Inverse(false)
+		, m_tCallbackCondition(callbackCondition)
+	{ reset(); }
+
+	explicit Condition(const std::string& name, const ConditionRepository::mapped_type& callback)
+		: TreeNodeLeaf(name)
+		, m_Inverse(false)
+		, m_tCallbackCondition(std::get<0>(callback))
+	{
+		reset();
+	}
+
 	virtual ~Condition()
 	{
 		
@@ -48,11 +62,6 @@ public:
 		return this->_status;
 	}
 
-	virtual size_t getStatus()
-	{
-		return this->_status;
-	}
-
 	virtual void reset()
 	{
 		
@@ -60,7 +69,6 @@ public:
 
 	virtual bool check(double deltatime)
 	{
-		// return (this->This()->*m_tCallbackCondition)(deltatime);
 		return m_tCallbackCondition(deltatime);
 	}
 
@@ -69,11 +77,23 @@ public:
 		m_tCallbackCondition = callbackCondition;
 	}
 
-	Condition* setInverseEx()
+	Condition* set_inverse_ex()
 	{
 		m_Inverse = true;
-		// this->get_name().insert(0,"!");
+		this->_name.insert(0,"!");
 		return this;
+	}
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		TreeNodeLeaf::_serialize(pipe);
+		pipe["Inverse"] = m_Inverse;
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		TreeNodeLeaf::_unserialize(pipe);
+		m_Inverse = pipe["Inverse"].get<bool>();
 	}
 
 protected:

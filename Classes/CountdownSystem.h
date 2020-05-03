@@ -17,6 +17,8 @@ struct CountDownSystem : public entityx::System<CountDownSystem>, public entityx
 {
 	explicit CountDownSystem()
 		: _countdown_default(3)
+		, _countdown(0)
+		, _active(false)
 	{
 
 	}

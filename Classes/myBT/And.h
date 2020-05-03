@@ -35,7 +35,6 @@ public:
 
 	virtual Type getType() const {return TYPE_AND;}
 
-	
 	virtual size_t update(const std::string& id_flow, double deltatime)
 	{
 		size_t totalChilds = TreeNodeComposite::size();
@@ -94,6 +93,20 @@ public:
 	virtual void reset()
 	{
 
+	}
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_serialize(pipe);
+		pipe["Inverse"] = m_Inverse;
+		pipe["Lazy"] = m_Lazy;
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_unserialize(pipe);
+		m_Inverse = pipe["Inverse"];
+		m_Lazy = pipe["Lazy"];
 	}
 
 };

@@ -44,8 +44,27 @@ public:
 	explicit Action(const std::string& _name = "")
 		 : TreeNodeLeaf(_name)
 		 , m_tCallbackStartSimple(nullptr)
+		 , m_tCallbackUpdateSimple(nullptr)
 		 , m_tCallbackFinishSimple(nullptr)
 	{ reset(); }
+
+	explicit Action(const std::string& _name, std::function<void()> callbackStartSimple, std::function<size_t(double)> callbackUpdateSimple, std::function<void(bool)> callbackFinishSimple)
+		: TreeNodeLeaf(_name)
+		, m_tCallbackStartSimple(callbackStartSimple)
+		, m_tCallbackUpdateSimple(callbackUpdateSimple)
+		, m_tCallbackFinishSimple(callbackFinishSimple)
+	{
+		reset();
+	}
+
+	explicit Action(const std::string& _name, const ActionRepository::mapped_type& callbacks)
+		: TreeNodeLeaf(_name)
+		, m_tCallbackStartSimple(std::get<0>(callbacks))
+		, m_tCallbackUpdateSimple(std::get<1>(callbacks))
+		, m_tCallbackFinishSimple(std::get<2>(callbacks))
+	{
+		reset();
+	}
 
 	virtual ~Action()
 	{
@@ -73,17 +92,16 @@ public:
 
 			if ((pNewState != data._current_action) || (!data._previous_action && !data._current_action))
 			{
-				data._previous_action = data._current_action;
-
-				if (data._current_action)
+				if (data._current_action != nullptr)
 				{
 					// Es interrumpido si en el cambio de acción
 					// la anterior esta en estado de RUNNING
-					data._current_action->terminate(data._current_action->getStatus() == myBT::RUNNING);
+					data._current_action->terminate(data._current_action->get_status() == myBT::RUNNING);
 				}
 
 				pNewState->init();
 
+				data._previous_action = data._current_action;
 				data._current_action = pNewState;
 			}
 		}
@@ -134,16 +152,6 @@ public:
 	void setFinish(const std::function<void(bool)>& callbackFinishSimple)
 	{
 		m_tCallbackFinishSimple = callbackFinishSimple;
-	}
-
-	virtual size_t getStatus()
-	{
-		return this->_status;
-	}
-	
-	std::string getFlow()
-	{
-		return this->_id_flow;
 	}
 
 protected:

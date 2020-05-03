@@ -12,6 +12,8 @@
 #include "TreeNodeComposite.h"
 #include "Resource.h"
 
+/*
+
 namespace myBT {
 
 class Semaphore : public TreeNodeComposite
@@ -19,7 +21,7 @@ class Semaphore : public TreeNodeComposite
 	PROPERTY(bool, Try)
 	PROPERTY_PTR(Resource, Resource)
 public:
-	Semaphore(const std::string& _name = "")
+	explicit Semaphore(const std::string& _name = "")
 		: TreeNodeComposite(_name)
 		, m_Try(false)
 		, m_Iniciado(false)
@@ -163,5 +165,7 @@ protected:
 };
 
 }
+
+*/
 
 #endif /* _SEMAPHORE_H_ */

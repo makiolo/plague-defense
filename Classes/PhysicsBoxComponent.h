@@ -45,37 +45,36 @@ struct PhysicsDescription {
 };
 
 struct PhysicsComponent {
-	explicit PhysicsComponent(entityx::Entity::Id entity_id, plague::Sprite* sprite_, plague::PhysicsDescription* physics, plague::PhysicsIntrospectionComponent* introspection, bool is_projectil)
+	explicit PhysicsComponent(entityx::Entity::Id entity_id, plague::Sprite& sprite, plague::PhysicsDescription& physics, plague::PhysicsIntrospectionComponent& introspection, bool is_projectil)
 	{
 		if (is_projectil)
 		{
-			// physicsBody = cocos2d::PhysicsBody::createBox(sprite_->sprite->getContentSize(), cocos2d::PhysicsMaterial(physics->density, physics->restitution, physics->friction));
-			physicsBody = cocos2d::PhysicsBody::createCircle(sprite_->sprite->getContentSize().width / 2.0, cocos2d::PhysicsMaterial(physics->density, physics->restitution, physics->friction));
+			// physicsBody = cocos2d::PhysicsBody::createBox(sprite->sprite->getContentSize(), cocos2d::PhysicsMaterial(physics->density, physics->restitution, physics->friction));
+			physicsBody = cocos2d::PhysicsBody::createCircle(sprite.sprite->getContentSize().width / 2.0, cocos2d::PhysicsMaterial(physics.density, physics.restitution, physics.friction));
 			update_collision_bitmask(DYNAMIC);
 			
 		}
 		else
 		{
-			physicsBody = cocos2d::PhysicsBody::createCircle(sprite_->sprite->getContentSize().width / 2.0, cocos2d::PhysicsMaterial(physics->density, physics->restitution, physics->friction));
+			physicsBody = cocos2d::PhysicsBody::createCircle(sprite.sprite->getContentSize().width / 2.0, cocos2d::PhysicsMaterial(physics.density, physics.restitution, physics.friction));
 			update_collision_bitmask(STATIC);
 		}
 		physicsBody->retain();
 
 		//apply physicsBody to the sprite
-		sprite = sprite_->sprite;
-		sprite->setPhysicsBody(physicsBody);
+		sprite.sprite->getParent()->setPhysicsBody(physicsBody);
 
 		// set introespection Id
-		introspection->id = entity_id;
+		introspection.id = entity_id;
 		if (is_projectil)
 		{
-			introspection->type = "projectil";
+			introspection.type = "projectil";
 		}
 		else
 		{
-			introspection->type = "insect";
+			introspection.type = "insect";
 		}
-		physicsBody->getNode()->setUserData((void*)introspection);
+		physicsBody->getNode()->setUserData((void*)&introspection);
 	}
 
 	~PhysicsComponent()
@@ -106,7 +105,6 @@ struct PhysicsComponent {
 	}
 
 	cocos2d::PhysicsBody* physicsBody;
-	cocos2d::Sprite* sprite;
 };
 
 }

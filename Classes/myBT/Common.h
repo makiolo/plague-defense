@@ -48,7 +48,6 @@ class While;
 class Semaphore;
 class And;
 class Or;
-// Primitives libraries
 class Aborted;
 class Completed;
 class Failed;
@@ -72,5 +71,6 @@ class Wait;
 #include <vector>
 #include <list>
 #include <deque>
+#include <tuple>
 
 #endif

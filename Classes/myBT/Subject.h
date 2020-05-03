@@ -92,7 +92,7 @@ public:
 				{
 					// Es interrumpido si en el cambio de acción
 					// la anterior esta en estado de RUNNING
-					data._current_action->terminate(data._current_action->getStatus() == myBT::RUNNING);
+					data._current_action->terminate(data._current_action->get_status() == myBT::RUNNING);
 				}
 				
 				pNewState->init();

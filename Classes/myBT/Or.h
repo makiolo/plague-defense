@@ -22,7 +22,7 @@ class Or : public TreeNodeComposite
 	PROPERTY(bool, Lazy) // evaluacion perezosa
 
 public:
-	Or(const std::string& _name = "")
+	explicit Or(const std::string& _name = "")
 		: TreeNodeComposite(_name)
 		, m_Inverse(false)
 		, m_Lazy(true)
@@ -94,6 +94,20 @@ public:
 	virtual void reset()
 	{
 		
+	}
+
+	virtual void _serialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_serialize(pipe);
+		pipe["Inverse"] = m_Inverse;
+		pipe["Lazy"] = m_Lazy;
+	}
+
+	virtual void _unserialize(nlohmann::json& pipe)
+	{
+		TreeNodeComposite::_unserialize(pipe);
+		m_Inverse = pipe["Inverse"];
+		m_Lazy = pipe["Lazy"];
 	}
 
 };

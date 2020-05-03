@@ -34,11 +34,12 @@ public:
 
 struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public entityx::Receiver<InputSystem> {
 
-	explicit InputSystem(cocos2d::Scene* scene)
-		: _send_right(true)
+	explicit InputSystem(cocos2d::Scene* scene, entityx::Entity player_to_control)
+		: _scene(scene)
+		, _player_to_control(player_to_control)
 		, _touching(false)
 		, _moved(false)
-		, _scene(scene)
+		
 	{
 		_listener = cocos2d::EventListenerKeyboard::create();
 		_listener->retain();
@@ -68,10 +69,6 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 		_scene->getEventDispatcher()->removeEventListener(_listener);
 		_scene->getEventDispatcher()->removeEventListener(_listener_touch);
 		_scene->getEventDispatcher()->removeEventListener(_listener_mouse);
-		
-		// CC_SAFE_RELEASE_NULL(_listener);
-		// CC_SAFE_RELEASE_NULL(_listener_touch);
-		// CC_SAFE_RELEASE_NULL(_listener_mouse);
 	}
 
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override {
@@ -162,13 +159,13 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 		value = _mapping[EventKeyboard::KeyCode::KEY_D];
 		if (value != _mappingPrevious[EventKeyboard::KeyCode::KEY_D])
 		{
-			events.emit<plague::RightCommand>(value);
+			events.emit<plague::RightCommand>(_player_to_control, _player_to_control, value);
 		}
 
 		value = _mapping[EventKeyboard::KeyCode::KEY_A];
 		if (value != _mappingPrevious[EventKeyboard::KeyCode::KEY_A])
 		{
-			events.emit<plague::LeftCommand>(value);
+			events.emit<plague::LeftCommand>(_player_to_control, _player_to_control, value);
 		}
 
 		if (_moved)
@@ -179,7 +176,7 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 
 		if (_mapping[EventKeyboard::KeyCode::KEY_SPACE])
 		{
-			events.emit<plague::FireCommand>();
+			events.emit<plague::FireCommand>(_player_to_control, _player_to_control);
 			_mapping[EventKeyboard::KeyCode::KEY_SPACE] = false;
 		}
 
@@ -189,22 +186,22 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 			auto quinto = cocos2d::Director::getInstance()->getVisibleSize().width / 5;
 			if (_mouse_x > (4*quinto))
 			{
-				events.emit<plague::RightCommand>(true);
+				events.emit<plague::RightCommand>(_player_to_control, _player_to_control, true);
 			}
 			else if (_mouse_x < quinto)
 			{
-				events.emit<plague::LeftCommand>(true);
+				events.emit<plague::LeftCommand>(_player_to_control, _player_to_control, true);
 			}
 			else
 			{
-				events.emit<plague::FireCommand>();
+				events.emit<plague::FireCommand>(_player_to_control, _player_to_control);
 				_touching = false;  // avoid autofire
 			}
 		}
 		else
 		{
-			events.emit<plague::RightCommand>(false);
-			events.emit<plague::LeftCommand>(false);
+			events.emit<plague::RightCommand>(_player_to_control, _player_to_control, false);
+			events.emit<plague::LeftCommand>(_player_to_control, _player_to_control, false);
 		}
 #endif
 		if (_mapping[EventKeyboard::KeyCode::KEY_ESCAPE] || _mapping[EventKeyboard::KeyCode::KEY_BACK])
@@ -216,21 +213,20 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 	};
 
 protected:
+	cocos2d::Scene* _scene;
+	entityx::Entity _player_to_control;
+
 	cocos2d::EventListenerKeyboard* _listener;
 	cocos2d::EventListenerTouchOneByOne* _listener_touch;
 	cocos2d::EventListenerMouse* _listener_mouse;
 
-	bool _send_right;
 	DefaultDict<cocos2d::EventKeyboard::KeyCode, bool> _mappingPrevious;
 	DefaultDict<cocos2d::EventKeyboard::KeyCode, bool> _mapping;
 
 	bool _touching;
-
 	bool _moved;
 	float _mouse_x;
 	float _mouse_y;
-
-	cocos2d::Scene* _scene;
 };
 
 }

@@ -7,11 +7,11 @@ namespace myBT {
 class Completed : public Action
 {
 public:
-	Completed(const std::string& what) : Action(what) {}
+	explicit Completed(const std::string& what) : Action(what) {}
 	virtual ~Completed() {}
-	virtual bool is_trivial() const { return true; }
 
-public:
+	virtual Type getType() const { return TYPE_COMPLETED; }
+
 	virtual size_t update(double deltatime)
 	{
 		return COMPLETED;

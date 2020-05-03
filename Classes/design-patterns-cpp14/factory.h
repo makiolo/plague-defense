@@ -96,7 +96,7 @@ public:
 	}
 	
 	template <typename TYPE_KEY>
-	auto execute(TYPE_KEY keyimpl_str, Args&&... data) const
+	T execute(TYPE_KEY keyimpl_str, Args&&... data) const
 	{
 		auto keyimpl = detail::factory::get_hash(keyimpl_str);
 		auto code = _create(keyimpl, std::forward<Args>(data)...);
@@ -146,7 +146,7 @@ public:
 
 	static std::unique_ptr<T> create(Args&&... data)
 	{
-		return std::make_unique<U>(std::forward<Args>(data)...);
+		return std::unique_ptr<U>(new U(std::forward<Args>(data)...));
 	}
 
 	~factory_registrator()

@@ -23,6 +23,8 @@ struct BrainSystem : public entityx::System<BrainSystem>
 
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
+		myBT::_action_control.clear();
+
 		es.each<plague::BrainComponent, plague::Transform>([&](entityx::Entity entity, plague::BrainComponent& brain, plague::Transform& transform) {
 			brain.configure(es, events, transform);
 		});
