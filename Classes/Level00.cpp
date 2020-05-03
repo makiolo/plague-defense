@@ -51,7 +51,6 @@ bool Level00::init()
 	// top image is moved at a ratio of 3.0x, 2.5y
 	paraNode->addChild(fondo3, 2, Vec2(3.0f, 2.5f), Vec2(200, 800));
 
-
 	this->addChild(paraNode, 1);
 
 

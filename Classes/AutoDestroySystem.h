@@ -32,15 +32,6 @@ struct AutoDestroySystem : public entityx::System<AutoDestroySystem> {
 				auto entity_id = entity.id();
 				auto entity = es.get(entity_id);
 				entity.destroy();
-
-				/*
-				sprite.sprite->runAction(
-						cocos2d::CallFunc::create([&es, entity_id]() {
-							auto entity = es.get(entity_id);
-							entity.destroy();
-						})
-				);
-				*/
 			}
 		});
 	}

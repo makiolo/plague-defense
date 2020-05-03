@@ -23,7 +23,7 @@
 #include "PhysicsBoxSystem.h"
 #include "GravitySystem.h"
 #include "BrainSystem.h"
-#include "SteeringBehavioursSystem.h"
+// #include "SteeringBehavioursSystem.h"
 // SCENES
 #include "MainMenuScene.h"
 // SPAWNERS
@@ -36,7 +36,7 @@
 #include "myBT/myBT.h"
 // Sounds
 // #define USE_AUDIO_ENGINE 1
-#define USE_SIMPLE_AUDIO_ENGINE 1
+// #define USE_SIMPLE_AUDIO_ENGINE 0
 #if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
 using namespace cocos2d::experimental;
@@ -66,11 +66,13 @@ Scene* Level01::createScene()
 }
 
 // Print useful error message instead of segfaulting when files are not there.
+/*
 static void problemLoading(const char* filename)
 {
     printf("Error while loading: %s\n", filename);
     printf("Depending on how you compiled you might have to add 'Resources/' in front of filenames in HelloWorldScene.cpp\n");
 }
+*/
 
 // on "init" you need to initialize your instance
 bool Level01::init()
@@ -88,7 +90,11 @@ bool Level01::init()
 	// sdkbox::PluginAdMob::show("home");
 #endif
 
+#if USE_AUDIO_ENGINE
+	AudioEngine::play2d("sounds/birds.mp3");
+#elif USE_SIMPLE_AUDIO_ENGINE
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/birds.mp3", true);
+#endif
 
 	ex = std::unique_ptr<entityx::EntityX>(new entityx::EntityX);
 	plague::make_clouds(this, ex->entities);
@@ -129,18 +135,18 @@ bool Level01::init()
 	ex->systems.add<plague::BlackboardSystem>();
 	// personaje
 	ex->systems.add<plague::CharacterSystem>();
-	// detección superior (fuera de mapa)
+	// detecciï¿½n superior (fuera de mapa)
 	ex->systems.add<plague::DetectInvasionSystem>();
-	// detección inferior (fuera de mapa)
+	// detecciï¿½n inferior (fuera de mapa)
 	ex->systems.add<plague::DetectFloorImpactSystem>();
-	// sistema físico
+	// sistema fï¿½sico
 	ex->systems.add<plague::PhysicsSystem>(this);
-	// generador de física
+	// generador de fï¿½sica
 	ex->systems.add<plague::PhysicsAssemblySystem>();
 	// actualizar IA
 	ex->systems.add<plague::BrainSystem>();
 	// Steering behaviours system
-	ex->systems.add<plague::SteeringBehavioursSystem>();
+	// ex->systems.add<plague::SteeringBehavioursSystem>();
 	ex->systems.configure();
 
     return true;

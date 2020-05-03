@@ -19,6 +19,11 @@
 #include "IntrospectionComponent.h"
 #include "LifeLostEvent.h"
 #include "Level01Constants.h"
+#if USE_AUDIO_ENGINE
+#include "audio/include/AudioEngine.h"
+#elif USE_SIMPLE_AUDIO_ENGINE
+#include "audio/include/SimpleAudioEngine.h"
+#endif
 
 namespace plague {
 
@@ -50,7 +55,17 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		events.subscribe<plague::InsectDeadEvent>(*this);
 		events.subscribe<plague::InsectInvasionEvent>(*this);
 
-		CocosDenshion::SimpleAudioEngine::getInstance()->preloadEffect("sounds/Rip.wav");
+#if USE_AUDIO_ENGINE
+		using namespace cocos2d::experimental;
+#elif USE_SIMPLE_AUDIO_ENGINE
+		using namespace CocosDenshion;
+#endif
+
+#if USE_AUDIO_ENGINE
+	AudioEngine::preload("sounds/Rip.wav");
+#elif USE_SIMPLE_AUDIO_ENGINE
+	SimpleAudioEngine::getInstance()->preloadEffect("sounds/Rip.wav");
+#endif
 	}
 
 	void spwan_spider_normal(entityx::EntityManager& es, entityx::EventManager& events, float start_x, float velocity, std::mt19937& gen, std::uniform_int_distribution<> step_dist, std::uniform_real_distribution<> wait_dist, std::normal_distribution<> offset_dist)
@@ -273,7 +288,17 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 
 	void receive(const plague::InsectDeadEvent& event)
 	{
-		CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/Rip.wav");
+#if USE_AUDIO_ENGINE
+		using namespace cocos2d::experimental;
+#elif USE_SIMPLE_AUDIO_ENGINE
+		using namespace CocosDenshion;
+#endif
+
+#if USE_AUDIO_ENGINE
+		AudioEngine::play2d("sounds/Rip.wav");
+#elif USE_SIMPLE_AUDIO_ENGINE
+		SimpleAudioEngine::getInstance()->playEffect("sounds/Rip.wav");
+#endif
 	}
 
 	void receive(const plague::InsectInvasionEvent& event)

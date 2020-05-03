@@ -4,7 +4,7 @@
 //
 
 // #define USE_AUDIO_ENGINE 1
-#define USE_SIMPLE_AUDIO_ENGINE 1
+// #define USE_SIMPLE_AUDIO_ENGINE 0
 
 #if USE_AUDIO_ENGINE && USE_SIMPLE_AUDIO_ENGINE
 #error "Don't use AudioEngine and SimpleAudioEngine at the same time. Please just select one in your game!"
@@ -113,8 +113,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // run
     director->runWithScene(scene);
-
-	// SimpleAudioEngine::getInstance()->playBackgroundMusic("music/Ghostemane-Plague-Doctor-Mask.mp3", true);
 
     return true;
 }

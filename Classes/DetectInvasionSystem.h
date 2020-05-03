@@ -12,6 +12,11 @@
 #include "InsectComponent.h"
 #include "InsectInvasionEvent.h"
 #include "Level01Constants.h"
+#if USE_AUDIO_ENGINE
+#include "audio/include/AudioEngine.h"
+#elif USE_SIMPLE_AUDIO_ENGINE
+#include "audio/include/SimpleAudioEngine.h"
+#endif
 
 namespace plague {
 
@@ -29,7 +34,17 @@ struct DetectInvasionSystem : public entityx::System<DetectInvasionSystem>
 
 	void configure(entityx::EntityManager& es, entityx::EventManager& events)
 	{
-		CocosDenshion::SimpleAudioEngine::getInstance()->preloadEffect("sounds/escape.mp3");
+#if USE_AUDIO_ENGINE
+		using namespace cocos2d::experimental;
+#elif USE_SIMPLE_AUDIO_ENGINE
+		using namespace CocosDenshion;
+#endif
+
+#if USE_AUDIO_ENGINE
+		AudioEngine::preload("sounds/escape.mp3");
+#elif USE_SIMPLE_AUDIO_ENGINE
+		SimpleAudioEngine::getInstance()->preloadEffect("sounds/escape.mp3");
+#endif
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
@@ -38,7 +53,16 @@ struct DetectInvasionSystem : public entityx::System<DetectInvasionSystem>
 			auto pos = transform.node->getPosition();
 			if(pos.y > level01::ceil)
 			{
-				CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/escape.mp3");
+#if USE_AUDIO_ENGINE
+				using namespace cocos2d::experimental;
+#elif USE_SIMPLE_AUDIO_ENGINE
+				using namespace CocosDenshion;
+#endif
+#if USE_AUDIO_ENGINE
+				AudioEngine::play2d("sounds/escape.mp3");
+#elif USE_SIMPLE_AUDIO_ENGINE
+				SimpleAudioEngine::getInstance()->playEffect("sounds/escape.mp3");
+#endif
 				if (!entity.has_component<plague::AutoDestroyDescription>())
 				{
 					entity.assign<plague::AutoDestroyDescription>();

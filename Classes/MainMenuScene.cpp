@@ -13,7 +13,7 @@
 #include "AnimationNode.h"
 // Sonido
 // #define USE_AUDIO_ENGINE 1
-#define USE_SIMPLE_AUDIO_ENGINE 1
+// #define USE_SIMPLE_AUDIO_ENGINE 0
 #if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
 using namespace cocos2d::experimental;
@@ -73,8 +73,13 @@ bool MainMenuScene::init()
 	// sdkbox::PluginSdkboxPlay::loadAllGameData();
 #endif
 
+#if USE_AUDIO_ENGINE
+	AudioEngine::play2d("sounds/negro.mp3");
+	AudioEngine::preload("sounds/anilla.mp3");
+#elif USE_SIMPLE_AUDIO_ENGINE
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/negro.mp3", true);
 	SimpleAudioEngine::getInstance()->preloadEffect("sounds/anilla.mp3");
+#endif
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -115,7 +120,11 @@ bool MainMenuScene::init()
 		"img/menu/play.png",
 		"img/menu/play_hover.png",
 		[&](Ref* sender) {
-			CocosDenshion::SimpleAudioEngine::getInstance()->playEffect("sounds/anilla.mp3");
+#if USE_AUDIO_ENGINE
+			AudioEngine::play2d("sounds/anilla.mp3");
+#elif USE_SIMPLE_AUDIO_ENGINE
+			SimpleAudioEngine::getInstance()->playEffect("sounds/anilla.mp3");
+#endif
 			Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, Level01::create()));
 		});
 
