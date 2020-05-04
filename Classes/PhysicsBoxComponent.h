@@ -16,10 +16,11 @@ namespace plague {
 enum PhysicsMask {
 	DYNAMIC = 0x01,
 	STATIC = 0x02,
-	DEAD = 0x03,
+	DEAD = 0x03,  // TODO: unused
 };
 
-struct PhysicsDescription {
+struct PhysicsDescription : public entityx::Component<PhysicsDescription>
+{
 	explicit PhysicsDescription(bool dynamic_ = true, cocos2d::Vec2 velocity_ = cocos2d::Vec2::ZERO, float density_ = 1.0f, float restitution_ = 1.0f, float friction_ = 1.0f)
 		: dynamic(dynamic_)
 		, velocity(velocity_)
@@ -44,7 +45,8 @@ struct PhysicsDescription {
 	
 };
 
-struct PhysicsComponent {
+struct PhysicsComponent : public entityx::Component<PhysicsComponent>
+{
 	explicit PhysicsComponent(entityx::Entity::Id entity_id, plague::Sprite& sprite, plague::PhysicsDescription& physics, plague::PhysicsIntrospectionComponent& introspection, bool is_projectil)
 	{
 		if (is_projectil)
@@ -54,7 +56,7 @@ struct PhysicsComponent {
 			update_collision_bitmask(DYNAMIC);
 			
 		}
-		else
+		else  // is enemy
 		{
 			physicsBody = cocos2d::PhysicsBody::createCircle(sprite.sprite->getContentSize().width / 2.0, cocos2d::PhysicsMaterial(physics.density, physics.restitution, physics.friction));
 			update_collision_bitmask(STATIC);
@@ -93,6 +95,7 @@ struct PhysicsComponent {
 			physicsBody->setDynamic(true);
 			physicsBody->setGravityEnable(true);
 			physicsBody->setMass(10);
+			physicsBody->setGroup(DYNAMIC);
 		}
 		else if (mask == STATIC)
 		{
@@ -101,6 +104,7 @@ struct PhysicsComponent {
 			physicsBody->setContactTestBitmask(0xFFFFFFFF);
 			physicsBody->setDynamic(false);
 			physicsBody->setMass(cocos2d::PHYSICS_INFINITY);
+			physicsBody->setGroup(STATIC);
 		}
 	}
 

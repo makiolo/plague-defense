@@ -6,7 +6,7 @@
 
 namespace plague {
 
-struct MouseMoveCommand
+struct MouseMoveCommand : public entityx::Event<MouseMoveCommand>
 {
 	explicit MouseMoveCommand(float x_, float y_)
 		: x(x_)

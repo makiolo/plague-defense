@@ -5,13 +5,14 @@ Nodo abstracto de un arbol de comportamiento
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _TREENODE_H_
 #define _TREENODE_H_
 
 #include <string>
+#include <unordered_map>
 #include "nlohmann/json.hpp"
 
 namespace myBT {
@@ -49,8 +50,8 @@ enum Type {
 	TYPE_WAIT,
 };
 
-using ActionRepository = std::map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void(bool)> > >;
-using ConditionRepository = std::map<std::string, std::tuple< std::function<bool(double)> > >;
+using ActionRepository = std::unordered_map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void(bool)> > >;
+using ConditionRepository = std::unordered_map<std::string, std::tuple< std::function<bool(double)> > >;
 
 class TreeNode
 {
@@ -183,7 +184,7 @@ public:
 	}
 
 	virtual void serialize(nlohmann::json& pipe) = 0;
-	virtual void unserialize(nlohmann::json& pipe, const std::map<std::string, std::tuple< std::function<bool(double)> > >& conditions, const std::map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void(bool)> > >& actions) = 0;
+	virtual void unserialize(nlohmann::json& pipe, const ConditionRepository& conditions, const ActionRepository& actions) = 0;
 
 	virtual void _serialize(nlohmann::json& pipe)
 	{

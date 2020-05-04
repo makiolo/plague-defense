@@ -6,7 +6,8 @@
 
 namespace plague {
 
-struct AutoDestroyDescription {
+struct AutoDestroyDescription : entityx::Component<AutoDestroyDescription>
+{
 	explicit AutoDestroyDescription(float life_ = 0.0f)
 		: life(life_)
 	{

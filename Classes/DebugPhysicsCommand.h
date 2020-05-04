@@ -8,6 +8,7 @@
 
 #include <cocos2d.h>
 
+/*
 namespace plague {
 
 // TODO: unused
@@ -19,5 +20,6 @@ struct DebugPhysicsCommand {
 };
 
 }
+*/
 
 #endif

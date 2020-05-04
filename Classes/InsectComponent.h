@@ -11,7 +11,8 @@
 
 namespace plague {
 
-struct InsectComponent {
+struct InsectComponent : public entityx::Component<InsectComponent>
+{
 	explicit InsectComponent()
 	{
 		

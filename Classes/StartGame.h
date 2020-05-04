@@ -10,7 +10,8 @@
 
 namespace plague {
 
-struct StartGame {
+struct StartGame : public entityx::Event<StartGame>
+{
 	explicit StartGame()
 	{
 		

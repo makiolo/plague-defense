@@ -1,11 +1,11 @@
 /**
 @file Common.h
 
-Archivo común a toda la librería "myBT"
+Archivo comï¿½n a toda la librerï¿½a "myBT"
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _COMMON_MYBT_

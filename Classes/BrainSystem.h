@@ -21,19 +21,22 @@ struct BrainSystem : public entityx::System<BrainSystem>
 		
 	}
 
+	virtual ~BrainSystem()
+	{
+
+	}
+
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
-		myBT::_action_control.clear();
-
 		es.each<plague::BrainComponent, plague::Transform>([&](entityx::Entity entity, plague::BrainComponent& brain, plague::Transform& transform) {
-			brain.configure(es, events, transform);
+			brain.configure_fw(es, events, transform);
 		});
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
 	{
 		es.each<plague::BrainComponent>([&](entityx::Entity entity, plague::BrainComponent& brain) {
-			brain.update(es, events, dt);
+			brain.update_fw(es, events, dt);
 		});
 	}
 };

@@ -10,7 +10,8 @@
 
 namespace plague {
 
-struct BrainDebugEvent {
+struct BrainDebugEvent : entityx::Event<BrainDebugEvent>
+{
 	explicit BrainDebugEvent()
 	{
 		

@@ -6,14 +6,16 @@
 
 namespace plague {
 
-struct Transform {
+struct Transform : public entityx::Component<Transform>
+{
 	explicit Transform(cocos2d::Node* node_, cocos2d::Vec2 position_initial_, float scale_initial_)
 		: node(node_)
 		, position_initial(position_initial_)
 		, scale_initial(scale_initial_)
 	{
 		node->retain();
-		reset();
+		node->setPosition(position_initial);
+		node->setScale(scale_initial);
 	}
 
 	~Transform()
@@ -23,11 +25,12 @@ struct Transform {
 		node->autorelease();
 	}
 
+	/*
 	void reset()
 	{
-		node->setPosition(position_initial);
-		node->setScale(scale_initial);
+
 	}
+	*/
 
 	cocos2d::Node* node;
 	cocos2d::Vec2 position_initial;

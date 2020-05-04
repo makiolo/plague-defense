@@ -9,6 +9,7 @@
 #include <cocos2d.h>
 #include "entityx/entityx.h"
 
+/*
 namespace plague {
 
 struct DetectCollisionSystem : public entityx::System<DetectCollisionSystem>
@@ -35,5 +36,6 @@ struct DetectCollisionSystem : public entityx::System<DetectCollisionSystem>
 };
 
 }
+*/
 
 #endif

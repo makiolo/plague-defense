@@ -222,6 +222,10 @@ elseif(WINDOWS)
     cocos_copy_target_dll(${APP_NAME})
 endif()
 
+if(LINUX)
+	target_link_libraries(${APP_NAME} pthread)
+endif()
+
 if(LINUX OR WINDOWS)
     set(APP_RES_DIR "$<TARGET_FILE_DIR:${APP_NAME}>/Resources")
     cocos_copy_target_res(${APP_NAME} COPY_TO ${APP_RES_DIR} FOLDERS ${GAME_RES_FOLDER})

@@ -33,7 +33,7 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 	{
 		es.each<plague::Transform, plague::CharacterComponent>([=, &es, &events](entityx::Entity entity, plague::Transform& transform, plague::CharacterComponent& character)
 		{
-			character.configure(es, events);
+			character.configure_fw(es, events);
 		});
 	}
 

@@ -32,9 +32,11 @@ public:
 	}
 };
 
-struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public entityx::Receiver<InputSystem> {
-
-	explicit InputSystem(cocos2d::Scene* scene, entityx::Entity player_to_control)
+struct InputSystem : public entityx::System<InputSystem>,
+					 public entityx::Receiver<InputSystem>,
+					 public cocos2d::Node  // TODO: remove, used by "convertToNodeSpace"
+{
+	explicit InputSystem(cocos2d::Scene* scene, entityx::Entity::Id player_to_control)
 		: _scene(scene)
 		, _player_to_control(player_to_control)
 		, _touching(false)
@@ -62,6 +64,7 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 		_scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_listener, _scene);
 		_scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_listener_touch, _scene);
 		_scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_listener_mouse, _scene);
+
 	}
 
 	virtual ~InputSystem()
@@ -71,14 +74,15 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 		_scene->getEventDispatcher()->removeEventListener(_listener_mouse);
 	}
 
-	void configure(entityx::EntityManager& es, entityx::EventManager& events) override {
+	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
+	{
 		events.subscribe<plague::ExitGameCommand>(*this);
 	}
 
 	void receive(const plague::ExitGameCommand& event)
 	{
-		cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, MainMenuScene::create()));
-		// cocos2d::Director::getInstance()->replaceScene(MainMenuScene::create());
+		// cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, MainMenuScene::create()));
+		cocos2d::Director::getInstance()->replaceScene(MainMenuScene::create());
 	}
 
 	////////////////////////////////////////////////////////////////////////
@@ -144,7 +148,7 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 
 	void onMouseScroll(cocos2d::EventMouse* e)
 	{
-		;
+
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -156,24 +160,28 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 		bool value;
 
+		// on_change
 		value = _mapping[EventKeyboard::KeyCode::KEY_D];
 		if (value != _mappingPrevious[EventKeyboard::KeyCode::KEY_D])
 		{
 			events.emit<plague::RightCommand>(_player_to_control, _player_to_control, value);
 		}
 
+		// on_change
 		value = _mapping[EventKeyboard::KeyCode::KEY_A];
 		if (value != _mappingPrevious[EventKeyboard::KeyCode::KEY_A])
 		{
 			events.emit<plague::LeftCommand>(_player_to_control, _player_to_control, value);
 		}
 
+		// on_move
 		if (_moved)
 		{
 			events.emit<plague::MouseMoveCommand>(_mouse_x, _mouse_y);
 			_moved = false;
 		}
 
+		// on_press
 		if (_mapping[EventKeyboard::KeyCode::KEY_SPACE])
 		{
 			events.emit<plague::FireCommand>(_player_to_control, _player_to_control);
@@ -214,7 +222,7 @@ struct InputSystem : public entityx::System<InputSystem>, cocos2d::Node, public 
 
 protected:
 	cocos2d::Scene* _scene;
-	entityx::Entity _player_to_control;
+	entityx::Entity::Id _player_to_control;
 
 	cocos2d::EventListenerKeyboard* _listener;
 	cocos2d::EventListenerTouchOneByOne* _listener_touch;
@@ -223,10 +231,11 @@ protected:
 	DefaultDict<cocos2d::EventKeyboard::KeyCode, bool> _mappingPrevious;
 	DefaultDict<cocos2d::EventKeyboard::KeyCode, bool> _mapping;
 
-	bool _touching;
-	bool _moved;
 	float _mouse_x;
 	float _mouse_y;
+
+	bool _touching;
+	bool _moved;
 };
 
 }

@@ -6,8 +6,9 @@
 
 namespace plague {
 
-struct LeftCommand {
-	explicit LeftCommand(entityx::Entity from_, entityx::Entity to_, bool active_)
+struct LeftCommand : public entityx::Component<LeftCommand>
+{
+	explicit LeftCommand(entityx::Entity::Id from_, entityx::Entity::Id to_, bool active_)
 		: from(from_)
 		, to(to_)
 		, active(active_)
@@ -15,8 +16,8 @@ struct LeftCommand {
 		
 	}
 
-	entityx::Entity from;
-	entityx::Entity to;
+	entityx::Entity::Id from;
+	entityx::Entity::Id to;
 	bool active;
 };
 

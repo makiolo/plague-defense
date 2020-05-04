@@ -11,8 +11,9 @@
 
 namespace plague {
 
-struct FireCommand {
-	explicit FireCommand(entityx::Entity from_, entityx::Entity to_)
+struct FireCommand : public entityx::Event<FireCommand>
+{
+	explicit FireCommand(entityx::Entity::Id from_, entityx::Entity::Id to_)
 		: from(from_)
 		, to(to_)
 
@@ -20,8 +21,8 @@ struct FireCommand {
 		
 	}
 
-	entityx::Entity from;
-	entityx::Entity to;
+	entityx::Entity::Id from;
+	entityx::Entity::Id to;
 };
 
 }

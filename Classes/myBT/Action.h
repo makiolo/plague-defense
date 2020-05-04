@@ -5,7 +5,7 @@ Accion primitiva
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _ACTION_H_
@@ -36,7 +36,6 @@ struct FlowProgramData
 };
 
 typedef typename std::map<std::string, FlowProgramData > MapFlows;
-static MapFlows _action_control;
 
 class Action : public TreeNodeLeaf
 {
@@ -86,6 +85,9 @@ public:
 
 	static void change_state(const std::string& id_flow, myBT::TreeNodeLeaf* pNewState)
 	{
+		// TODO: Hacer un context y pasarlo
+		myBT::MapFlows _action_control;
+
 		if (pNewState)
 		{
 			auto& data = _action_control[id_flow];
@@ -94,7 +96,7 @@ public:
 			{
 				if (data._current_action != nullptr)
 				{
-					// Es interrumpido si en el cambio de acción
+					// Es interrumpido si en el cambio de acciï¿½n
 					// la anterior esta en estado de RUNNING
 					data._current_action->terminate(data._current_action->get_status() == myBT::RUNNING);
 				}
@@ -112,11 +114,11 @@ public:
 		// se establece su flujo
 		this->set_flow( id_flow );
 
-		// genera callbacks, si hay cambio de acción
+		// genera callbacks, si hay cambio de acciï¿½n
 		// TODO:
 		change_state(id_flow, this);
 		
-		// ejecutar la acción
+		// ejecutar la acciï¿½n
 		this->_status = update(deltatime);
 		
 		return this->_status;

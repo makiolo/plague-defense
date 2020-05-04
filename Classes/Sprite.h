@@ -6,7 +6,8 @@
 
 namespace plague {
 
-struct Sprite {
+struct Sprite : public entityx::Component<Sprite>
+{
 	explicit Sprite(cocos2d::Sprite* sprite_)
 		: sprite(sprite_)
 	{

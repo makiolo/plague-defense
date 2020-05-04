@@ -34,7 +34,7 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 
 	}
 
-	void configure(entityx::EntityManager& es, entityx::EventManager& events)
+	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
 #if USE_AUDIO_ENGINE
 		using namespace cocos2d::experimental;

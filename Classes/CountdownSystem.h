@@ -15,8 +15,8 @@ namespace plague {
 
 struct CountDownSystem : public entityx::System<CountDownSystem>, public entityx::Receiver<CountDownSystem>
 {
-	explicit CountDownSystem()
-		: _countdown_default(3)
+	explicit CountDownSystem(int countdown_default)
+		: _countdown_default(countdown_default)
 		, _countdown(0)
 		, _active(false)
 	{

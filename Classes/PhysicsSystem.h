@@ -23,7 +23,7 @@
 
 namespace plague {
 
-struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Receiver<PhysicsSystem>
+struct PhysicsSystem : public entityx::System<PhysicsSystem>
 {
 	explicit PhysicsSystem(cocos2d::Scene* scene)
 		: _scene(scene)
@@ -33,14 +33,15 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 		PhysicsBody objects are the backbone for shapes. A PhysicsBody does not have a shape until you attach a shape to it.
 		*/
 		// _scene->getPhysicsWorld()->setDebugDrawMask(cocos2d::PhysicsWorld::DEBUGDRAW_ALL);
-		_scene->getPhysicsWorld()->setAutoStep(false);
+		// _scene->getPhysicsWorld()->setAutoStep(false);
 		_scene->getPhysicsWorld()->setSubsteps(4);
 		_scene->getPhysicsWorld()->setGravity(cocos2d::Vec2(0, -1000));
 
-		_listener = cocos2d::EventListenerPhysicsContact::create();
+		_listener = cocos2d::EventListenerPhysicsContactWithGroup::create(STATIC);
 		_listener->onContactBegin = CC_CALLBACK_1(PhysicsSystem::onContactBegin, this);
 		_listener->onContactPreSolve = CC_CALLBACK_2(PhysicsSystem::onContactPreSolve, this);
-		_listener->onContactPostSolve = CC_CALLBACK_2(PhysicsSystem::onContactPostSolve, this);		
+		_listener->onContactPostSolve = CC_CALLBACK_2(PhysicsSystem::onContactPostSolve, this);
+		// _listener->setEnabled(false);
 
 		_scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_listener, _scene);
 	}
@@ -88,14 +89,12 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 
 	}
 
-	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
-	{
-		events.subscribe<plague::DebugPhysicsCommand>(*this);
-	}
-
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
 	{
-		_scene->getPhysicsWorld()->step(dt);
+		// update physics
+		// _scene->getPhysicsWorld()->step(dt);
+
+		bool reupdate = false;
 
 		if (_destroy.size() > 0)
 		{
@@ -103,6 +102,7 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 			{
 				entityx::Entity::Id idA, idB;
 				std::tie(idA, idB) = tuple;
+
 				auto projectile = es.get(idA);
 				auto insect = es.get(idB);
 
@@ -114,6 +114,9 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 					{
 						// se da la vuelta al enemigo
 						transform_component->node->setScaleY(scaley * -1);
+						// La fisica necesita que la escala de "x" e "y", sean iguales
+						float scalex = transform_component->node->getScaleX();
+						transform_component->node->setScaleX(scalex * -1);
 
 						// Se le marca como estanpable (TODO: Cambiar nombre de la componente)
 						 auto gravity_component = projectile.component<plague::GravityComponent>().get();
@@ -133,12 +136,13 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>, public entityx::Re
 				}
 			}
 			_destroy.clear();
+			reupdate = true;
 		}
-	}
 
-	void receive(const plague::DebugPhysicsCommand& command)
-	{
-		
+		if(reupdate)
+		{
+			// _scene->getPhysicsWorld()->step(dt);
+		}
 	}
 
 protected:

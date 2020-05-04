@@ -11,7 +11,7 @@
 
 namespace plague {
 
-struct ProjectilComponent {
+struct ProjectilComponent : public entityx::Component<ProjectilComponent> {
 	explicit ProjectilComponent()
 	{
 		

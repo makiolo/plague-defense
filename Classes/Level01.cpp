@@ -53,10 +53,7 @@ Level01::Level01()
 }
 Level01::~Level01()
 {
-	if (ex)
-	{
-		ex.reset();
-	}
+
 }
 
 
@@ -91,63 +88,88 @@ bool Level01::init()
 #endif
 
 #if USE_AUDIO_ENGINE
+	AudioEngine::pauseAll();
 	AudioEngine::play2d("sounds/birds.mp3");
 #elif USE_SIMPLE_AUDIO_ENGINE
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/birds.mp3", true);
 #endif
 
-	ex = std::unique_ptr<entityx::EntityX>(new entityx::EntityX);
-	plague::make_clouds(this, ex->entities);
+	plague::make_clouds(this, ex.entities);
 	plague::make_sky(this);
 	
-	auto building = ex->entities.create();
+	auto building = ex.entities.create();
 	plague::make_sprite(building, this, "img/building/newlevel01.png", cocos2d::Vec2::ZERO, 1.0f, true, true);
 
-	auto scenary = ex->entities.create();
-	scenary.assign<plague::DebugBar>(this, ex->events);
+	auto scenary = ex.entities.create();
+	scenary.assign<plague::DebugBar>(this);
 
-	auto character = ex->entities.create();
+	auto character = ex.entities.create();
 	plague::make_sprite(character, this, "img/character/character.png", plague::level01::player, 0.15f, true);
-	character.assign<plague::CharacterComponent>(character, 450.0f);
-	// character.assign<plague::BrainComponent>(character, "brain");
+	character.assign<plague::CharacterComponent>(character.id(), 450.0f);
+	character.assign<plague::BrainComponent>(character.id(), "brain");
 
-	auto character2 = ex->entities.create();
+	auto character2 = ex.entities.create();
 	plague::make_sprite(character2, this, "img/character/character.png", plague::level01::player, 0.30f, true);
-	character2.assign<plague::CharacterComponent>(character2, 100.0f);
-	character2.assign<plague::BrainComponent>(character2, "brain2");
+	character2.assign<plague::CharacterComponent>(character2.id(), 100.0f);
+	character2.assign<plague::BrainComponent>(character2.id(), "brain2");
 
-	/*
-	auto character3 = ex->entities.create();
+	auto character3 = ex.entities.create();
 	plague::make_sprite(character3, this, "img/character/character.png", plague::level01::player, 0.21f, true);
-	character3.assign<plague::CharacterComponent>(character3, 200.0f);
-	character3.assign<plague::BrainComponent>(character3, "brain3");
-	*/
+	character3.assign<plague::CharacterComponent>(character3.id(), 200.0f);
+	character3.assign<plague::BrainComponent>(character3.id(), "brain3");
 
+#if 1
 	// Movimiento de nubes
-	ex->systems.add<plague::MovementSystem>();
+	ex.systems.add<plague::MovementSystem>();
 	// Sistema de entrada (teclado/raton/touch)
-	ex->systems.add<plague::InputSystem>(this, character);
+	ex.systems.add<plague::InputSystem>(this, character.id());
 	// Destructor de entidades
-	ex->systems.add<plague::AutoDestroySystem>();
+	ex.systems.add<plague::AutoDestroySystem>();
 	// Cuenta atras del comienzo de la oleada
-	ex->systems.add<plague::CountDownSystem>();
+	ex.systems.add<plague::CountDownSystem>(3);
 	// director de oleadas
-	ex->systems.add<plague::BlackboardSystem>();
+	ex.systems.add<plague::BlackboardSystem>();
 	// personaje
-	ex->systems.add<plague::CharacterSystem>();
+	ex.systems.add<plague::CharacterSystem>();
 	// detecci�n superior (fuera de mapa)
-	ex->systems.add<plague::DetectInvasionSystem>();
+	ex.systems.add<plague::DetectInvasionSystem>();
 	// detecci�n inferior (fuera de mapa)
-	ex->systems.add<plague::DetectFloorImpactSystem>();
+	ex.systems.add<plague::DetectFloorImpactSystem>();
 	// sistema f�sico
-	ex->systems.add<plague::PhysicsSystem>(this);
+	ex.systems.add<plague::PhysicsSystem>(this);
 	// generador de f�sica
-	ex->systems.add<plague::PhysicsAssemblySystem>();
+	ex.systems.add<plague::PhysicsAssemblySystem>();
 	// actualizar IA
-	ex->systems.add<plague::BrainSystem>();
+	ex.systems.add<plague::BrainSystem>();
 	// Steering behaviours system
-	// ex->systems.add<plague::SteeringBehavioursSystem>();
-	ex->systems.configure();
+	// ex.systems.add<plague::SteeringBehavioursSystem>();
+#else
+	// Movimiento de nubes
+	ex.systems.add<plague::MovementSystem>();
+	// Sistema de entrada (teclado/raton/touch)
+	ex.systems.add<plague::InputSystem>(this, character.id());
+	// Destructor de entidades
+	ex.systems.add<plague::AutoDestroySystem>();
+	// Cuenta atras del comienzo de la oleada
+	ex.systems.add<plague::CountDownSystem>(3);
+	// director de oleadas
+	ex.systems.add<plague::BlackboardSystem>();
+	// personaje
+	ex.systems.add<plague::CharacterSystem>();
+	// detecci�n superior (fuera de mapa)
+	ex.systems.add<plague::DetectInvasionSystem>();
+	// detecci�n inferior (fuera de mapa)
+	ex.systems.add<plague::DetectFloorImpactSystem>();
+	// sistema f�sico
+	ex.systems.add<plague::PhysicsSystem>(this);
+	// generador de f�sica
+	ex.systems.add<plague::PhysicsAssemblySystem>();
+	// actualizar IA
+	ex.systems.add<plague::BrainSystem>();
+	// Steering behaviours system
+	// ex.systems.add<plague::SteeringBehavioursSystem>();
+#endif
+	ex.systems.configure();
 
     return true;
 }
@@ -156,6 +178,6 @@ bool Level01::init()
 void Level01::render(cocos2d::Renderer* renderer, const cocos2d::Mat4& eyeTransform, const cocos2d::Mat4* eyeProjection)
 {
 	cocos2d::Scene::render(renderer, eyeTransform, eyeProjection);
-	ex->systems.update_all(1.0f / 60.0f);
+	ex.systems.update_all(1.0f / 60.0f);
 }
 

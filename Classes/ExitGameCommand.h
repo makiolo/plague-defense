@@ -1,6 +1,6 @@
 /* struct ExitGameCommand
 *
-*  Ricardo Marmolejo García 2019
+*  Ricardo Marmolejo Garcï¿½a 2019
 */
 #pragma once
 #ifndef _ExitGameCommand_H_
@@ -10,7 +10,7 @@
 
 namespace plague {
 
-struct ExitGameCommand {
+struct ExitGameCommand : entityx::Event<ExitGameCommand> {
 	explicit ExitGameCommand()
 	{
 

@@ -14,8 +14,9 @@
 
 namespace plague {
 
-struct CharacterComponent : public entityx::Receiver<CharacterComponent> {
-	explicit CharacterComponent(entityx::Entity whoami_, float velocity_)
+struct CharacterComponent : public entityx::Component<CharacterComponent>, public entityx::Receiver<CharacterComponent>
+{
+	explicit CharacterComponent(entityx::Entity::Id whoami_, float velocity_)
 		: whoami(whoami_)
 		, velocity(velocity_)
 		, _left(false)
@@ -27,10 +28,10 @@ struct CharacterComponent : public entityx::Receiver<CharacterComponent> {
 
 	virtual ~CharacterComponent()
 	{
-		
+
 	}
 
-	void configure(entityx::EntityManager& es, entityx::EventManager& events)
+	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events)
 	{
 		events.subscribe<plague::LeftCommand>(*this);
 		events.subscribe<plague::RightCommand>(*this);
@@ -61,7 +62,7 @@ struct CharacterComponent : public entityx::Receiver<CharacterComponent> {
 		}
 	}
 
-	entityx::Entity whoami;
+	entityx::Entity::Id whoami;
 	float velocity;
 	bool _left;
 	bool _right;

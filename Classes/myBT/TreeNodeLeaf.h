@@ -5,7 +5,7 @@ Nodo hoja de un arbol de comportamiento
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _TREENODELEAF_H_
@@ -39,7 +39,7 @@ public:
 	/**
 	Terminar
 
-	La variable booleana indica si el motivo a sido por interrupción
+	La variable booleana indica si el motivo a sido por interrupciï¿½n
 	*/
 	virtual void terminate(bool interrupted)
 	{
@@ -94,7 +94,7 @@ public:
 		this->_serialize(pipe);
 	}
 
-	virtual void unserialize(nlohmann::json& pipe, const std::map<std::string, std::tuple< std::function<bool(double)> > >& conditions, const std::map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void(bool)> > >& actions) final
+	virtual void unserialize(nlohmann::json& pipe, const ConditionRepository& conditions, const ActionRepository& actions) final
 	{
 		this->_unserialize(pipe);
 	}

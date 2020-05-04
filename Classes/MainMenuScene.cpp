@@ -74,6 +74,7 @@ bool MainMenuScene::init()
 #endif
 
 #if USE_AUDIO_ENGINE
+	AudioEngine::pauseAll();
 	AudioEngine::play2d("sounds/negro.mp3");
 	AudioEngine::preload("sounds/anilla.mp3");
 #elif USE_SIMPLE_AUDIO_ENGINE
@@ -125,7 +126,8 @@ bool MainMenuScene::init()
 #elif USE_SIMPLE_AUDIO_ENGINE
 			SimpleAudioEngine::getInstance()->playEffect("sounds/anilla.mp3");
 #endif
-			Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, Level01::create()));
+			// Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, Level01::create()));
+			cocos2d::Director::getInstance()->replaceScene(Level01::create());
 		});
 
 	float x = origin.x + (visibleSize.width / 2);

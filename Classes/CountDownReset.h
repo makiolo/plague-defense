@@ -10,7 +10,7 @@
 
 namespace plague {
 
-struct CountDownReset {
+struct CountDownReset : public entityx::Event<CountDownReset> {
 	explicit CountDownReset()
 	{
 		

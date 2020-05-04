@@ -11,7 +11,8 @@
 
 namespace plague {
 
-struct GravityComponent {
+struct GravityComponent : public entityx::Component<FireCommand>
+{
 	explicit GravityComponent(float vel_, float acc_)
 		: vel(vel_)
 		, acc(acc_)

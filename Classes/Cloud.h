@@ -6,7 +6,7 @@
 
 namespace plague {
 
-struct CloudComponent {
+struct CloudComponent : entityx::Component<CloudComponent> {
 	explicit CloudComponent()
 	{
 		;
