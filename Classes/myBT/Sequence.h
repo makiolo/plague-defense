@@ -32,7 +32,7 @@ public:
 	virtual Type getType() const {return TYPE_SEQUENCE;}
 
 	
-	virtual size_t update(const std::string& id_flow, double deltatime)
+	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		if(!m_Init)
 		{
@@ -53,7 +53,7 @@ public:
 			{
 				TreeNode* child = TreeNodeComposite::get_child(i);
 				child->printTrace();
-				size_t code = child->update(id_flow, deltatime);
+				size_t code = child->update(context, id_flow, deltatime);
 
 				switch(code)
 				{
@@ -64,7 +64,7 @@ public:
 					case COMPLETED:
 					{
 						++i;						
-						return update(id_flow, deltatime);
+						return update(context, id_flow, deltatime);
 					}
 					case FAILED:
 					{

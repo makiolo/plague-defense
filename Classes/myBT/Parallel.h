@@ -42,7 +42,7 @@ public:
 
 	virtual Type getType() const {return TYPE_PARALLEL;}
 
-	virtual size_t update(const std::string& id_flow, double deltatime)
+	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		size_t totalChilds = TreeNodeComposite::size();
 		TreeNode* child;
@@ -62,8 +62,8 @@ public:
 			child->printTrace();
 
 			std::stringstream ss;
-			ss << id_flow << "." << i+1;
-			code = child->update(ss.str(), deltatime);
+			ss << id_flow << "/" << child->get_name();
+			code = child->update(context, ss.str(), deltatime);
 
 			if(code == PANIC_ERROR)
 			{

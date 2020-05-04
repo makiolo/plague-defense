@@ -96,6 +96,11 @@ public:
 	template <typename T, typename ... Args>
 	T* make_node(const std::string& what, Args&& ... args)
 	{
+		if (what == "" && this->getType() == TYPE_PARALLEL)
+		{
+			assert(false && "Name is mandatory in childs of Parallel");
+		}
+
 		TreeNode* newtreenode = new T(what, std::forward<Args>(args)...);
 		this->add(newtreenode);
 		return static_cast<T*>(newtreenode);

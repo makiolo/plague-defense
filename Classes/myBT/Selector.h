@@ -34,7 +34,7 @@ public:
 
 	virtual Type getType() const {return TYPE_SELECTOR;}
 	
-	virtual size_t update(const std::string& id_flow, double deltatime)
+	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		if(!_init)
 		{
@@ -55,7 +55,7 @@ public:
 			{
 				TreeNode* child = TreeNodeComposite::get_child(i);
 				child->printTrace();
-				size_t code = child->update(id_flow, deltatime);
+				size_t code = child->update(context, id_flow, deltatime);
 
 				switch(code)
 				{
@@ -97,7 +97,7 @@ public:
 						// avanzar a la siguiente rama
 						++i;
 						
-						return update(id_flow, deltatime);
+						return update(context, id_flow, deltatime);
 					}
 					default:
 					{

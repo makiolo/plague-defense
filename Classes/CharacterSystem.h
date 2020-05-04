@@ -31,7 +31,7 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
-		es.each<plague::Transform, plague::CharacterComponent>([=, &es, &events](entityx::Entity entity, plague::Transform& transform, plague::CharacterComponent& character)
+		es.each<plague::Transform, plague::CharacterComponent>([&](entityx::Entity entity, plague::Transform& transform, plague::CharacterComponent& character)
 		{
 			character.configure_fw(es, events);
 		});
@@ -39,7 +39,7 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
 	{
-		es.each<plague::Transform, plague::CharacterComponent>([=, &es, &events](entityx::Entity entity, plague::Transform& transform, plague::CharacterComponent& character)
+		es.each<plague::Transform, plague::CharacterComponent>([&](entityx::Entity entity, plague::Transform& transform, plague::CharacterComponent& character)
 		{
 			const float velocity = character.velocity;
 			cocos2d::Vec2 position = transform.node->getPosition();

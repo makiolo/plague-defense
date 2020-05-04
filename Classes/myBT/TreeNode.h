@@ -12,10 +12,13 @@ Nodo abstracto de un arbol de comportamiento
 #define _TREENODE_H_
 
 #include <string>
+#include <tuple>
 #include <unordered_map>
 #include "nlohmann/json.hpp"
 
 namespace myBT {
+
+class TreeNodeLeaf;
 
 enum Status {
 	INITIAL = 0,
@@ -50,8 +53,29 @@ enum Type {
 	TYPE_WAIT,
 };
 
+struct FlowProgramData
+{
+	FlowProgramData()
+		: _previous_action(nullptr)
+		, _current_action(nullptr)
+	{
+		;
+	}
+
+	/**
+	Action previa ejecutada
+	*/
+	myBT::TreeNodeLeaf* _previous_action;
+
+	/**
+	Action actual ejecutandose
+	*/
+	myBT::TreeNodeLeaf* _current_action;
+};
+
 using ActionRepository = std::unordered_map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void(bool)> > >;
 using ConditionRepository = std::unordered_map<std::string, std::tuple< std::function<bool(double)> > >;
+using Context = std::unordered_map<std::string, FlowProgramData>;
 
 class TreeNode
 {
@@ -158,7 +182,7 @@ public:
 	inline const std::string& get_name() const {return _name;}
 
 	virtual void init() {}
-	virtual size_t update(const std::string& id_flow, double deltatime) = 0;
+	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) = 0;
 	virtual void terminate(bool interrupted) {}
 	virtual void free_childs() {}
 	virtual bool is_trivial() const { return false; }

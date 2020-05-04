@@ -127,7 +127,8 @@ bool MainMenuScene::init()
 			SimpleAudioEngine::getInstance()->playEffect("sounds/anilla.mp3");
 #endif
 			// Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, Level01::create()));
-			cocos2d::Director::getInstance()->replaceScene(Level01::create());
+			Director::getInstance()->replaceScene(cocos2d::TransitionFlipX::create(1, Level01::create()));
+			// Director::getInstance()->replaceScene(Level01::create());
 		});
 
 	float x = origin.x + (visibleSize.width / 2);
@@ -149,7 +150,7 @@ bool MainMenuScene::init()
 	MenuItems.pushBack(exitButton);
 	/////////////////
 
-	auto button = ui::Button::create("img/menu/normal_image.png", "img/menu/disabled_image.png", "img/menu/selected_image.png");
+	auto button = cocos2d::ui::Button::create("img/menu/normal_image.png", "img/menu/disabled_image.png", "img/menu/selected_image.png");
 	button->setTitleText("A");
 	button->setTitleColor(cocos2d::Color3B::BLACK);
 	float x3 = origin.x + (visibleSize.width / 2);

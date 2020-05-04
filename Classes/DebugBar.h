@@ -15,7 +15,7 @@ namespace plague {
 
 struct DebugBar : public entityx::Component<DebugBar>, public entityx::Receiver<DebugBar>
 {
-	explicit DebugBar(cocos2d::Scene* scene)
+	explicit DebugBar(cocos2d::Scene* scene, entityx::EventManager& events)
 		: _scene(scene)
 	{
 		_label = cocos2d::Label::createWithTTF("Lifes: 0", "fonts/Marker Felt.ttf", 24);
@@ -34,6 +34,8 @@ struct DebugBar : public entityx::Component<DebugBar>, public entityx::Receiver<
 			// add the label as a child to this layer
 			_scene->addChild(_label, 5);
 		}
+
+		events.subscribe<plague::LifeLostEvent>(*this);
 	}
 
 	virtual ~DebugBar()
@@ -41,11 +43,6 @@ struct DebugBar : public entityx::Component<DebugBar>, public entityx::Receiver<
 		_label->removeFromParent();
 		_label->setVisible(false);
 		_label->autorelease();
-	}
-
-	void configure(entityx::EntityManager& es, entityx::EventManager& events)
-	{
-		events.subscribe<plague::LifeLostEvent>(*this);
 	}
 
 	void receive(const plague::LifeLostEvent& command)

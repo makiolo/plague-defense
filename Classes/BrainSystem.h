@@ -9,6 +9,7 @@
 #include <cocos2d.h>
 #include "entityx/entityx.h"
 #include "BrainComponent.h"
+#include "SpiderBrainComponent.h"
 #include "Sprite.h"
 #include "Transform.h"
 
@@ -31,12 +32,18 @@ struct BrainSystem : public entityx::System<BrainSystem>
 		es.each<plague::BrainComponent, plague::Transform>([&](entityx::Entity entity, plague::BrainComponent& brain, plague::Transform& transform) {
 			brain.configure_fw(es, events, transform);
 		});
+		es.each<plague::SpiderBrainComponent, plague::Transform>([&](entityx::Entity entity, plague::SpiderBrainComponent& brain, plague::Transform& transform) {
+			brain.configure_fw(es, events, transform);
+		});
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
 	{
-		es.each<plague::BrainComponent>([&](entityx::Entity entity, plague::BrainComponent& brain) {
-			brain.update_fw(es, events, dt);
+		es.each<plague::BrainComponent, plague::Transform>([&](entityx::Entity entity, plague::BrainComponent& brain, plague::Transform& transform) {
+			brain.update_fw(es, events, dt, transform);
+		});
+		es.each<plague::SpiderBrainComponent, plague::Transform>([&](entityx::Entity entity, plague::SpiderBrainComponent& brain, plague::Transform& transform) {
+			brain.update_fw(es, events, dt, transform);
 		});
 	}
 };

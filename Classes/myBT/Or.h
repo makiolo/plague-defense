@@ -35,7 +35,7 @@ public:
 
 	virtual Type getType() const {return TYPE_OR;}
 
-	virtual size_t update(const std::string& id_flow, double deltatime)
+	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		size_t totalChilds = TreeNodeComposite::size();
 		
@@ -55,7 +55,7 @@ public:
 							child->getType() == Type::TYPE_AND ||
 							child->getType() == Type::TYPE_OR);
 
-				size_t code = child->update(id_flow, deltatime);
+				size_t code = child->update(context, id_flow, deltatime);
 
 				if(code == COMPLETED)
 				{

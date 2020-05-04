@@ -31,7 +31,7 @@ public:
 	virtual Type getType() const {return TYPE_ASSERT;}
 
 	
-	virtual size_t update(const std::string& id_flow, double deltatime)
+	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		size_t totalChilds = TreeNodeComposite::size();
 
@@ -41,7 +41,7 @@ public:
 			// se espera que sea Condition
 			TreeNode* child0 = TreeNodeComposite::get_child(0);
 			child0->printTrace();
-			size_t code0 = child0->update(id_flow, deltatime);
+			size_t code0 = child0->update(context, id_flow, deltatime);
 			bool checkCondition;
 			switch(code0)
 			{
@@ -66,7 +66,7 @@ public:
 				// segundo hijo, tiene la lógica
 				TreeNode* child1 = TreeNodeComposite::get_child(1);
 				child1->printTrace();
-				size_t code1 = child1->update(id_flow, deltatime);
+				size_t code1 = child1->update(context, id_flow, deltatime);
 
 				switch(code1)
 				{

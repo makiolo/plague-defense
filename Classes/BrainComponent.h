@@ -24,7 +24,7 @@ class BrainComponent : entityx::Component<BrainComponent>
 public:
 	explicit BrainComponent(entityx::Entity::Id whoami_, const std::string& name)
 		: whoami(whoami_)
-		, root(name)
+		, bt(name)
 		, x(0)
 	{ ; }
 
@@ -38,7 +38,7 @@ public:
 		// Actions
 		actions["left"] = {
 			[&]() {
-
+				
 			}, [&](double deltatime) {
 				events.emit<plague::LeftCommand>(whoami, whoami, true);
 				return myBT::RUNNING;
@@ -48,7 +48,7 @@ public:
 		};
 		actions["right"] = {
 			[&]() {
-
+				
 			}, [&](double deltatime) {
 				events.emit<plague::RightCommand>(whoami, whoami, true);
 				return myBT::RUNNING;
@@ -114,17 +114,20 @@ public:
 		// Para probar la mezcla de comportamiento scriptado con reactivo
 		// Si no hay enemigos, patrullar
 
+// READ doctor.ai (default behaviour)
 #if 0
 
 #ifdef __unix__
-		root.read_ai("/home/ricardomg/dev/plague-defense/example.txt", conditions, actions);
+		bt.read_ai("/home/ricardomg/dev/plague-defense/example.txt", conditions, actions);
 #else
-		root.read_ai("e:\\dev\\PlagueDefense\\example.txt", conditions, actions);
+		bt.read_ai("e:\\dev\\PlagueDefense\\example.txt", conditions, actions);
 #endif
 
-#else
+#endif
 
-		auto selector_00 = root.make_node<myBT::Selector>("");
+// WRITE doctor.ai
+#if 1
+		auto selector_00 = bt.make_node<myBT::Selector>("main_control");
 		selector_00->setPriority(true);
 
 			auto assert_00 = selector_00->make_node<myBT::Assert>("");
@@ -164,15 +167,15 @@ public:
 					action_04->setTime(2.0);
 
 #ifdef __unix__
-		root.write_ai("/home/ricardomg/dev/plague-defense/example.txt", conditions, actions);
+		bt.write_ai("/home/ricardomg/dev/plague-defense/example.txt", conditions, actions);
 #else
-		root.write_ai("e:\\dev\\PlagueDefense\\example.txt", conditions, actions);
+		bt.write_ai("e:\\dev\\PlagueDefense\\example.txt", conditions, actions);
 #endif
 
 #endif
 	}
 
-	void update_fw(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt)
+	void update_fw(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt, plague::Transform& transform)
 	{
 		// procesar sentidos
 		// TODO: mover esta lógica concreta a un sistema general
@@ -190,13 +193,14 @@ public:
 		}
 
 		// think
-		root.update(root.get_name(), dt);
+		bt.update(context, bt.get_name(), dt);
 	}
 
 	entityx::Entity::Id whoami;
 	myBT::ActionRepository actions;
 	myBT::ConditionRepository conditions;
-	myBT::Parallel root;
+	myBT::Parallel bt;
+	myBT::Context context;
 	// sentidos
 	double x;  // eje x con mas enemigos
 };

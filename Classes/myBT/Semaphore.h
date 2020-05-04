@@ -35,7 +35,7 @@ public:
 	virtual Type getType() const {return TYPE_SEMAPHORE;}
 
 	
-	virtual size_t update(const std::string& id_flow, double deltatime)
+	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		if(!m_Iniciado)
 		{
@@ -56,7 +56,7 @@ public:
 			if(totalChilds > 0)
 			{
 				TreeNode* child = TreeNodeComposite::get_child(0);
-				return child->update(id_flow, deltatime);
+				return child->update(context, id_flow, deltatime);
 			}
 			else
 			{
@@ -92,7 +92,7 @@ public:
 				{
 					TreeNode* child = TreeNodeComposite::get_child(0);
 					child->printTrace();
-					size_t code = child->update(id_flow, deltatime);
+					size_t code = child->update(context, id_flow, deltatime);
 					
 					switch(code)
 					{

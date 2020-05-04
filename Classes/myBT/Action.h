@@ -15,31 +15,15 @@ Accion primitiva
 
 namespace myBT {
 
-struct FlowProgramData
-{
-	FlowProgramData()
-		: _previous_action(nullptr)
-		, _current_action(nullptr)
-	{
-		;
-	}
-
-	/**
-	Action previa ejecutada
-	*/
-	myBT::TreeNodeLeaf* _previous_action;
-
-	/**
-	Action actual ejecutandose
-	*/
-	myBT::TreeNodeLeaf* _current_action;
-};
-
-typedef typename std::map<std::string, FlowProgramData > MapFlows;
-
+// Implementar ActionEvent ?
+// Implementar SimpleAction ?
 class Action : public TreeNodeLeaf
 {
 public:
+	using func0 = typename std::tuple_element<0, ActionRepository::mapped_type>::type;
+	using func1 = typename std::tuple_element<1, ActionRepository::mapped_type>::type;
+	using func2 = typename std::tuple_element<2, ActionRepository::mapped_type>::type;
+
 	explicit Action(const std::string& _name = "")
 		 : TreeNodeLeaf(_name)
 		 , m_tCallbackStartSimple(nullptr)
@@ -47,7 +31,7 @@ public:
 		 , m_tCallbackFinishSimple(nullptr)
 	{ reset(); }
 
-	explicit Action(const std::string& _name, std::function<void()> callbackStartSimple, std::function<size_t(double)> callbackUpdateSimple, std::function<void(bool)> callbackFinishSimple)
+	explicit Action(const std::string& _name, const func0& callbackStartSimple, const func1& callbackUpdateSimple, const func2& callbackFinishSimple)
 		: TreeNodeLeaf(_name)
 		, m_tCallbackStartSimple(callbackStartSimple)
 		, m_tCallbackUpdateSimple(callbackUpdateSimple)
@@ -74,23 +58,14 @@ public:
 
 	virtual void reset()
 	{
-		/*
-		if(this->_status == RUNNING)
-		{
-			terminate(true);
-			init();
-		}
-		*/
+		
 	}
 
-	static void change_state(const std::string& id_flow, myBT::TreeNodeLeaf* pNewState)
+	void change_state(myBT::Context& context, const std::string& id_flow, myBT::TreeNodeLeaf* pNewState)
 	{
-		// TODO: Hacer un context y pasarlo
-		myBT::MapFlows _action_control;
-
 		if (pNewState)
 		{
-			auto& data = _action_control[id_flow];
+			auto& data = context[id_flow];
 
 			if ((pNewState != data._current_action) || (!data._previous_action && !data._current_action))
 			{
@@ -109,14 +84,13 @@ public:
 		}
 	}
 	
-	virtual size_t update(const std::string& id_flow, double deltatime)
+	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		// se establece su flujo
 		this->set_flow( id_flow );
 
-		// genera callbacks, si hay cambio de acci�n
-		// TODO:
-		change_state(id_flow, this);
+		// el context lleva una maquina de estados por flujo
+		change_state(context, id_flow, this);
 		
 		// ejecutar la acci�n
 		this->_status = update(deltatime);
@@ -141,25 +115,25 @@ public:
 			m_tCallbackFinishSimple(interrupted);
 	}
 
-	void setStart(const std::function<void()>& callbackStartSimple)
+	void setStart(const func0& callbackStartSimple)
 	{
 		m_tCallbackStartSimple = callbackStartSimple;
 	}
 
-	void setUpdate(const std::function<size_t(double)>& callbackUpdateSimple)
+	void setUpdate(const func1& callbackUpdateSimple)
 	{
 		m_tCallbackUpdateSimple = callbackUpdateSimple;
 	}
 
-	void setFinish(const std::function<void(bool)>& callbackFinishSimple)
+	void setFinish(const func2& callbackFinishSimple)
 	{
 		m_tCallbackFinishSimple = callbackFinishSimple;
 	}
 
 protected:
-	std::function<void()> m_tCallbackStartSimple;
-	std::function<size_t(double)> m_tCallbackUpdateSimple;
-	std::function<void(bool)> m_tCallbackFinishSimple;
+	func0 m_tCallbackStartSimple;
+	func1 m_tCallbackUpdateSimple;
+	func2 m_tCallbackFinishSimple;
 
 };
 

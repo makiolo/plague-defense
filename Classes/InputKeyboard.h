@@ -81,8 +81,9 @@ struct InputSystem : public entityx::System<InputSystem>,
 
 	void receive(const plague::ExitGameCommand& event)
 	{
+		cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFadeTR::create(1, MainMenuScene::create()));
 		// cocos2d::Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, MainMenuScene::create()));
-		cocos2d::Director::getInstance()->replaceScene(MainMenuScene::create());
+		// cocos2d::Director::getInstance()->replaceScene(MainMenuScene::create());
 	}
 
 	////////////////////////////////////////////////////////////////////////

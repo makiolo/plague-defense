@@ -20,12 +20,14 @@ class Condition : public TreeNodeLeaf
 	PROPERTY(bool, Inverse)
 
 public:
+	using func0 = typename std::tuple_element<0, ConditionRepository::mapped_type>::type;
+
 	explicit Condition(const std::string& name = "")
 		: TreeNodeLeaf(name)
 		, m_Inverse(false)
 	{ reset(); }
 
-	explicit Condition(const std::string& name, std::function<bool(double)> callbackCondition)
+	explicit Condition(const std::string& name, const func0& callbackCondition)
 		: TreeNodeLeaf(name)
 		, m_Inverse(false)
 		, m_tCallbackCondition(callbackCondition)
@@ -46,7 +48,7 @@ public:
 
 	virtual Type getType() const {return TYPE_CONDITION;}
 
-	virtual size_t update(const std::string& id_flow, double deltatime)
+	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		// se establece su flujo
 		this->set_flow( id_flow );
@@ -72,7 +74,7 @@ public:
 		return m_tCallbackCondition(deltatime);
 	}
 
-	void setCondition(const std::function<bool(double)>& callbackCondition)
+	void setCondition(const func0& callbackCondition)
 	{
 		m_tCallbackCondition = callbackCondition;
 	}
@@ -97,7 +99,7 @@ public:
 	}
 
 protected:
-	std::function<bool(double)> m_tCallbackCondition;
+	func0 m_tCallbackCondition;
 
 };
 

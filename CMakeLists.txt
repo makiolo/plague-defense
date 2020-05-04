@@ -140,8 +140,14 @@ target_include_directories(${APP_NAME}
 	PRIVATE ${CMAKE_SOURCE_DIR}/external/Spriter2dX/SpriterPlusPlus/tinyxml2
 )
 
-add_definitions(-DUSE_AUDIO_ENGINE=1)
-add_definitions(-DUSE_SIMPLE_AUDIO_ENGINE=0)
+if(LINUX OR APPLE OR ANDROID)
+    add_definitions(-DUSE_AUDIO_ENGINE=1)
+    add_definitions(-DUSE_SIMPLE_AUDIO_ENGINE=0)
+endif()
+if(WINDOWS)
+    add_definitions(-DUSE_AUDIO_ENGINE=0)
+    add_definitions(-DUSE_SIMPLE_AUDIO_ENGINE=1)
+endif()
 
 # mark app resources
 setup_cocos_app_config(${APP_NAME})

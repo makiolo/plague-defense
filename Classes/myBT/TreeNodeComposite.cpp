@@ -27,6 +27,11 @@ void TreeNodeComposite::unserialize(nlohmann::json& pipe, const ConditionReposit
 			auto newchild = this->make_node<Assert>(name);
 			newchild->unserialize(child, conditions, actions);
 		}
+		else if (type == "While")
+		{
+			auto newchild = this->make_node<While>(name);
+			newchild->unserialize(child, conditions, actions);
+		}
 		else if (type == "For")
 		{
 			auto newchild = this->make_node<For>(name);
@@ -35,6 +40,16 @@ void TreeNodeComposite::unserialize(nlohmann::json& pipe, const ConditionReposit
 		else if (type == "Fortime")
 		{
 			auto newchild = this->make_node<ForTime>(name);
+			newchild->unserialize(child, conditions, actions);
+		}
+		else if (type == "And")
+		{
+			auto newchild = this->make_node<And>(name);
+			newchild->unserialize(child, conditions, actions);
+		}
+		else if (type == "Or")
+		{
+			auto newchild = this->make_node<Or>(name);
 			newchild->unserialize(child, conditions, actions);
 		}
 		else if (type == "Condition")

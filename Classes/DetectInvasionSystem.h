@@ -51,7 +51,7 @@ struct DetectInvasionSystem : public entityx::System<DetectInvasionSystem>
 	{
 		es.each<plague::Transform, plague::InsectComponent>([&](entityx::Entity entity, plague::Transform& transform, plague::InsectComponent& insect) {
 			auto pos = transform.node->getPosition();
-			if(pos.y > level01::ceil)
+			if(pos.y >= level01::ceil)
 			{
 #if USE_AUDIO_ENGINE
 				using namespace cocos2d::experimental;
@@ -65,7 +65,8 @@ struct DetectInvasionSystem : public entityx::System<DetectInvasionSystem>
 #endif
 				if (!entity.has_component<plague::AutoDestroyDescription>())
 				{
-					entity.assign<plague::AutoDestroyDescription>();
+					//  TODO: retrasar la destrucción, pero hacerlo invisible
+					entity.assign<plague::AutoDestroyDescription>(0.5f);
 					events.emit<plague::InsectInvasionEvent>();
 				}
 			}

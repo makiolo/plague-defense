@@ -65,25 +65,27 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 			auto pos = transform.node->getPosition();
 			if (pos.y < level01::floor)
 			{
-				if (entity.has_component<plague::ProjectilComponent>())
-				{
-#if USE_AUDIO_ENGINE
-					AudioEngine::play2d("sounds/rock_impact.mp3");
-#elif USE_SIMPLE_AUDIO_ENGINE
-					SimpleAudioEngine::getInstance()->playEffect("sounds/rock_impact.mp3");
-#endif
-				}
-				else
-				{
-#if USE_AUDIO_ENGINE
-					AudioEngine::play2d("sounds/insect_impact.mp3");
-#elif USE_SIMPLE_AUDIO_ENGINE
-					SimpleAudioEngine::getInstance()->playEffect("sounds/insect_impact.mp3");
-#endif
-				}
 				if (!entity.has_component<plague::AutoDestroyDescription>())
 				{
-					entity.assign<plague::AutoDestroyDescription>();
+					if (entity.has_component<plague::ProjectilComponent>())
+					{
+#if USE_AUDIO_ENGINE
+						AudioEngine::play2d("sounds/rock_impact.mp3");
+#elif USE_SIMPLE_AUDIO_ENGINE
+						SimpleAudioEngine::getInstance()->playEffect("sounds/rock_impact.mp3");
+#endif
+					}
+					else
+					{
+#if USE_AUDIO_ENGINE
+						AudioEngine::play2d("sounds/insect_impact.mp3");
+#elif USE_SIMPLE_AUDIO_ENGINE
+						SimpleAudioEngine::getInstance()->playEffect("sounds/insect_impact.mp3");
+#endif
+					}
+
+					//  TODO: retrasar la destrucción, pero hacerlo invisible
+					entity.assign<plague::AutoDestroyDescription>(0.5f);
 				}
 			}
 		});

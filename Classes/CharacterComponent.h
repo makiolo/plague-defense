@@ -16,8 +16,8 @@ namespace plague {
 
 struct CharacterComponent : public entityx::Component<CharacterComponent>, public entityx::Receiver<CharacterComponent>
 {
-	explicit CharacterComponent(entityx::Entity::Id whoami_, float velocity_)
-		: whoami(whoami_)
+	explicit CharacterComponent(entityx::Entity::Id whoami, float velocity_)
+		: _whoami(whoami)
 		, velocity(velocity_)
 		, _left(false)
 		, _right(false)
@@ -40,7 +40,7 @@ struct CharacterComponent : public entityx::Component<CharacterComponent>, publi
 
 	void receive(const plague::LeftCommand& event)
 	{
-		if (event.to == whoami)
+		if (event.to == _whoami)
 		{
 			_left = event.active;
 		}
@@ -48,7 +48,7 @@ struct CharacterComponent : public entityx::Component<CharacterComponent>, publi
 
 	void receive(const plague::RightCommand& event)
 	{
-		if (event.to == whoami)
+		if (event.to == _whoami)
 		{
 			_right = event.active;
 		}
@@ -56,13 +56,13 @@ struct CharacterComponent : public entityx::Component<CharacterComponent>, publi
 
 	void receive(const plague::FireCommand& event)
 	{
-		if (event.to == whoami)
+		if (event.to == _whoami)
 		{
 			_fire = true;
 		}
 	}
 
-	entityx::Entity::Id whoami;
+	entityx::Entity::Id _whoami;
 	float velocity;
 	bool _left;
 	bool _right;

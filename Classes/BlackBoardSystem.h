@@ -24,6 +24,7 @@
 #elif USE_SIMPLE_AUDIO_ENGINE
 #include "audio/include/SimpleAudioEngine.h"
 #endif
+#include "SpiderBrainComponent.h"
 
 namespace plague {
 
@@ -75,19 +76,21 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		spider.assign<plague::InsectComponent>();
 		spider.assign<plague::PhysicsDescription>(false);
 		spider.assign<plague::PhysicsIntrospectionComponent>();
-		float spider_x = 357.0f;
-		float spider_y = 155.0f;
-		cocos2d::Vec2 spawn_point = level01::enemies;
-		cocos2d::Vec2 start_point(start_x + offset_dist(gen), spawn_point.y);
-		float start_time = spawn_point.distance(start_point) / velocity;
-		float wait_time = wait_dist(gen);
+		spider.assign<plague::SpiderBrainComponent>(spider.id(), "spider");
+		//float spider_x = 357.0f;
+		//float spider_y = 155.0f;
+		//cocos2d::Vec2 spawn_point = level01::enemies;
+		//cocos2d::Vec2 start_point(start_x + offset_dist(gen), spawn_point.y);
+		//float start_time = spawn_point.distance(start_point) / velocity;
+		//float wait_time = wait_dist(gen);
 		
 		// calcular tiempo para un vel MRU desde spider_x hasta start_x
-		cocos2d::Vec2 step = cocos2d::Vec2(0.0f, step_dist(gen));
-		float step_time = step.distance(cocos2d::Vec2::ZERO) / velocity;
+		//cocos2d::Vec2 step = cocos2d::Vec2(0.0f, step_dist(gen));
+		//float step_time = step.distance(cocos2d::Vec2::ZERO) / velocity;
 
-		plague::make_sprite(spider, scene, "img/enemy/spider.png", spawn_point, 1.0f);
+		plague::make_sprite(spider, scene, "img/enemy/spider.png", level01::enemies, 1.0f);
 
+		/*
 		auto spider_component = spider.component<plague::Transform>().get();
 		spider_component->node->runAction(
 			cocos2d::Sequence::create(
@@ -102,12 +105,10 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 					nullptr
 				), 999),
 
-				//cocos2d::CallFunc::create([&events]() {
-				//	events.emit<plague::InsectInvasionEvent>();
-				//}),
 				nullptr
 			)
 		);
+		*/
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
