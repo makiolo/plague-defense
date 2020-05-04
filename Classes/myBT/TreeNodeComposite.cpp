@@ -130,7 +130,8 @@ void TreeNodeComposite::write_ai(const std::string& filename, const ConditionRep
 
 	std::ofstream myfile;
 	myfile.open(filename);
-	myfile << std::setw(4) << pipe.dump(4) << std::endl;
+	// myfile << std::setw(4) << pipe.dump(4) << std::endl;
+    myfile << pipe.dump() << std::endl;
 	myfile.close();
 }
 

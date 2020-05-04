@@ -10,9 +10,9 @@ public:
 	explicit Running(const std::string& what) : Action(what) {}
 	virtual ~Running() {}
 
-	virtual Type getType() const { return TYPE_RUNNING; }
+	virtual Type getType() const override { return TYPE_RUNNING; }
 
-	virtual size_t update(double deltatime)
+	virtual size_t update(double deltatime) override
 	{
 		return RUNNING;
 	}

@@ -3,7 +3,7 @@
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _ASSERT_H_
@@ -28,7 +28,7 @@ public:
 	virtual ~Assert()
 	{ ; }
 
-	virtual Type getType() const {return TYPE_ASSERT;}
+	virtual Type getType() const override {return TYPE_ASSERT;}
 
 	
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
@@ -63,7 +63,7 @@ public:
 			
 			if(checkCondition)
 			{
-				// segundo hijo, tiene la lógica
+				// segundo hijo, tiene la lï¿½gica
 				TreeNode* child1 = TreeNodeComposite::get_child(1);
 				child1->printTrace();
 				size_t code1 = child1->update(context, id_flow, deltatime);
@@ -123,23 +123,23 @@ public:
 
 	}
 
-	virtual void reset()
+	virtual void reset() override
 	{
 		
 	}
 
-	virtual void _serialize(nlohmann::json& pipe)
+	virtual void _serialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_serialize(pipe);
 		pipe["AutoReset"] = m_AutoReset;
 		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe)
+	virtual void _unserialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_unserialize(pipe);
-		m_AutoReset = pipe["AutoReset"];
-		m_ReturnCodeFinish = pipe["ReturnCodeFinish"];
+		m_AutoReset = pipe["AutoReset"].get<bool>();
+		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<int>();
 	}
 };
 

@@ -15,6 +15,11 @@ struct MouseMoveCommand : public entityx::Event<MouseMoveCommand>
 		;
 	}
 
+	virtual ~MouseMoveCommand()
+	{
+
+	}
+
 	float x;
 	float y;
 };

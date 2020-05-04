@@ -28,24 +28,22 @@ Archivo com�n a toda la librer�a "myBT"
 
 namespace myBT {
 
-class Resource;
-class IBehaviour;
-class Subject;
+// class Resource;
+// class Subject;
 class Assert;
 class For;
 class ForTime;
 class Parallel;
 class Action;
-class ActionFunction;
 class Condition;
 class Selector;
-class SelectorProbability;
+// class SelectorProbability;
 class Sequence;
 class TreeNode;
 class TreeNodeLeaf;
 class TreeNodeComposite;
 class While;
-class Semaphore;
+// class Semaphore;
 class And;
 class Or;
 class Aborted;
@@ -53,6 +51,8 @@ class Completed;
 class Failed;
 class Running;
 class Wait;
+class AlwaysTrue;
+class AlwaysFalse;
 
 }
 

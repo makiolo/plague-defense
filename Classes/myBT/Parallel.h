@@ -3,7 +3,7 @@
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _PARALLEL_H_
@@ -40,7 +40,7 @@ public:
 	virtual ~Parallel()
 	{ ; }
 
-	virtual Type getType() const {return TYPE_PARALLEL;}
+	virtual Type getType() const override {return TYPE_PARALLEL;}
 
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
@@ -135,12 +135,12 @@ public:
 		return candidato;
 	}
 
-	virtual void reset()
+	virtual void reset() override
 	{
 		
 	}
 
-	virtual void _serialize(nlohmann::json& pipe)
+	virtual void _serialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_serialize(pipe);
 		pipe["FailedMode"] = m_FailedMode;
@@ -148,12 +148,12 @@ public:
 		pipe["AbortedMode"] = m_AbortedMode;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe)
+	virtual void _unserialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_unserialize(pipe);
-		m_FailedMode = pipe["FailedMode"];
-		m_CompletedMode = pipe["CompletedMode"];
-		m_AbortedMode = pipe["AbortedMode"];
+		m_FailedMode = pipe["FailedMode"].get<size_t>();
+		m_CompletedMode = pipe["CompletedMode"].get<size_t>();
+		m_AbortedMode = pipe["AbortedMode"].get<size_t>();
 	}
 
 private:

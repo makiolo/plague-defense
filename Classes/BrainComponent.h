@@ -19,7 +19,7 @@
 
 namespace plague {
 
-class BrainComponent : entityx::Component<BrainComponent>
+class BrainComponent : public entityx::Component<BrainComponent>
 {
 public:
 	explicit BrainComponent(entityx::Entity::Id whoami_, const std::string& name)
@@ -118,7 +118,23 @@ public:
 #if 0
 
 #ifdef __unix__
-		bt.read_ai("/home/ricardomg/dev/plague-defense/example.txt", conditions, actions);
+
+#ifdef __ANDROID__
+        /*
+        // https://discuss.cocos2d-x.org/t/please-help-cocos2d-x-to-determine-whats-the-correct-path-to-save-a-file-on-ios-and-android/5578/19
+        Persistant data like savegames, highscores, replays
+        Android: Contect.getFilesDir()
+        iOS: /Documents (Note it is NOT /Library/Documents)
+
+        Temporary data like user avatars:
+        Android: Context.getCacheDir()
+        iOS: /Library/Caches
+        */
+        auto fullpath = cocos2d::FileUtils::getInstance()->getWritablePath() + "/example.json";
+        bt.read_ai(fullpath, conditions, actions);
+#else
+        bt.read_ai("/home/ricardomg/dev/plague-defense/example.txt", conditions, actions);
+#endif
 #else
 		bt.read_ai("e:\\dev\\PlagueDefense\\example.txt", conditions, actions);
 #endif
@@ -127,6 +143,7 @@ public:
 
 // WRITE doctor.ai
 #if 1
+		/*
 		auto selector_00 = bt.make_node<myBT::Selector>("main_control");
 		selector_00->setPriority(true);
 
@@ -165,9 +182,70 @@ public:
 					auto action_03 = seq_02->make_node<myBT::Action>("fire", actions.at("fire"));
 					auto action_04 = seq_02->make_node<myBT::Wait>("wait");
 					action_04->setTime(2.0);
+		*/
+
+		auto selector_00 = bt.make_node<myBT::Selector>("main_control");
+		selector_00->setPriority(true);
+		selector_00->setAutoReset(true);
+
+			auto sequence_00 = selector_00->make_node<myBT::Sequence>("");
+			//sequence_00->setAutoReset(true);
+
+				auto condition_00 = sequence_00->make_node<myBT::Condition>("has_enemies?", conditions.at("has_enemies?"));
+				condition_00->setInverse(true);
+
+				auto fortime_000 = sequence_00->make_node<myBT::ForTime>("");
+				fortime_000->setValueSecs(1.0);
+
+					auto sequence_01 = fortime_000->make_node<myBT::Sequence>("");
+					//sequence_01->setAutoReset(true);
+
+						auto right_00 = sequence_01->make_node<myBT::Action>("right", actions.at("right"));
+
+						auto fortime_001 = sequence_01->make_node<myBT::ForTime>("");
+						fortime_001->setValueSecs(1.0);
+
+						auto left_00 = sequence_01->make_node<myBT::Action>("left", actions.at("left"));
+
+			auto selector_01 = selector_00->make_node<myBT::Selector>("");
+			selector_01->setPriority(true);
+
+				auto sequence_02 = selector_01->make_node<myBT::Sequence>("");
+				//sequence_02->setAutoReset(true);
+
+					auto condition_01 = sequence_02->make_node<myBT::Condition>("right?", conditions.at("right?"));
+					auto action_01 = sequence_02->make_node<myBT::Action>("right", actions.at("right"));
+
+				auto sequence_03 = selector_01->make_node<myBT::Sequence>("");
+				//sequence_03->setAutoReset(true);
+
+					auto condition_02 = sequence_03->make_node<myBT::Condition>("left?", conditions.at("left?"));
+					auto action_02 = sequence_03->make_node<myBT::Action>("left", actions.at("left"));
+
+			auto sequence_04 = selector_00->make_node<myBT::Sequence>("");
+			//sequence_04->setAutoReset(true);
+
+				auto action_03 = sequence_04->make_node<myBT::Action>("fire", actions.at("fire"));
+				auto action_04 = sequence_04->make_node<myBT::Wait>("wait");
+				action_04->setTime(2.0);
 
 #ifdef __unix__
-		bt.write_ai("/home/ricardomg/dev/plague-defense/example.txt", conditions, actions);
+#ifdef __ANDROID__
+        /*
+        // https://discuss.cocos2d-x.org/t/please-help-cocos2d-x-to-determine-whats-the-correct-path-to-save-a-file-on-ios-and-android/5578/19
+        Persistant data like savegames, highscores, replays
+        Android: Contect.getFilesDir()
+        iOS: /Documents (Note it is NOT /Library/Documents)
+
+        Temporary data like user avatars:
+        Android: Context.getCacheDir()
+        iOS: /Library/Caches
+        */
+        auto fullpath = cocos2d::FileUtils::getInstance()->getWritablePath() + "/example.json";
+        bt.write_ai(fullpath, conditions, actions);
+#else
+        bt.write_ai("/home/ricardomg/dev/plague-defense/example.txt", conditions, actions);
+#endif
 #else
 		bt.write_ai("e:\\dev\\PlagueDefense\\example.txt", conditions, actions);
 #endif

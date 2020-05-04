@@ -11,7 +11,7 @@
 
 namespace plague {
 
-struct PhysicsIntrospectionComponent : entityx::Component<PhysicsIntrospectionComponent>
+struct PhysicsIntrospectionComponent : public entityx::Component<PhysicsIntrospectionComponent>
 {
 	explicit PhysicsIntrospectionComponent()
 	{

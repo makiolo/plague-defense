@@ -63,9 +63,9 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 #endif
 
 #if USE_AUDIO_ENGINE
-	AudioEngine::preload("sounds/Rip.wav");
+		AudioEngine::preload("sounds/Rip.wav");
 #elif USE_SIMPLE_AUDIO_ENGINE
-	SimpleAudioEngine::getInstance()->preloadEffect("sounds/Rip.wav");
+		SimpleAudioEngine::getInstance()->preloadEffect("sounds/Rip.wav");
 #endif
 	}
 

@@ -10,7 +10,7 @@ public:
 
     static cocos2d::Scene* createScene();
 
-    virtual bool init();
+    virtual bool init() override;
     void render(cocos2d::Renderer* renderer, const cocos2d::Mat4& eyeTransform, const cocos2d::Mat4* eyeProjection = nullptr) override;
 
     CREATE_FUNC(Level00);

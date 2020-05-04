@@ -16,9 +16,9 @@ public:
 	{ ; }
 	virtual ~Wait() {}
     
-	virtual Type getType() const { return TYPE_WAIT; }
+	virtual Type getType() const override { return TYPE_WAIT; }
 
-	virtual size_t update(double deltatime)
+	virtual size_t update(double deltatime) override
 	{       
         if(m_Count < m_Time)
         {
@@ -31,18 +31,18 @@ public:
         }
 	}
     
-	virtual void reset()
+	virtual void reset() override
 	{
 		m_Count = 0.0f;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe)
+	virtual void _serialize(nlohmann::json& pipe) override
 	{
 		Action::_serialize(pipe);
 		pipe["Time"] = m_Time;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe)
+	virtual void _unserialize(nlohmann::json& pipe) override
 	{
 		Action::_unserialize(pipe);
 		m_Time = pipe["Time"];

@@ -10,7 +10,7 @@
 
 namespace plague {
 
-struct ExitGameCommand : entityx::Event<ExitGameCommand> {
+struct ExitGameCommand : public entityx::Event<ExitGameCommand> {
 	explicit ExitGameCommand()
 	{
 

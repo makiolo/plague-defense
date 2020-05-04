@@ -15,8 +15,6 @@ Accion primitiva
 
 namespace myBT {
 
-// Implementar ActionEvent ?
-// Implementar SimpleAction ?
 class Action : public TreeNodeLeaf
 {
 public:
@@ -54,14 +52,14 @@ public:
 		
 	}
 
-	virtual Type getType() const {return TYPE_ACTION;}
+	virtual Type getType() const override {return TYPE_ACTION;}
 
-	virtual void reset()
+	virtual void reset() override
 	{
 		
 	}
 
-	void change_state(myBT::Context& context, const std::string& id_flow, myBT::TreeNodeLeaf* pNewState)
+	void _change_state(myBT::Context& context, const std::string& id_flow, myBT::TreeNodeLeaf* pNewState)
 	{
 		if (pNewState)
 		{
@@ -83,6 +81,12 @@ public:
 			}
 		}
 	}
+
+    virtual void init() override
+    {
+        if (m_tCallbackStartSimple)
+            m_tCallbackStartSimple();
+    }
 	
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
@@ -90,42 +94,49 @@ public:
 		this->set_flow( id_flow );
 
 		// el context lleva una maquina de estados por flujo
-		change_state(context, id_flow, this);
+		_change_state(context, id_flow, this);
+		/*
+		if (this->_status == INITIAL)
+		{
+			init();
+		}
+		*/
 		
 		// ejecutar la acci�n
 		this->_status = update(deltatime);
+
+		/*
+		if (this->_status != RUNNING)
+		{
+			terminate(this->_status != COMPLETED);
+		}
+		*/
 		
 		return this->_status;
 	}
 
-	virtual void init()
-	{
-		if (m_tCallbackStartSimple)
-			m_tCallbackStartSimple();
-	}
+    virtual void terminate(bool interrupted) override
+    {
+        if (m_tCallbackFinishSimple)
+            m_tCallbackFinishSimple(interrupted);
+    }
 
 	virtual size_t update(double deltatime)
 	{
 		return m_tCallbackUpdateSimple(deltatime);
 	}
 
-	virtual void terminate(bool interrupted)
-	{
-		if (m_tCallbackFinishSimple)
-			m_tCallbackFinishSimple(interrupted);
-	}
-
-	void setStart(const func0& callbackStartSimple)
+	void set_start(const func0& callbackStartSimple)
 	{
 		m_tCallbackStartSimple = callbackStartSimple;
 	}
 
-	void setUpdate(const func1& callbackUpdateSimple)
+	void set_update(const func1& callbackUpdateSimple)
 	{
 		m_tCallbackUpdateSimple = callbackUpdateSimple;
 	}
 
-	void setFinish(const func2& callbackFinishSimple)
+	void set_finish(const func2& callbackFinishSimple)
 	{
 		m_tCallbackFinishSimple = callbackFinishSimple;
 	}

@@ -33,7 +33,7 @@ public:
 	virtual ~ForTime()
 	{ ; }
 
-	virtual Type getType() const {return TYPE_FORTIME;}
+	virtual Type getType() const override {return TYPE_FORTIME;}
 
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
@@ -108,12 +108,12 @@ public:
 		}
 	}
 	
-	virtual void reset()
+	virtual void reset() override
 	{
 		m_Init = false;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe)
+	virtual void _serialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_serialize(pipe);
 		pipe["ValueSecs"] = m_ValueSecs;
@@ -122,13 +122,13 @@ public:
 		pipe["ValueMax"] = m_ValueMax;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe)
+	virtual void _unserialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_unserialize(pipe);
-		m_ValueSecs = pipe["ValueSecs"];
-		m_UseRange = pipe["UseRange"];
-		m_ValueMin = pipe["ValueMin"];
-		m_ValueMax = pipe["ValueMax"];
+		m_ValueSecs = pipe["ValueSecs"].get<double>();
+		m_UseRange = pipe["UseRange"].get<bool>();
+		m_ValueMin = pipe["ValueMin"].get<double>();
+		m_ValueMax = pipe["ValueMax"].get<double>();
 	}
 	
 protected:

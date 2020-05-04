@@ -3,7 +3,7 @@
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _TREENODECOMPOSITE_H_
@@ -16,12 +16,17 @@
 
 namespace myBT {
 
+const size_t max_behaviour_tree = 8192;
+
 class TreeNodeComposite : public TreeNode
 {
 public:
-	typedef typename std::vector<TreeNode*> TreeNodeChilds;
+	using TreeNodeChilds = std::vector<TreeNode*>;
 
-	explicit TreeNodeComposite(const std::string& name = "") : TreeNode(name)
+	explicit TreeNodeComposite(const std::string& name = "")
+		: TreeNode(name)
+		// , _buffer(new uint8_t[max_behaviour_tree])
+		// , _offset(0)
 	{
 		;	
 	}
@@ -102,6 +107,9 @@ public:
 		}
 
 		TreeNode* newtreenode = new T(what, std::forward<Args>(args)...);
+		// TreeNode* newtreenode = new ((void*)((size_t)_buffer + _offset)) T(what, std::forward<Args>(args)...);
+		// _offset += sizeof(T);
+		// assert(_offset < max_behaviour_tree);
 		this->add(newtreenode);
 		return static_cast<T*>(newtreenode);
 	}
@@ -141,30 +149,18 @@ public:
 		assert(_childs.size() == 0);
 	}
 
-	void init()
+	void init() final
 	{
-		auto it = _childs.begin();
-		auto ite = _childs.end();
-
-		TreeNode* child;
-
-		for(; it != ite; ++it)
+		for(auto& child : _childs)
 		{
-			child = *it;
 			child->init();
 		}
 	}
 
 	void terminate(bool interrupted) final
 	{
-		auto it = _childs.begin();
-		auto ite = _childs.end();
-
-		TreeNode* child;
-
-		for(; it != ite; ++it)
+		for(auto& child : _childs)
 		{
-			child = *it;
 			child->terminate(interrupted);
 		}
 	}
@@ -176,7 +172,7 @@ public:
 		for (auto& child : _childs)
 		{
 			std::stringstream ss;
-			ss << std::setfill('0') << std::setw(2) << i << "_" << child->getTypeStr();
+			ss << std::setfill('0') << std::setw(3) << i << "_" << child->getTypeStr();
 			std::string name = child->get_name();
 			if (name != "")
 			{
@@ -193,6 +189,8 @@ public:
 
 protected:
 	TreeNodeChilds _childs;
+	//uint8_t* _buffer;
+	//size_t _offset;
 };
 
 }

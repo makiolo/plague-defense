@@ -31,7 +31,7 @@ public:
 	/**
 	Empezar
 	*/
-	virtual void init()
+	virtual void init() override
 	{
 		
 	}
@@ -41,7 +41,7 @@ public:
 
 	La variable booleana indica si el motivo a sido por interrupci�n
 	*/
-	virtual void terminate(bool interrupted)
+	virtual void terminate(bool interrupted) override
 	{
 		
 	}
@@ -86,7 +86,7 @@ public:
 		_id_flow = id_flow;
 
 		// Puede indicar que un proceso no devuelve ninguna accion y condicion
-		assert(_id_flow == id_flow && "La accion/condicion ha cambiado de canal de flujo");
+		assert(_id_flow_initial == _id_flow && "La accion/condicion ha cambiado de canal de flujo");
 	}
 
 	virtual void serialize(nlohmann::json& pipe) final
@@ -99,17 +99,19 @@ public:
 		this->_unserialize(pipe);
 	}
 
-	virtual void _serialize(nlohmann::json& pipe)
+	/*
+	virtual void _serialize(nlohmann::json& pipe) override
 	{
 		TreeNode::_serialize(pipe);
 		// pipe["status"] = _status;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe)
+	virtual void _unserialize(nlohmann::json& pipe) override
 	{
 		TreeNode::_unserialize(pipe);
 		// _status = pipe["status"];
 	}
+	 */
 
 protected:
 	/**

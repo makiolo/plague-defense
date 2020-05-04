@@ -37,7 +37,7 @@ public:
 		
 	}
 
-	virtual Type getType() const {return TYPE_FOR;}
+	virtual Type getType() const override {return TYPE_FOR;}
 
 	
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
@@ -109,12 +109,12 @@ public:
 		}
 	}
 
-	virtual void reset()
+	virtual void reset() override
 	{
 		m_Init = false;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe)
+	virtual void _serialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_serialize(pipe);
 		pipe["Count"] = m_Count;
@@ -123,13 +123,13 @@ public:
 		pipe["CountMax"] = m_CountMax;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe)
+	virtual void _unserialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_unserialize(pipe);
-		m_Count = pipe["Count"];
-		m_UseRange = pipe["UseRange"];
-		m_CountMin = pipe["CountMin"];
-		m_CountMax = pipe["CountMax"];
+		m_Count = pipe["Count"].get<int>();
+		m_UseRange = pipe["UseRange"].get<bool>();
+		m_CountMin = pipe["CountMin"].get<int>();
+		m_CountMax = pipe["CountMax"].get<int>();
 	}
 
 protected:

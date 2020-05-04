@@ -2,11 +2,11 @@
 @file myBT.h
 
 Esta es la cabecera que debe ser incluida desde
-fuera de la librería. Cumple la regla ODR.
+fuera de la librerï¿½a. Cumple la regla ODR.
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _MYBT_H_
@@ -19,15 +19,15 @@ fuera de la librería. Cumple la regla ODR.
 #include "ForTime.h"
 #include "Parallel.h"
 #include "Selector.h"
-#include "SelectorProbability.h"
+// #include "SelectorProbability.h"
 #include "Sequence.h"
 #include "Action.h"
 #include "Condition.h"
 #include "While.h"
-#include "Semaphore.h"
+// #include "Semaphore.h"
 #include "And.h"
 #include "Or.h"
-#include "Subject.h"
+// #include "Subject.h"
 #include "Actions/Aborted.h"
 #include "Actions/Completed.h"
 #include "Actions/Failed.h"

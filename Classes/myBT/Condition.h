@@ -1,11 +1,11 @@
 /**
 @file Condition.h
 
-Acción primitiva que verifica que una condición se cumple.
+Acciï¿½n primitiva que verifica que una condiciï¿½n se cumple.
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _CONDITION_H_
@@ -46,7 +46,7 @@ public:
 		
 	}
 
-	virtual Type getType() const {return TYPE_CONDITION;}
+	virtual Type getType() const override {return TYPE_CONDITION;}
 
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
@@ -60,11 +60,11 @@ public:
 
 		this->_status = retorno ? COMPLETED : FAILED;
 
-		// una condición se satisface si la acción devuelve COMPLETED
+		// una condiciï¿½n se satisface si la acciï¿½n devuelve COMPLETED
 		return this->_status;
 	}
 
-	virtual void reset()
+	virtual void reset() override
 	{
 		
 	}
@@ -86,13 +86,13 @@ public:
 		return this;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe)
+	virtual void _serialize(nlohmann::json& pipe) override
 	{
 		TreeNodeLeaf::_serialize(pipe);
 		pipe["Inverse"] = m_Inverse;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe)
+	virtual void _unserialize(nlohmann::json& pipe) override
 	{
 		TreeNodeLeaf::_unserialize(pipe);
 		m_Inverse = pipe["Inverse"].get<bool>();

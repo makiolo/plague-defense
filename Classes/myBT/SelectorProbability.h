@@ -3,13 +3,15 @@
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _SELECTOR_PROBABILITY_H_
 #define _SELECTOR_PROBABILITY_H_
 
 #include "TreeNodeComposite.h"
+
+#if 0
 
 namespace myBT {
 
@@ -25,7 +27,7 @@ public:
 	virtual ~SelectorProbability()
 	{ ; }
 
-	virtual Type getType() const {return TYPE_SELECTOR_PROBABILITY;}
+	virtual Type getType() const override {return TYPE_SELECTOR_PROBABILITY;}
 
 	void setWeight(size_t numChild, double weight)
 	{
@@ -94,19 +96,19 @@ public:
 		}
 	}
 
-	void reset()
+	virtual void reset() override
 	{
 		_iter = 0;
 		_request_lotto = true;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe)
+	virtual void _serialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_serialize(pipe);
 		// TODO ?
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe)
+	virtual void _unserialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_unserialize(pipe);
 		// TODO ?
@@ -142,5 +144,7 @@ protected:
 };
 
 }
+
+#endif
 
 #endif /* _SELECTOR_PROBABILITY_H_ */

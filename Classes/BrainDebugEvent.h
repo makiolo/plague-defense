@@ -8,9 +8,10 @@
 
 #include <cocos2d.h>
 
+/*
 namespace plague {
 
-struct BrainDebugEvent : entityx::Event<BrainDebugEvent>
+struct BrainDebugEvent : public entityx::Event<BrainDebugEvent>
 {
 	explicit BrainDebugEvent()
 	{
@@ -19,5 +20,6 @@ struct BrainDebugEvent : entityx::Event<BrainDebugEvent>
 };
 
 }
+*/
 
 #endif

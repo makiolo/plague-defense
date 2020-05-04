@@ -25,9 +25,6 @@ struct AutoDestroySystem : public entityx::System<AutoDestroySystem> {
 			autodestroy.life -= dt;
 			if (autodestroy.life <= 0)
 			{
-				// remove component
-				// entity.component<plague::AutoDestroyDescription>().remove();
-
 				// animate and destroy
 				auto entity_id = entity.id();
 				auto entity = es.get(entity_id);

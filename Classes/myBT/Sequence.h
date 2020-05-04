@@ -3,7 +3,7 @@
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _SEQUENCE_H_
@@ -29,8 +29,7 @@ public:
 
 	virtual ~Sequence() { ; }
 
-	virtual Type getType() const {return TYPE_SEQUENCE;}
-
+	virtual Type getType() const override {return TYPE_SEQUENCE;}
 	
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
@@ -104,12 +103,12 @@ public:
 		}
 	}
 
-	virtual void reset()
+	virtual void reset() override
 	{
 		m_Init = false;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe)
+	virtual void _serialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_serialize(pipe);
 		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
@@ -117,12 +116,12 @@ public:
 		pipe["AutoReset"] = m_AutoReset;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe)
+	virtual void _unserialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_unserialize(pipe);
-		m_ReturnCodeFinish = pipe["ReturnCodeFinish"];
-		m_Random = pipe["Random"];
-		m_AutoReset = pipe["AutoReset"];
+		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<int>();
+		m_Random = pipe["Random"].get<bool>();
+		m_AutoReset = pipe["AutoReset"].get<bool>();
 	}
 
 protected:

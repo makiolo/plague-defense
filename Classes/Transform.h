@@ -25,13 +25,6 @@ struct Transform : public entityx::Component<Transform>
 		node->autorelease();
 	}
 
-	/*
-	void reset()
-	{
-
-	}
-	*/
-
 	cocos2d::Node* node;
 	cocos2d::Vec2 position_initial;
 	float scale_initial;

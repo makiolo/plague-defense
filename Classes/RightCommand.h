@@ -16,6 +16,11 @@ struct RightCommand : public entityx::Event<RightCommand>
 		
 	}
 
+	virtual ~RightCommand()
+	{
+
+	}
+
 	entityx::Entity::Id from;
 	entityx::Entity::Id to;
 	bool active;

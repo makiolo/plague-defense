@@ -18,6 +18,11 @@ struct SteeringBehavioursSystem : public entityx::System<SteeringBehavioursSyste
 		
 	}
 
+	virtual ~SteeringBehavioursSystem()
+	{
+
+	}
+
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
 		

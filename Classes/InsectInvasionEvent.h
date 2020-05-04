@@ -10,10 +10,16 @@
 
 namespace plague {
 
-struct InsectInvasionEvent : public entityx::Event<InsectInvasionEvent> {
+struct InsectInvasionEvent : public entityx::Event<InsectInvasionEvent>
+{
 	explicit InsectInvasionEvent()
 	{
 		
+	}
+
+	virtual ~InsectInvasionEvent()
+	{
+
 	}
 };
 

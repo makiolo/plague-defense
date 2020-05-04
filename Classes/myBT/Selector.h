@@ -3,7 +3,7 @@
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 #ifndef _SELECTOR_H_
@@ -32,7 +32,7 @@ public:
 	virtual ~Selector()
 	{ ; }
 
-	virtual Type getType() const {return TYPE_SELECTOR;}
+	virtual Type getType() const override {return TYPE_SELECTOR;}
 	
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
@@ -61,12 +61,14 @@ public:
 				{
 					case RUNNING:
 					{
+						/*
 						if(m_Priority)
 						{
 							// el selector de prioridad no tiene memoria de su seleccion
-							// en el próximo tick volverá a empezar
+							// en el prï¿½ximo tick volverï¿½ a empezar
 							i = 0;
 						}
+						*/
 
 						return RUNNING;
 					}
@@ -75,8 +77,14 @@ public:
 						if(m_Priority)
 						{
 							// el selector de prioridad no tiene memoria de su seleccion
-							// en el próximo tick volverá a empezar
+							// en el prï¿½ximo tick volverï¿½ a empezar
 							i = 0;
+						}
+
+						if (m_AutoReset)
+						{
+							// se reinicia el selector
+							child->_reset();
 						}
 
 						return COMPLETED;
@@ -86,7 +94,7 @@ public:
 						if(m_Priority)
 						{
 							// el selector de prioridad no tiene memoria de su seleccion
-							// en el próximo tick volverá a empezar
+							// en el prï¿½ximo tick volverï¿½ a empezar
 							i = 0;
 						}
 
@@ -130,12 +138,12 @@ public:
 		}
 	}
 
-	virtual void reset()
+	virtual void reset() override
 	{
 		_init = false;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe)
+	virtual void _serialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_serialize(pipe);
 		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
@@ -144,13 +152,13 @@ public:
 		pipe["Priority"] = m_Priority;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe)
+	virtual void _unserialize(nlohmann::json& pipe) override
 	{
 		TreeNodeComposite::_unserialize(pipe);
-		m_ReturnCodeFinish = pipe["ReturnCodeFinish"];
-		m_Random = pipe["Random"];
-		m_AutoReset = pipe["AutoReset"];
-		m_Priority = pipe["Priority"];
+		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<int>();
+		m_Random = pipe["Random"].get<bool>();
+		m_AutoReset = pipe["AutoReset"].get<bool>();
+		m_Priority = pipe["Priority"].get<bool>();
 	}
 
 protected:

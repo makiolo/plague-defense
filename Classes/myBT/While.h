@@ -3,7 +3,7 @@
 
 @see myBT
 
-@author Ricardo Marmolejo García
+@author Ricardo Marmolejo Garcï¿½a
 @date 2013
 */
 
@@ -24,7 +24,7 @@ public:
 	}
 
 	virtual ~While() { ; }
-	virtual Type getType() const {return TYPE_WHILE;}
+	virtual Type getType() const override {return TYPE_WHILE;}
 };
 
 }

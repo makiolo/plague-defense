@@ -21,6 +21,11 @@ struct FireCommand : public entityx::Event<FireCommand>
 		
 	}
 
+	virtual ~FireCommand()
+	{
+
+	}
+
 	entityx::Entity::Id from;
 	entityx::Entity::Id to;
 };

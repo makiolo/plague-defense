@@ -16,6 +16,11 @@ struct StartGame : public entityx::Event<StartGame>
 	{
 		
 	}
+
+	virtual ~StartGame()
+	{
+
+	}
 };
 
 }

@@ -23,7 +23,7 @@
 #include "PhysicsBoxSystem.h"
 #include "GravitySystem.h"
 #include "BrainSystem.h"
-// #include "SteeringBehavioursSystem.h"
+#include "SteeringBehavioursSystem.h"
 // SCENES
 #include "MainMenuScene.h"
 // SPAWNERS
@@ -108,7 +108,6 @@ bool Level01::init()
 	character.assign<plague::CharacterComponent>(character.id(), 450.0f);
 	// character.assign<plague::BrainComponent>(character.id(), "brain");
 
-	/*
 	auto character2 = ex.entities.create();
 	plague::make_sprite(character2, this, "img/character/character.png", plague::level01::player, 0.30f, true);
 	character2.assign<plague::CharacterComponent>(character2.id(), 100.0f);
@@ -118,7 +117,6 @@ bool Level01::init()
 	plague::make_sprite(character3, this, "img/character/character.png", plague::level01::player, 0.21f, true);
 	character3.assign<plague::CharacterComponent>(character3.id(), 200.0f);
 	character3.assign<plague::BrainComponent>(character3.id(), "brain3");
-	*/
 
 	// Movimiento de nubes
 	ex.systems.add<plague::MovementSystem>();
@@ -143,7 +141,7 @@ bool Level01::init()
 	// actualizar IA
 	ex.systems.add<plague::BrainSystem>();
 	// Steering behaviours system
-	// ex.systems.add<plague::SteeringBehavioursSystem>();
+	ex.systems.add<plague::SteeringBehavioursSystem>();
 	ex.systems.configure();
 
     return true;
