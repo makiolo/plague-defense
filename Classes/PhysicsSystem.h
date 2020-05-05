@@ -32,9 +32,9 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>
 		A PhysicsBody holds the physical properties of an object. These include mass, position, rotation, velocity and damping.
 		PhysicsBody objects are the backbone for shapes. A PhysicsBody does not have a shape until you attach a shape to it.
 		*/
-		_scene->getPhysicsWorld()->setDebugDrawMask(cocos2d::PhysicsWorld::DEBUGDRAW_ALL);
+		// _scene->getPhysicsWorld()->setDebugDrawMask(cocos2d::PhysicsWorld::DEBUGDRAW_ALL);
 		// _scene->getPhysicsWorld()->setAutoStep(false);
-		_scene->getPhysicsWorld()->setSubsteps(4);
+		_scene->getPhysicsWorld()->setSubsteps(8);
 		_scene->getPhysicsWorld()->setGravity(cocos2d::Vec2(0, -1000));
 
 		_listener = cocos2d::EventListenerPhysicsContactWithGroup::create(STATIC);
@@ -56,14 +56,14 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>
 		auto shapeA = contact.getShapeA();
 		auto shapeB = contact.getShapeB();
 
-		auto bodyA = contact.getShapeA()->getBody();
-		auto bodyB = contact.getShapeB()->getBody();
+		auto bodyA = shapeA->getBody();
+		auto bodyB = shapeB->getBody();
 
 		auto nodeA = bodyA->getNode();
 		auto nodeB = bodyB->getNode();
 
-		plague::PhysicsIntrospectionComponent* objA = static_cast<plague::PhysicsIntrospectionComponent*>(nodeA->getUserData());
-		plague::PhysicsIntrospectionComponent* objB = static_cast<plague::PhysicsIntrospectionComponent*>(nodeB->getUserData());
+		auto objA = static_cast<plague::PhysicsIntrospectionComponent*>(nodeA->getUserData());
+		auto objB = static_cast<plague::PhysicsIntrospectionComponent*>(nodeB->getUserData());
 
 		if (objA->type == "projectil" && objB->type == "insect")
 		{

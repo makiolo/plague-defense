@@ -53,18 +53,19 @@ struct DetectInvasionSystem : public entityx::System<DetectInvasionSystem>
 			auto pos = transform.node->getPosition();
 			if(pos.y >= level01::ceil)
 			{
-#if USE_AUDIO_ENGINE
-				using namespace cocos2d::experimental;
-#elif USE_SIMPLE_AUDIO_ENGINE
-				using namespace CocosDenshion;
-#endif
-#if USE_AUDIO_ENGINE
-				AudioEngine::play2d("sounds/escape.mp3");
-#elif USE_SIMPLE_AUDIO_ENGINE
-				SimpleAudioEngine::getInstance()->playEffect("sounds/escape.mp3");
-#endif
 				if (!entity.has_component<plague::AutoDestroyDescription>())
 				{
+#if USE_AUDIO_ENGINE
+					using namespace cocos2d::experimental;
+#elif USE_SIMPLE_AUDIO_ENGINE
+					using namespace CocosDenshion;
+#endif
+#if USE_AUDIO_ENGINE
+					AudioEngine::play2d("sounds/escape.mp3");
+#elif USE_SIMPLE_AUDIO_ENGINE
+					SimpleAudioEngine::getInstance()->playEffect("sounds/escape.mp3");
+#endif
+
 					//  TODO: retrasar la destrucción, pero hacerlo invisible
 					entity.assign<plague::AutoDestroyDescription>(0.5f);
 					events.emit<plague::InsectInvasionEvent>();

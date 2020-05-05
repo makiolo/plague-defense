@@ -10,22 +10,19 @@ namespace plague {
 struct Transform : public entityx::Component<Transform>
 {
 	explicit Transform(cocos2d::Vec2 position_, float scale_)
-		: node(nullptr)
+		: node(cocos2d::Node::create())
 		, position(position_)
 		, scale(scale_)
 		, configured(false)
 	{
-
+		node->retain();
 	}
 
 	~Transform()
 	{
-		if(node)
-		{
-			node->removeFromParent();
-			node->setVisible(false);
-			node->autorelease();
-		}
+		node->removeFromParent();
+		node->setVisible(false);
+		node->autorelease();
 	}
 
 	cocos2d::Node* get() const
@@ -36,9 +33,7 @@ struct Transform : public entityx::Component<Transform>
 	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, plague::SceneComponent& scene)
 	{
 		if(!configured)
-		{
-			node = cocos2d::Node::create();
-			node->retain();
+		{			
 			node->setPosition(position);
 			node->setScale(scale);
 			scene.get()->addChild(node);

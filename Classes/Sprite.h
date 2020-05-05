@@ -11,23 +11,20 @@ namespace plague {
 struct Sprite : public entityx::Component<Sprite>
 {
 	explicit Sprite(const std::string& appearance_, bool down_ = false, bool left_ = false)
-		: sprite(nullptr)
+		: sprite(cocos2d::Sprite::create(appearance_))
 		, appearance(appearance_)
 		, down(down_)
 		, left(left_)
 		, configured(false)
 	{
-		
+		sprite->retain();
 	}
 
 	~Sprite()
 	{
-		if(sprite)
-		{
-			sprite->removeFromParent();
-			sprite->setVisible(false);
-			sprite->autorelease();
-		}
+		sprite->removeFromParent();
+		sprite->setVisible(false);
+		sprite->autorelease();
 	}
 
 	cocos2d::Sprite* get() const
@@ -41,8 +38,6 @@ struct Sprite : public entityx::Component<Sprite>
 		if(!configured)
 		{
 			transform.configure_fw(es, events, scene);
-			sprite = cocos2d::Sprite::create(appearance);
-			sprite->retain();
 			if (down)
 			{
 				if (!left)

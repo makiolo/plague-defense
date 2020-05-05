@@ -47,24 +47,24 @@ struct PhysicsDescription : public entityx::Component<PhysicsDescription>
 
 struct PhysicsComponent : public entityx::Component<PhysicsComponent>
 {
-	explicit PhysicsComponent(entityx::Entity::Id entity_id, plague::Sprite& sprite, plague::PhysicsDescription& physics, plague::PhysicsIntrospectionComponent& introspection, bool is_projectil)
+	explicit PhysicsComponent(entityx::Entity::Id entity_id, plague::Transform& transform, plague::Sprite& sprite, plague::PhysicsDescription& physics, plague::PhysicsIntrospectionComponent& introspection, bool is_projectil)
 	{
 		if (is_projectil)
 		{
 			// physicsBody = cocos2d::PhysicsBody::createBox(sprite->sprite->getContentSize(), cocos2d::PhysicsMaterial(physics->density, physics->restitution, physics->friction));
-			physicsBody = cocos2d::PhysicsBody::createCircle(sprite.sprite->getContentSize().width / 2.0, cocos2d::PhysicsMaterial(physics.density, physics.restitution, physics.friction));
+			physicsBody = cocos2d::PhysicsBody::createCircle(sprite.get()->getContentSize().width / 2.0, cocos2d::PhysicsMaterial(physics.density, physics.restitution, physics.friction));
 			update_collision_bitmask(DYNAMIC);
 			
 		}
 		else  // is enemy
 		{
-			physicsBody = cocos2d::PhysicsBody::createCircle(sprite.sprite->getContentSize().width / 2.0, cocos2d::PhysicsMaterial(physics.density, physics.restitution, physics.friction));
+			physicsBody = cocos2d::PhysicsBody::createCircle(sprite.get()->getContentSize().width / 2.0, cocos2d::PhysicsMaterial(physics.density, physics.restitution, physics.friction));
 			update_collision_bitmask(STATIC);
 		}
 		physicsBody->retain();
 
-		//apply physicsBody to the sprite
-		sprite.sprite->getParent()->setPhysicsBody(physicsBody);
+		//apply physicsBody to the sprite (to The Node)
+		transform.get()->setPhysicsBody(physicsBody);
 
 		// set introespection Id
 		introspection.id = entity_id;
@@ -76,7 +76,8 @@ struct PhysicsComponent : public entityx::Component<PhysicsComponent>
 		{
 			introspection.type = "insect";
 		}
-		physicsBody->getNode()->setUserData((void*)&introspection);
+		// physicsBody->getNode()->setUserData((void*)&introspection);
+		transform.get()->setUserData((void*)&introspection);
 	}
 
 	~PhysicsComponent()
