@@ -125,6 +125,7 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>
 						// para su comportamiento (IA?)
 						auto sprite_component = insect.component<plague::Sprite>().get();
 						sprite_component->sprite->stopAllActions();
+						// sprite_component->get()->setFlippedX(  );
 
 						// su fisica se convierte en dinamica
 						auto physics_box_component = insect.component<plague::PhysicsComponent>().get();

@@ -11,6 +11,7 @@
 
 namespace plague {
 
+/*
 void make_sprite(entityx::Entity& entity, cocos2d::Scene* scene, const std::string& resource, cocos2d::Vec2 position = cocos2d::Vec2::ZERO, float scale = 1, bool down = false, bool left = false)
 {
 	auto building_sprite = cocos2d::Sprite::create(resource);
@@ -91,6 +92,7 @@ void make_clouds(cocos2d::Scene* scene, entityx::EntityManager& entities)
 		}
 	}
 }
+*/
 
 void make_sky(cocos2d::Scene* scene)
 {
@@ -101,25 +103,23 @@ void make_sky(cocos2d::Scene* scene)
 
 void make_particle_system(cocos2d::Scene* scene)
 {
-	/*
 	// probando particulas creadas con: http://particle2dx.com/
 	// auto particle_system = ParticleSystem::create("particles/particle_texture.plist");
-	auto particle_system = ParticleFireworks::create();
-	particle_system->setDuration(ParticleSystem::DURATION_INFINITY);
+	auto particle_system = cocos2d::ParticleFireworks::create();
+	particle_system->setDuration(cocos2d::ParticleSystem::DURATION_INFINITY);
 	if (particle_system == nullptr)
 	{
-		problemLoading("'particles/particle_texture.plist'");
+		// problemLoading("'particles/particle_texture.plist'");
 	}
 	else
 	{
 		// position the sprite on the center of the screen
-		particle_system->setPosition(Vec2(150, 100));
+		particle_system->setPosition(cocos2d::Vec2(150, 100));
 		particle_system->setScale(1.2f);
 
 		// add the sprite as a child to this layer
-		this->addChild(particle_system, 3);
+		scene->addChild(particle_system, 3);
 	}
-	*/
 }
 
 }

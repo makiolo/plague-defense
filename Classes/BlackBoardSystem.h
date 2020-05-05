@@ -88,7 +88,11 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		//cocos2d::Vec2 step = cocos2d::Vec2(0.0f, step_dist(gen));
 		//float step_time = step.distance(cocos2d::Vec2::ZERO) / velocity;
 
-		plague::make_sprite(spider, scene, "img/enemy/spider.png", level01::enemies, 1.0f);
+		// OLD
+		// plague::make_sprite(spider, scene, "img/enemy/spider.png", level01::enemies, 1.0f);
+		spider.assign<plague::SceneComponent>(scene);
+		spider.assign<plague::Transform>(plague::level01::enemies, 1.0f);  // position and scale
+		spider.assign<plague::Sprite>("img/enemy/spider.png");
 
 		/*
 		auto spider_component = spider.component<plague::Transform>().get();

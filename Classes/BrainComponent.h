@@ -143,7 +143,6 @@ public:
 
 // WRITE doctor.ai
 #if 1
-		/*
 		auto selector_00 = bt.make_node<myBT::Selector>("main_control");
 		selector_00->setPriority(true);
 
@@ -166,6 +165,7 @@ public:
 			auto selector_01 = selector_00->make_node<myBT::Selector>("");
 			selector_01->setPriority(true);
 
+
 				auto assert_01 = selector_01->make_node<myBT::Assert>("");
 
 					auto condition_01 = assert_01->make_node<myBT::Condition>("right?", conditions.at("right?"));
@@ -182,8 +182,10 @@ public:
 					auto action_03 = seq_02->make_node<myBT::Action>("fire", actions.at("fire"));
 					auto action_04 = seq_02->make_node<myBT::Wait>("wait");
 					action_04->setTime(2.0);
-		*/
 
+		/*
+		 *Arbol nuevo
+		 *
 		auto selector_00 = bt.make_node<myBT::Selector>("main_control");
 		selector_00->setPriority(true);
 		selector_00->setAutoReset(true);
@@ -228,6 +230,8 @@ public:
 				auto action_03 = sequence_04->make_node<myBT::Action>("fire", actions.at("fire"));
 				auto action_04 = sequence_04->make_node<myBT::Wait>("wait");
 				action_04->setTime(2.0);
+		*/
+
 
 #ifdef __unix__
 #ifdef __ANDROID__

@@ -24,6 +24,9 @@
 #include "GravitySystem.h"
 #include "BrainSystem.h"
 #include "SteeringBehavioursSystem.h"
+#include "SceneComponent.h"
+#include "SpriteSystem.h"
+
 // SCENES
 #include "MainMenuScene.h"
 // SPAWNERS
@@ -94,29 +97,38 @@ bool Level01::init()
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/birds.mp3", true);
 #endif
 
-	plague::make_clouds(this, ex.entities);
-	plague::make_sky(this);
+	// plague::make_clouds(this, ex.entities);
+	// plague::make_sky(this);
+	plague::make_particle_system(this);
 	
 	auto building = ex.entities.create();
-	plague::make_sprite(building, this, "img/building/newlevel01.png", cocos2d::Vec2::ZERO, 1.0f, true, true);
+	building.assign<plague::SceneComponent>(this);
+	building.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
+	building.assign<plague::Sprite>("img/building/newlevel01.png", true, true);
 
 	auto scenary = ex.entities.create();
 	scenary.assign<plague::DebugBar>(this, ex.events);
 
 	auto character = ex.entities.create();
-	plague::make_sprite(character, this, "img/character/character.png", plague::level01::player, 0.15f, true);
-	character.assign<plague::CharacterComponent>(character.id(), 450.0f);
+	character.assign<plague::SceneComponent>(this);
+	character.assign<plague::Transform>(plague::level01::player, 0.15f);  // position and scale
+	character.assign<plague::Sprite>("img/character/character.png", true, false);
+	character.assign<plague::CharacterComponent>(character.id(), 250.0f);
 	// character.assign<plague::BrainComponent>(character.id(), "brain");
 
-	auto character2 = ex.entities.create();
-	plague::make_sprite(character2, this, "img/character/character.png", plague::level01::player, 0.30f, true);
-	character2.assign<plague::CharacterComponent>(character2.id(), 100.0f);
-	character2.assign<plague::BrainComponent>(character2.id(), "brain2");
-
-	auto character3 = ex.entities.create();
-	plague::make_sprite(character3, this, "img/character/character.png", plague::level01::player, 0.21f, true);
-	character3.assign<plague::CharacterComponent>(character3.id(), 200.0f);
-	character3.assign<plague::BrainComponent>(character3.id(), "brain3");
+	// auto character2 = ex.entities.create();
+	// character2.assign<plague::SceneComponent>(this);
+	// character2.assign<plague::Transform>(plague::level01::player, 0.30f);  // position and scale
+	// character2.assign<plague::Sprite>("img/character/character.png", true, false);
+	// character2.assign<plague::CharacterComponent>(character2.id(), 100.0f);
+	// character2.assign<plague::BrainComponent>(character2.id(), "brain2");
+    //
+	// auto character3 = ex.entities.create();
+	// character3.assign<plague::SceneComponent>(this);
+	// character3.assign<plague::Transform>(plague::level01::player, 0.21f);  // position and scale
+	// character3.assign<plague::Sprite>("img/character/character.png", true, false);
+	// character3.assign<plague::CharacterComponent>(character3.id(), 200.0f);
+	// character3.assign<plague::BrainComponent>(character3.id(), "brain3");
 
 	// Movimiento de nubes
 	ex.systems.add<plague::MovementSystem>();
@@ -142,6 +154,7 @@ bool Level01::init()
 	ex.systems.add<plague::BrainSystem>();
 	// Steering behaviours system
 	ex.systems.add<plague::SteeringBehavioursSystem>();
+	ex.systems.add<plague::SpriteSystem>();
 	ex.systems.configure();
 
     return true;

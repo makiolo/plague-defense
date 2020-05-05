@@ -84,7 +84,9 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 		projectil.assign<plague::PhysicsDescription>();
 		projectil.assign<plague::PhysicsIntrospectionComponent>();
 		projectil.assign<plague::GravityComponent>(400, 300);
-		plague::make_sprite(projectil, scene, "img/character/piedra.png", spawn_point, 0.2f);
+		projectil.assign<plague::SceneComponent>(scene);
+		projectil.assign<plague::Transform>(spawn_point, 0.2f);  // position and scale
+		projectil.assign<plague::Sprite>("img/character/piedra.png");
 	}
 
 };

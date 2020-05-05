@@ -19,7 +19,7 @@ struct BrainSystem : public entityx::System<BrainSystem>
 {
 	explicit BrainSystem()
 	{
-		
+			
 	}
 
 	virtual ~BrainSystem()
