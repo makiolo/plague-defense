@@ -13,13 +13,12 @@
 #include <physics/CCPhysicsBody.h>
 #include <physics3d/CCPhysics3DWorld.h>
 #include "entityx/entityx.h"
-#include "DebugPhysicsCommand.h"
-#include "IntrospectionComponent.h"
+#include "PhysicsIntrospectionComponent.h"
 #include "AutoDestroyDescription.h"
-#include "PhysicsBoxSystem.h"
+#include "PhysicsBuilderSystem.h"
 #include "InsectDeadEvent.h"
 #include "ProjectilComponent.h"
-#include "GravityComponent.h"
+#include "StammableComponent.h"
 
 namespace plague {
 
@@ -34,7 +33,7 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>
 		*/
 		// _scene->getPhysicsWorld()->setDebugDrawMask(cocos2d::PhysicsWorld::DEBUGDRAW_ALL);
 		// _scene->getPhysicsWorld()->setAutoStep(false);
-		_scene->getPhysicsWorld()->setSubsteps(8);
+		_scene->getPhysicsWorld()->setSubsteps(4);
 		_scene->getPhysicsWorld()->setGravity(cocos2d::Vec2(0, -1000));
 
 		_listener = cocos2d::EventListenerPhysicsContactWithGroup::create(STATIC);
@@ -91,58 +90,33 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
 	{
-		// update physics
-		// _scene->getPhysicsWorld()->step(dt);
-
-		bool reupdate = false;
-
 		if (_destroy.size() > 0)
 		{
 			for (auto& tuple : _destroy)
 			{
-				entityx::Entity::Id idA, idB;
-				std::tie(idA, idB) = tuple;
+				entityx::Entity::Id idB;
+				std::tie(std::ignore, idB) = tuple;
 
-				auto projectile = es.get(idA);
 				auto insect = es.get(idB);
 
-				if (!insect.has_component<plague::GravityComponent>())
+				if (!insect.has_component<plague::StammableComponent>())
 				{
-					auto transform_component = insect.component<plague::Transform>().get();
-					float scaley = transform_component->node->getScaleY();
-					if (scaley > 0)
-					{
-						// se da la vuelta al enemigo
-						transform_component->node->setScaleY(scaley * -1);
-						// La fisica necesita que la escala de "x" e "y", sean iguales
-						float scalex = transform_component->node->getScaleX();
-						transform_component->node->setScaleX(scalex * -1);
+					insect.assign<plague::StammableComponent>();
 
-						// Se le marca como estanpable (TODO: Cambiar nombre de la componente)
-						 auto gravity_component = projectile.component<plague::GravityComponent>().get();
-						insect.assign<plague::GravityComponent>(gravity_component->vel, gravity_component->acc);
+					// para su comportamiento (IA?)
+					auto sprite = insect.component<plague::Sprite>().get();
+					sprite->get()->stopAllActions();
+					sprite->get()->setFlippedY(true);
 
-						// para su comportamiento (IA?)
-						auto sprite_component = insect.component<plague::Sprite>().get();
-						sprite_component->sprite->stopAllActions();
-						// sprite_component->get()->setFlippedX(  );
+					// su fisica se convierte en dinamica
+					auto physics_box_component = insect.component<plague::PhysicsComponent>().get();
+					physics_box_component->update_collision_bitmask(DYNAMIC);
 
-						// su fisica se convierte en dinamica
-						auto physics_box_component = insect.component<plague::PhysicsComponent>().get();
-						physics_box_component->update_collision_bitmask(DYNAMIC);
-
-						// evento de enemigo muerto
-						events.emit<plague::InsectDeadEvent>();
-					}
+					// evento de enemigo muerto
+					events.emit<plague::InsectDeadEvent>();
 				}
 			}
 			_destroy.clear();
-			reupdate = true;
-		}
-
-		if(reupdate)
-		{
-			// _scene->getPhysicsWorld()->step(dt);
 		}
 	}
 

@@ -12,6 +12,7 @@
 #include "SpiderBrainComponent.h"
 #include "Sprite.h"
 #include "Transform.h"
+#include "CountSensorComponent.h"
 
 namespace plague {
 
@@ -29,8 +30,8 @@ struct BrainSystem : public entityx::System<BrainSystem>
 
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
-		es.each<plague::BrainComponent, plague::Transform>([&](entityx::Entity entity, plague::BrainComponent& brain, plague::Transform& transform) {
-			brain.configure_fw(es, events, transform);
+		es.each<plague::BrainComponent, plague::Transform, plague::CountSensorComponent>([&](entityx::Entity entity, plague::BrainComponent& brain, plague::Transform& transform, plague::CountSensorComponent& count_sensor) {
+			brain.configure_fw(es, events, transform, count_sensor);
 		});
 		es.each<plague::SpiderBrainComponent, plague::Transform>([&](entityx::Entity entity, plague::SpiderBrainComponent& brain, plague::Transform& transform) {
 			brain.configure_fw(es, events, transform);

@@ -7,10 +7,12 @@
 #define _LifeLostEvent_H_
 
 #include <cocos2d.h>
+#include "entityx/entityx.h"
 
 namespace plague {
 
-struct LifeLostEvent {
+struct LifeLostEvent : public entityx::Event<LifeLostEvent>
+{
 	explicit LifeLostEvent(int lifes_)
 		: lifes(lifes_)
 	{

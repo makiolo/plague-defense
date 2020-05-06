@@ -1,3 +1,6 @@
+//
+// Sistema de entrada (teclado/raton/touch)
+//
 #pragma once
 #ifndef _INPUTKEYBOARD_H_
 #define _INPUTKEYBOARD_H_
@@ -107,8 +110,8 @@ struct InputSystem : public entityx::System<InputSystem>,
 		_touching = true;
 
 		// read touch position
-		cocos2d::CCPoint touchLocation = touch->getLocationInView();
-		touchLocation = cocos2d::CCDirector::sharedDirector()->convertToGL(touchLocation);
+		cocos2d::Vec2 touchLocation = touch->getLocationInView();
+		touchLocation = cocos2d::Director::getInstance()->convertToGL(touchLocation);
 		touchLocation = convertToNodeSpace(touchLocation);
 
 		_mouse_x = touchLocation.x;

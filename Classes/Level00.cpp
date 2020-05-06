@@ -86,9 +86,8 @@ bool Level00::init()
 	// sistema físico
 	ex->systems.add<plague::PhysicsSystem>(this);
 	// generador de física
-	ex->systems.add<plague::PhysicsAssemblySystem>();
+	ex->systems.add<plague::PhysicsBuilderSystem>();
 	// Gravedad simulada
-	// ex->systems.add<plague::GravitySystem>();
 	ex->systems.configure();
 	*/
 

@@ -1,3 +1,6 @@
+//
+// Movimiento de las nubes
+//
 #pragma once
 #ifndef _MOVEMENTSCLOUDS_H_
 #define _MOVEMENTSCLOUDS_H_
@@ -31,8 +34,8 @@ struct MovementSystem : public entityx::System<MovementSystem> {
 	
 		es.each<plague::Transform, plague::CloudComponent>([=](entityx::Entity entity, plague::Transform& transform, plague::CloudComponent& cloud) {
 
-			cocos2d::Vec2 position = transform.node->getPosition();
-			float scale = transform.node->getScale();
+			cocos2d::Vec2 position = transform.get()->getPosition();
+			float scale = transform.get()->getScale();
 			float bb_width = scale * 100;
 			float limit = visibleSize.width + bb_width;
 
@@ -58,7 +61,7 @@ struct MovementSystem : public entityx::System<MovementSystem> {
 			}
 
 			// apply new position in transform
-			transform.node->setPosition(position);
+			transform.get()->setPosition(position);
 		});
 	};
 protected:

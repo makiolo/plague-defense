@@ -5,6 +5,7 @@
 #include <cocos2d.h>
 #include "entityx/entityx.h"
 #include "Transform.h"
+#include "SceneComponent.h"
 
 namespace plague {
 

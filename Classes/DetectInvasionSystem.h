@@ -17,6 +17,7 @@
 #elif USE_SIMPLE_AUDIO_ENGINE
 #include "audio/include/SimpleAudioEngine.h"
 #endif
+#include "AutoDestroyDescription.h"
 
 namespace plague {
 
@@ -50,7 +51,7 @@ struct DetectInvasionSystem : public entityx::System<DetectInvasionSystem>
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
 	{
 		es.each<plague::Transform, plague::InsectComponent>([&](entityx::Entity entity, plague::Transform& transform, plague::InsectComponent& insect) {
-			auto pos = transform.node->getPosition();
+			auto pos = transform.get()->getPosition();
 			if(pos.y >= level01::ceil)
 			{
 				if (!entity.has_component<plague::AutoDestroyDescription>())

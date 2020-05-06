@@ -1,3 +1,6 @@
+//
+// Destructor de entidades
+//
 #pragma once
 #ifndef _AUTODESTROYSYSTEM_H_
 #define _AUTODESTROYSYSTEM_H_

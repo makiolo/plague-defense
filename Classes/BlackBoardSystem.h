@@ -15,8 +15,8 @@
 #include "InsectInvasionEvent.h"
 #include "InsectComponent.h"
 #include "ProjectilComponent.h"
-#include "PhysicsBoxComponent.h"
-#include "IntrospectionComponent.h"
+#include "PhysicsComponent.h"
+#include "PhysicsIntrospectionComponent.h"
 #include "LifeLostEvent.h"
 #include "Level01Constants.h"
 #if USE_AUDIO_ENGINE
@@ -25,6 +25,7 @@
 #include "audio/include/SimpleAudioEngine.h"
 #endif
 #include "SpiderBrainComponent.h"
+#include "SceneComponent.h"
 
 namespace plague {
 
@@ -71,48 +72,19 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 
 	void spwan_spider_normal(entityx::EntityManager& es, entityx::EventManager& events, float start_x, float velocity, std::mt19937& gen, std::uniform_int_distribution<> step_dist, std::uniform_real_distribution<> wait_dist, std::normal_distribution<> offset_dist)
 	{
-		cocos2d::Scene* scene = cocos2d::Director::getInstance()->getRunningScene();
 		entityx::Entity spider = es.create();
+		// Marca la entidad como de tipo Insecto
 		spider.assign<plague::InsectComponent>();
+		// Fisica
 		spider.assign<plague::PhysicsDescription>(false);
 		spider.assign<plague::PhysicsIntrospectionComponent>();
+		// Comportamiento IA
 		spider.assign<plague::SpiderBrainComponent>(spider.id(), "spider");
-		//float spider_x = 357.0f;
-		//float spider_y = 155.0f;
-		//cocos2d::Vec2 spawn_point = level01::enemies;
-		//cocos2d::Vec2 start_point(start_x + offset_dist(gen), spawn_point.y);
-		//float start_time = spawn_point.distance(start_point) / velocity;
-		//float wait_time = wait_dist(gen);
-		
-		// calcular tiempo para un vel MRU desde spider_x hasta start_x
-		//cocos2d::Vec2 step = cocos2d::Vec2(0.0f, step_dist(gen));
-		//float step_time = step.distance(cocos2d::Vec2::ZERO) / velocity;
-
-		// OLD
-		// plague::make_sprite(spider, scene, "img/enemy/spider.png", level01::enemies, 1.0f);
+		// Apariencia
+		cocos2d::Scene* scene = cocos2d::Director::getInstance()->getRunningScene();
 		spider.assign<plague::SceneComponent>(scene);
 		spider.assign<plague::Transform>(plague::level01::enemies, 1.0f);  // position and scale
 		spider.assign<plague::Sprite>("img/enemy/spider.png");
-
-		/*
-		auto spider_component = spider.component<plague::Transform>().get();
-		spider_component->node->runAction(
-			cocos2d::Sequence::create(
-				// go start point
-				cocos2d::MoveBy::create(start_time, start_point - spawn_point),
-				cocos2d::DelayTime::create(wait_time),
-
-				// steps
-				cocos2d::Repeat::create(cocos2d::Sequence::create(
-					cocos2d::MoveBy::create(step_time, step),
-					cocos2d::DelayTime::create(wait_time),
-					nullptr
-				), 999),
-
-				nullptr
-			)
-		);
-		*/
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override

@@ -30,7 +30,7 @@ struct Transform : public entityx::Component<Transform>
 		return node;
 	}
 
-	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, plague::SceneComponent& scene)
+	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, SceneComponent& scene)
 	{
 		if(!configured)
 		{			

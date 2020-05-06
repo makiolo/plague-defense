@@ -8,6 +8,9 @@
 
 #include <cocos2d.h>
 #include "entityx/entityx.h"
+#include "myBT/myBT.h"
+#include "Transform.h"
+#include "Level01Constants.h"
 
 namespace plague {
 
@@ -26,38 +29,38 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
 		actions["go_to_spawn"] = {
 			[&]() {
 				const float velocity = 100.0f;
-				cocos2d::Vec2 spawn_point = transform.node->getPosition();
+				cocos2d::Vec2 spawn_point = transform.get()->getPosition();
 				cocos2d::Vec2 start_point(level01::column1, spawn_point.y);
 				float start_time = spawn_point.distance(start_point) / velocity;
-				transform.node->runAction(cocos2d::MoveBy::create(start_time, start_point - spawn_point));
+				transform.get()->runAction(cocos2d::MoveBy::create(start_time, start_point - spawn_point));
 			}, [&](double deltatime) {
-				cocos2d::Vec2 spawn_point = transform.node->getPosition();
+				cocos2d::Vec2 spawn_point = transform.get()->getPosition();
 				cocos2d::Vec2 start_point(level01::column1, spawn_point.y);
 				if(spawn_point.distanceSquared(start_point) > (1.0f*1.0f))
 					return myBT::RUNNING;
 				else
 					return myBT::COMPLETED;
 			}, [&](bool interrupted) {
-				transform.node->cleanup();
+				transform.get()->cleanup();
 			}
 		};
 
 		actions["go_to_roof"] = {
 			[&]() {
 				const float velocity = 100.0f;
-				cocos2d::Vec2 spawn_point = transform.node->getPosition();
+				cocos2d::Vec2 spawn_point = transform.get()->getPosition();
 				cocos2d::Vec2 start_point(level01::column3, level01::ceil);
 				float start_time = spawn_point.distance(start_point) / velocity;
-				transform.node->runAction(cocos2d::MoveBy::create(start_time, start_point - spawn_point));
+				transform.get()->runAction(cocos2d::MoveBy::create(start_time, start_point - spawn_point));
 			}, [&](double deltatime) {
-				cocos2d::Vec2 spawn_point = transform.node->getPosition();
+				cocos2d::Vec2 spawn_point = transform.get()->getPosition();
 				cocos2d::Vec2 start_point(level01::column3, level01::ceil);
 				if (spawn_point.distanceSquared(start_point) > (1.0f * 1.0f))
 					return myBT::RUNNING;
 				else
 					return myBT::COMPLETED;
 			}, [&](bool interrupted) {
-				transform.node->cleanup();
+				transform.get()->cleanup();
 			}
 		};
 

@@ -1,7 +1,6 @@
-/* System/Receiver class CountDownSystem
-*
-*  Ricardo Marmolejo García 2019
-*/
+//
+// Cuenta atras del comienzo de la oleada
+//
 #pragma once
 #ifndef _CountDownSystem_H_
 #define _CountDownSystem_H_

@@ -15,7 +15,7 @@
 #include "InsectComponent.h"
 #include "Sprite.h"
 #include "Transform.h"
-#include "BrainDebugEvent.h"
+#include "CountSensorComponent.h"
 
 namespace plague {
 
@@ -25,7 +25,6 @@ public:
 	explicit BrainComponent(entityx::Entity::Id whoami_, const std::string& name)
 		: whoami(whoami_)
 		, bt(name)
-		, x(0)
 	{ ; }
 
 	~BrainComponent()
@@ -33,7 +32,7 @@ public:
 
 	}
 
-	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, plague::Transform& transform)
+	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, plague::Transform& transform, plague::CountSensorComponent& count_sensor)
 	{
 		// Actions
 		actions["left"] = {
@@ -60,7 +59,7 @@ public:
 			[&]() {
 
 			}, [&](double deltatime) {
-				if (x != 0)
+				if (count_sensor.x != 0)
 				{
 					events.emit<plague::FireCommand>(whoami, whoami);
 				}
@@ -73,27 +72,27 @@ public:
 		// Conditions
 		conditions["left?"] = {
 			[&](double deltatime) {
-				if (x != 0)
+				if (count_sensor.x != 0)
 				{
-					double myposition = transform.node->getPosition().x;
-					return myposition > (x + 5);
+					double myposition = transform.get()->getPosition().x;
+					return myposition > (count_sensor.x + 5);
 				}
 				return false;
 			}
 		};
 		conditions["right?"] = {
 			[&](double deltatime) {
-				if (x != 0)
+				if (count_sensor.x != 0)
 				{
-					double myposition = transform.node->getPosition().x;
-					return myposition < (x - 5);
+					double myposition = transform.get()->getPosition().x;
+					return myposition < (count_sensor.x - 5);
 				}
 				return false;
 			}
 		};
 		conditions["has_enemies?"] = {
 			[&](double deltatime) {
-				return x != 0;
+				return count_sensor.x != 0;
 			}
 		};
 
@@ -259,22 +258,6 @@ public:
 
 	void update_fw(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt, plague::Transform& transform)
 	{
-		// procesar sentidos
-		// TODO: mover esta lógica concreta a un sistema general
-		x = 0;
-		std::vector<double> positions;
-		es.each<plague::InsectComponent, plague::Transform>(
-				[&](entityx::Entity entity, plague::InsectComponent& insect, plague::Transform& transform) {
-					positions.push_back(transform.node->getPosition().x);
-				}
-		);
-		if (positions.size() > 0)
-		{
-			std::sort(positions.begin(), positions.end());
-			x = positions[positions.size() / 2];
-		}
-
-		// think
 		bt.update(context, bt.get_name(), dt);
 	}
 
@@ -283,8 +266,6 @@ public:
 	myBT::ConditionRepository conditions;
 	myBT::Parallel bt;
 	myBT::Context context;
-	// sentidos
-	double x;  // eje x con mas enemigos
 };
 
 }

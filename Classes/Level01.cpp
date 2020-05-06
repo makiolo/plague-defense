@@ -10,6 +10,9 @@
 #include "DebugBar.h"
 #include "CharacterComponent.h"
 #include "BrainComponent.h"
+#include "CountSensorComponent.h"
+#include "SceneComponent.h"
+#include "TimerComponent.h"
 // SYSTEMS
 #include "MovementClouds.h"
 #include "InputKeyboard.h"
@@ -20,12 +23,12 @@
 #include "CharacterSystem.h"
 #include "DetectFloorImpactSystem.h"
 #include "PhysicsSystem.h"
-#include "PhysicsBoxSystem.h"
-#include "GravitySystem.h"
+#include "PhysicsBuilderSystem.h"
 #include "BrainSystem.h"
 #include "SteeringBehavioursSystem.h"
-#include "SceneComponent.h"
 #include "SpriteSystem.h"
+#include "CountSensorSystem.h"
+#include "TimerSystem.h"
 
 // SCENES
 #include "MainMenuScene.h"
@@ -114,29 +117,29 @@ bool Level01::init()
 	character.assign<plague::Transform>(plague::level01::player, 0.15f);  // position and scale
 	character.assign<plague::Sprite>("img/character/character.png", true, false);
 	character.assign<plague::CharacterComponent>(character.id(), 250.0f);
+	character.assign<plague::CountSensorComponent>();
+	character.assign<plague::TimerComponent>("fire", 3);
 	// character.assign<plague::BrainComponent>(character.id(), "brain");
 
-	// auto character2 = ex.entities.create();
-	// character2.assign<plague::SceneComponent>(this);
-	// character2.assign<plague::Transform>(plague::level01::player, 0.30f);  // position and scale
-	// character2.assign<plague::Sprite>("img/character/character.png", true, false);
-	// character2.assign<plague::CharacterComponent>(character2.id(), 100.0f);
-	// character2.assign<plague::BrainComponent>(character2.id(), "brain2");
-    //
-	// auto character3 = ex.entities.create();
-	// character3.assign<plague::SceneComponent>(this);
-	// character3.assign<plague::Transform>(plague::level01::player, 0.21f);  // position and scale
-	// character3.assign<plague::Sprite>("img/character/character.png", true, false);
-	// character3.assign<plague::CharacterComponent>(character3.id(), 200.0f);
-	// character3.assign<plague::BrainComponent>(character3.id(), "brain3");
+	auto character2 = ex.entities.create();
+	character2.assign<plague::SceneComponent>(this);
+	character2.assign<plague::Transform>(plague::level01::player, 0.30f);  // position and scale
+	character2.assign<plague::Sprite>("img/character/character.png", true, false);
+	character2.assign<plague::CharacterComponent>(character2.id(), 100.0f);
+	character2.assign<plague::CountSensorComponent>();
+	character2.assign<plague::BrainComponent>(character2.id(), "brain2");
 
-	// Movimiento de nubes
+	auto character3 = ex.entities.create();
+	character3.assign<plague::SceneComponent>(this);
+	character3.assign<plague::Transform>(plague::level01::player, 0.21f);  // position and scale
+	character3.assign<plague::Sprite>("img/character/character.png", true, false);
+	character3.assign<plague::CharacterComponent>(character3.id(), 200.0f);
+	character3.assign<plague::CountSensorComponent>();
+	character3.assign<plague::BrainComponent>(character3.id(), "brain3");
+
 	ex.systems.add<plague::MovementSystem>();
-	// Sistema de entrada (teclado/raton/touch)
 	ex.systems.add<plague::InputSystem>(this, character.id());
-	// Destructor de entidades
 	ex.systems.add<plague::AutoDestroySystem>();
-	// Cuenta atras del comienzo de la oleada
 	ex.systems.add<plague::CountDownSystem>(3);
 	// director de oleadas
 	ex.systems.add<plague::BlackboardSystem>();
@@ -149,12 +152,14 @@ bool Level01::init()
 	// sistema f�sico
 	ex.systems.add<plague::PhysicsSystem>(this);
 	// generador de f�sica
-	ex.systems.add<plague::PhysicsAssemblySystem>();
+	ex.systems.add<plague::PhysicsBuilderSystem>();
 	// actualizar IA
 	ex.systems.add<plague::BrainSystem>();
 	// Steering behaviours system
 	ex.systems.add<plague::SteeringBehavioursSystem>();
 	ex.systems.add<plague::SpriteSystem>();
+	ex.systems.add<plague::CountSensorSystem>();
+	ex.systems.add<plague::TimerSystem>();
 	ex.systems.configure();
 
     return true;

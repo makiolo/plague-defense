@@ -7,6 +7,7 @@
 #define _InsectDeadEvent_H_
 
 #include <cocos2d.h>
+#include "entityx/entityx.h"
 
 namespace plague {
 

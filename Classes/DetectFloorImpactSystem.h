@@ -10,8 +10,8 @@
 #include "entityx/entityx.h"
 #include "AutoDestroyDescription.h"
 #include "Transform.h"
-#include "PhysicsBoxComponent.h"
-#include "GravityComponent.h"
+#include "PhysicsComponent.h"
+#include "StammableComponent.h"
 #include "Level01Constants.h"
 #include "ProjectilComponent.h"
 #if USE_AUDIO_ENGINE
@@ -59,10 +59,10 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 		using namespace CocosDenshion;
 #endif
 
-		es.each<plague::Transform, plague::PhysicsComponent, plague::GravityComponent>([=](entityx::Entity entity, plague::Transform& transform, plague::PhysicsComponent& physics, plague::GravityComponent& gravity)
+		es.each<plague::Transform, plague::PhysicsComponent, plague::StammableComponent>([=](entityx::Entity entity, plague::Transform& transform, plague::PhysicsComponent& physics, plague::StammableComponent& gravity)
 		{
 			// projectile is dynamic
-			auto pos = transform.node->getPosition();
+			auto pos = transform.get()->getPosition();
 			if (pos.y < level01::floor)
 			{
 				if (!entity.has_component<plague::AutoDestroyDescription>())
