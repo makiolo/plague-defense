@@ -34,7 +34,6 @@
 #include "MainMenuScene.h"
 // SPAWNERS
 #include "utils.h"
-#include "navmesh/CCNavMesh.h"
 #ifdef SDKBOX_ENABLED
 #include "PluginAdMob/PluginAdMob.h"
 #endif
@@ -102,12 +101,12 @@ bool Level01::init()
 
 	// plague::make_clouds(this, ex.entities);
 	// plague::make_sky(this);
-	plague::make_particle_system(this);
+	// plague::make_particle_system(this);
 	
-	auto building = ex.entities.create();
-	building.assign<plague::SceneComponent>(this);
-	building.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
-	building.assign<plague::Sprite>("img/building/newlevel01.png", true, true);
+	// auto building = ex.entities.create();
+	// building.assign<plague::SceneComponent>(this);
+	// building.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
+	// building.assign<plague::Sprite>("img/building/newlevel01.png", true, true);
 
 	auto scenary = ex.entities.create();
 	scenary.assign<plague::DebugBar>(this, ex.events);
@@ -121,21 +120,21 @@ bool Level01::init()
 	character.assign<plague::TimerComponent>("fire", 3);
 	// character.assign<plague::BrainComponent>(character.id(), "brain");
 
-	auto character2 = ex.entities.create();
-	character2.assign<plague::SceneComponent>(this);
-	character2.assign<plague::Transform>(plague::level01::player, 0.30f);  // position and scale
-	character2.assign<plague::Sprite>("img/character/character.png", true, false);
-	character2.assign<plague::CharacterComponent>(character2.id(), 100.0f);
-	character2.assign<plague::CountSensorComponent>();
-	character2.assign<plague::BrainComponent>(character2.id(), "brain2");
-
-	auto character3 = ex.entities.create();
-	character3.assign<plague::SceneComponent>(this);
-	character3.assign<plague::Transform>(plague::level01::player, 0.21f);  // position and scale
-	character3.assign<plague::Sprite>("img/character/character.png", true, false);
-	character3.assign<plague::CharacterComponent>(character3.id(), 200.0f);
-	character3.assign<plague::CountSensorComponent>();
-	character3.assign<plague::BrainComponent>(character3.id(), "brain3");
+	// auto character2 = ex.entities.create();
+	// character2.assign<plague::SceneComponent>(this);
+	// character2.assign<plague::Transform>(plague::level01::player, 0.30f);  // position and scale
+	// character2.assign<plague::Sprite>("img/character/character.png", true, false);
+	// character2.assign<plague::CharacterComponent>(character2.id(), 100.0f);
+	// character2.assign<plague::CountSensorComponent>();
+	// character2.assign<plague::BrainComponent>(character2.id(), "brain2");
+    //
+	// auto character3 = ex.entities.create();
+	// character3.assign<plague::SceneComponent>(this);
+	// character3.assign<plague::Transform>(plague::level01::player, 0.21f);  // position and scale
+	// character3.assign<plague::Sprite>("img/character/character.png", true, false);
+	// character3.assign<plague::CharacterComponent>(character3.id(), 200.0f);
+	// character3.assign<plague::CountSensorComponent>();
+	// character3.assign<plague::BrainComponent>(character3.id(), "brain3");
 
 	ex.systems.add<plague::MovementSystem>();
 	ex.systems.add<plague::InputSystem>(this, character.id());

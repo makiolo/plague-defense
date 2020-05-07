@@ -18,6 +18,11 @@
 #ifdef SDKBOX_ENABLED
 #include "PluginAdMob/PluginAdMob.h"
 #endif
+// Navmesh
+#include "navmesh/CCNavMesh.h"
+#include "3d/CCBundle3D.h"
+#include "physics3d/CCPhysics3D.h"
+#include "physics3d/CCPhysics3DWorld.h"
 
 namespace plague {
 
@@ -68,6 +73,106 @@ struct InputSystem : public entityx::System<InputSystem>,
 		_scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_listener_touch, _scene);
 		_scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_listener_mouse, _scene);
 
+
+
+
+		using namespace cocos2d;
+
+		std::vector<Vec3> trianglesList = Bundle3D::getTrianglesList("grid/grid.obj");
+		Physics3DRigidBodyDes rbDes;
+		rbDes.mass = 0.0f;
+		rbDes.shape = Physics3DShape::createMesh(&trianglesList[0], (int)trianglesList.size() / 3);
+		auto rigidBody = Physics3DRigidBody::create(&rbDes);
+		auto component = Physics3DComponent::create(rigidBody);
+		auto sprite = Sprite3D::create("grid/grid.obj");
+		sprite->addComponent(component);
+		sprite->setCameraMask((unsigned short)CameraFlag::USER1);
+		_scene->addChild(sprite);
+
+
+		cocos2d::Size size = cocos2d::Director::getInstance()->getWinSize();
+		_camera = cocos2d::Camera::createPerspective(60.0f, size.width / size.height, 1.0f, 1000.0f);
+		// _camera = cocos2d::Camera::createOrthographic(50, 50, 1, 1000);
+		// _camera->setViewport(experimental::Viewport(0, 0, 1080, 1920));
+		_camera->setPosition3D(cocos2d::Vec3(.0f, 20.0f, 20.0f));
+		_camera->lookAt(cocos2d::Vec3(0.0f, 0.0f, 0.0f), cocos2d::Vec3(0.0f, 1.0f, 0.0f));
+		_camera->setCameraFlag(cocos2d::CameraFlag::USER1);
+		_scene->addChild(_camera);
+
+		navmesh = cocos2d::NavMesh::create("grid/all_tiles_tilecache.bin", "grid/grid.gset");
+		navmesh->setDebugDrawEnable(true);
+
+		_scene->setNavMesh(navmesh);
+		_scene->setNavMeshDebugCamera(_camera);
+
+		auto ambientLight = cocos2d::AmbientLight::create(cocos2d::Color3B(64, 64, 64));
+		ambientLight->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
+		_scene->addChild(ambientLight);
+
+		auto dirLight = DirectionLight::create(Vec3(1.2f, -1.1f, 0.5f), cocos2d::Color3B(255, 255, 255));
+		dirLight->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
+		_scene->addChild(dirLight);
+
+		// create obstable
+		for(int j=2; j<8; j+=4)
+		{
+			for(int i=-3; i<5; i++)
+			{
+				cocos2d::Vec3 pos(i, 1, j - 1);
+				auto obstacle = cocos2d::NavMeshObstacle::create(0.5f, 2.0f);
+				auto obstacleNode = cocos2d::Sprite3D::create("grid/cylinder.obj");
+				obstacleNode->setPosition3D(pos);
+				// obstacleNode->setRotation3D(Vec3(-90.0f, 0.0f, 0.0f));
+				// obstacleNode->setScale(0.1f);
+				obstacleNode->addComponent(obstacle);
+				obstacleNode->setCameraMask((unsigned short)CameraFlag::USER1);
+				obstacleNode->setVisible(false);
+				_scene->addChild(obstacleNode);
+
+				// navmesh->addNavMeshObstacle(obstacle);
+			}
+
+			for(int i=-5; i<3; i++)
+			{
+				cocos2d::Vec3 pos(i, 1, j + 1);
+				auto obstacle = cocos2d::NavMeshObstacle::create(0.5f, 2.0f);
+				auto obstacleNode = cocos2d::Sprite3D::create("grid/cylinder.obj");
+				obstacleNode->setPosition3D(pos);
+				// obstacleNode->setRotation3D(Vec3(-90.0f, 0.0f, 0.0f));
+				// obstacleNode->setScale(0.1f);
+				obstacleNode->addComponent(obstacle);
+				obstacleNode->setCameraMask((unsigned short)CameraFlag::USER1);
+				obstacleNode->setVisible(false);
+				_scene->addChild(obstacleNode);
+			}
+		}
+		
+		// create agents
+		{
+			cocos2d::Vec3 posAgent(-3, 1, -3);
+			cocos2d::NavMeshAgentParam param;
+			param.radius = 0.5f;
+			param.height = 1.8f;
+			param.maxSpeed = 2.0f;
+			param.maxAcceleration = 1000.0f;
+			agent = NavMeshAgent::create(param);
+			auto agentNode = cocos2d::Sprite3D::create("grid/cylinder.obj");
+			agentNode->setPosition3D(posAgent);
+			// agentNode->setRotation3D(Vec3(-90.0f, 0.0f, 0.0f));
+			// agentNode->setScale(0.1f);
+			agentNode->addComponent(agent);
+			agentNode->setCameraMask((unsigned short)CameraFlag::USER1);
+			agentNode->setVisible(false);
+			_scene->addChild(agentNode);
+		}
+
+
+
+
+
+
+
+
 	}
 
 	virtual ~InputSystem()
@@ -116,6 +221,19 @@ struct InputSystem : public entityx::System<InputSystem>,
 
 		_mouse_x = touchLocation.x;
 		_mouse_y = touchLocation.y;
+
+		// auto touch = touches[0];
+		auto location = touch->getLocationInView();
+		cocos2d::Vec3 nearP(location.x, location.y, 0.0f), farP(location.x, location.y, 1.0f);
+
+		auto size = cocos2d::Director::getInstance()->getWinSize();
+		_camera->unproject(size, &nearP, &nearP);
+		_camera->unproject(size, &farP, &farP);
+
+		cocos2d::Physics3DWorld::HitResult result;
+		_scene->getPhysics3DWorld()->rayCast(nearP, farP, &result);
+		agent->move(result.hitPosition);
+		std::cout << "hit = " << result.hitPosition.x << ", " << result.hitPosition.y << ", " << result.hitPosition.z << std::endl;
 
 		return true;
 	}
@@ -240,6 +358,11 @@ protected:
 
 	bool _touching;
 	bool _moved;
+
+	// NavMesh
+	cocos2d::NavMesh* navmesh;
+	cocos2d::Camera *_camera;
+	cocos2d::NavMeshAgent* agent;
 };
 
 }
