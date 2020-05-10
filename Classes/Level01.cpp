@@ -151,6 +151,16 @@ bool Level01::init()
 
 	// PhysicsShapeCache::getInstance();
 
+	/*
+	Shaders:
+	https://github.com/urho3d/Urho3D/tree/master/bin/CoreData/Shaders/GLSL
+	https://github.com/phi-lira/UniversalShaderExamples/blob/b450133fedf51ab3e1944fc630eb1f5954c4c55a/Assets/_ExampleScenes/51_LitPhysicallyBased/CustomLit.shader
+	https://github.com/phi-lira/UniversalShaderExamples/blob/b450133fedf51ab3e1944fc630eb1f5954c4c55a/Assets/_ExampleScenes/CustomShading.hlsl
+	https://github.com/urho3d/Urho3D/blob/17c4a1022d3342b6318fa095661a0ecba6306284/bin/CoreData/Shaders/GLSL/PBRDeferred.glsl
+	https://www.youtube.com/watch?v=0ckE-CZpXAo
+	https://www.youtube.com/watch?v=7hxrPKoELpo
+	*/
+
 
 
 	ex.systems.add<plague::MovementSystem>();

@@ -13,3 +13,12 @@
 /Resources/img/building/*.png~
 /Resources/img/enemy/spider/*.scml~
 /cocos2d_old
+/proj.android/app/.cxx/cmake/debug/arm64-v8a
+/proj.android/app/.cxx/cmake/debug/armeabi-v7a
+/proj.android/app/.cxx/cmake/debug/x86
+/proj.android/app/.cxx/cmake/debug/x86_64
+/proj.android/app/.cxx/cmake/release/arm64-v8a
+/proj.android/app/.cxx/cmake/release/armeabi-v7a
+/proj.android/app/.cxx/cmake/release/x86
+/proj.android/app/.cxx/cmake/release/x86_64
+/proj.android/app/.cxx
