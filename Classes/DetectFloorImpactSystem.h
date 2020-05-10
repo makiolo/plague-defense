@@ -37,7 +37,7 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
 #if USE_AUDIO_ENGINE
-		using namespace cocos2d::experimental;
+		using namespace cocos2d;
 #elif USE_SIMPLE_AUDIO_ENGINE
 		using namespace CocosDenshion;
 #endif
@@ -54,7 +54,7 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
 	{
 #if USE_AUDIO_ENGINE
-		using namespace cocos2d::experimental;
+		using namespace cocos2d;
 #elif USE_SIMPLE_AUDIO_ENGINE
 		using namespace CocosDenshion;
 #endif

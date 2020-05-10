@@ -87,6 +87,7 @@ class Sprite;
 class SpriteBatchNode;
 class DrawNode;
 class EventListenerCustom;
+class TextureAtlas;
 
 /**
  * @brief Label is a subclass of Node that knows how to render text labels.
@@ -197,14 +198,58 @@ public:
     * @param text The initial text.
     * @param hAlignment Text horizontal alignment.
     * @param maxLineWidth The max line width.
-    * @param imageOffset
     *
     * @return An automatically released Label object.
     * @see setBMFontFilePath setMaxLineWidth
     */
     static Label* createWithBMFont(const std::string& bmfontPath, const std::string& text,
-        const TextHAlignment& hAlignment = TextHAlignment::LEFT, int maxLineWidth = 0,
-        const Vec2& imageOffset = Vec2::ZERO);
+        const TextHAlignment& hAlignment = TextHAlignment::LEFT, int maxLineWidth = 0);
+
+    /**
+    * Allocates and initializes a Label, with a bitmap font file.
+    *
+    * @param bmfontPath A bitmap font file, it's a FNT format.
+    * @param text The initial text.
+    * @param hAlignment Text horizontal alignment.
+    * @param maxLineWidth The max line width.
+    * @param imageRect
+    * @param imageRotated
+    *
+    * @return An automatically released Label object.
+    * @see setBMFontFilePath setMaxLineWidth
+    */
+    static Label* createWithBMFont(const std::string& bmfontPath, const std::string& text,
+        const TextHAlignment& hAlignment, int maxLineWidth, const Rect& imageRect, bool imageRotated);
+
+    /**
+    * Allocates and initializes a Label, with a bitmap font file.
+    *
+    * @param bmfontPath A bitmap font file, it's a FNT format.
+    * @param text The initial text.
+    * @param hAlignment Text horizontal alignment.
+    * @param maxLineWidth The max line width.
+    * @param subTextureKey Name of entry in PLIST texture atlas/sprite sheet
+    *
+    * @return An automatically released Label object.
+    * @see setBMFontFilePath setMaxLineWidth
+    */
+    static Label* createWithBMFont(const std::string& bmfontPath, const std::string& text,
+        const TextHAlignment& hAlignment, int maxLineWidth, const std::string& subTextureKey);
+
+    /**
+    * Allocates and initializes a Label, with a bitmap font file.
+    *
+    * @param bmfontPath A bitmap font file, it's a FNT format.
+    * @param text The initial text.
+    * @param hAlignment Text horizontal alignment.
+    * @param maxLineWidth The max line width.
+    * @param imageOffset Offset into larger texture
+    *
+    * @return An automatically released Label object.
+    * @see setBMFontFilePath setMaxLineWidth
+    */
+    CC_DEPRECATED_ATTRIBUTE static Label* createWithBMFont(const std::string& bmfontPath, const std::string& text,
+            const TextHAlignment& hAlignment, int maxLineWidth, const Vec2& imageOffset);
 
     /**
     * Allocates and initializes a Label, with char map configuration.
@@ -258,7 +303,16 @@ public:
     virtual const TTFConfig& getTTFConfig() const { return _fontConfig;}
 
     /** Sets a new bitmap font to Label */
-    virtual bool setBMFontFilePath(const std::string& bmfontFilePath, const Vec2& imageOffset = Vec2::ZERO, float fontSize = 0);
+    virtual bool setBMFontFilePath(const std::string& bmfontFilePath, float fontSize = 0);
+
+    /** Sets a new bitmap font to Label */
+    virtual bool setBMFontFilePath(const std::string& bmfontFilePath, const Rect& imageRect, bool imageRotated, float fontSize = 0);
+
+    /** Sets a new bitmap font to Label */
+    virtual bool setBMFontFilePath(const std::string& bmfontFilePath, const std::string& subTextureKey, float fontSize = 0);
+
+    /** Sets a new bitmap font to Label */
+    CC_DEPRECATED_ATTRIBUTE virtual bool setBMFontFilePath(const std::string& bmfontFilePath, const Vec2& imageOffset, float fontSize = 0);
 
     /** Returns the bitmap font used by the Label.*/
     const std::string& getBMFontFilePath() const { return _bmFontPath;}
@@ -559,7 +613,7 @@ public:
      
      @warning Not support system font.
      @return the type of label
-     @since v3.17.1
+     @since v3.18.0
      */
     LabelType getLabelType() const { return _currentLabelType; }
     
@@ -584,6 +638,11 @@ public:
      */
     float getAdditionalKerning() const;
 
+    /**
+    * set ProgramState of current render command
+    */
+    virtual void setProgramState(backend::ProgramState *programState) override;
+
     FontAtlas* getFontAtlas() { return _fontAtlas; }
 
     virtual const BlendFunc& getBlendFunc() const override { return _blendFunc; }
@@ -592,7 +651,7 @@ public:
     virtual bool isOpacityModifyRGB() const override { return _isOpacityModifyRGB; }
     virtual void setOpacityModifyRGB(bool isOpacityModifyRGB) override;
     virtual void updateDisplayedColor(const Color3B& parentColor) override;
-    virtual void updateDisplayedOpacity(GLubyte parentOpacity) override;
+    virtual void updateDisplayedOpacity(uint8_t parentOpacity) override;
 
     virtual std::string getDescription() const override;
 
@@ -607,13 +666,6 @@ public:
     virtual void removeAllChildrenWithCleanup(bool cleanup) override;
     virtual void removeChild(Node* child, bool cleanup = true) override;
     virtual void setGlobalZOrder(float globalZOrder) override;
-
-    CC_DEPRECATED_ATTRIBUTE static Label* create(const std::string& text, const std::string& font, float fontSize,
-        const Size& dimensions = Size::ZERO, TextHAlignment hAlignment = TextHAlignment::LEFT,
-        TextVAlignment vAlignment = TextVAlignment::TOP);
-    CC_DEPRECATED_ATTRIBUTE virtual void setFontDefinition(const FontDefinition& textDefinition);
-    CC_DEPRECATED_ATTRIBUTE FontDefinition getFontDefinition() const { return _getFontDefinition(); }
-    CC_DEPRECATED_ATTRIBUTE int getCommonLineHeight() const { return (int)getLineHeight();}
 
 CC_CONSTRUCTOR_ACCESS:
     /**
@@ -648,19 +700,28 @@ protected:
         int lineIndex;
     };
 
+    struct BatchCommand {
+        BatchCommand();
+        ~BatchCommand();
+
+        CustomCommand textCommand;
+        CustomCommand outLineCommand;
+        CustomCommand shadowCommand;
+
+        std::array<CustomCommand*, 3> getCommandArray();
+    };
+
     virtual void setFontAtlas(FontAtlas* atlas, bool distanceFieldEnabled = false, bool useA8Shader = false);
     bool getFontLetterDef(char32_t character, FontLetterDefinition& letterDef) const;
 
     void computeStringNumLines();
 
-    void onDraw(const Mat4& transform, bool transformUpdated);
-    void onDrawShadow(GLProgram* glProgram, const Color4F& shadowColor);
     void drawSelf(bool visibleByCamera, Renderer* renderer, uint32_t flags);
 
     bool multilineTextWrapByChar();
     bool multilineTextWrapByWord();
     bool multilineTextWrap(const std::function<int(const std::u32string&, int, int)>& lambda);
-    void shrinkLabelToContentSize(const std::function<bool()>& lambda);
+    void shrinkLabelToContentSize(const std::function<bool(void)>& lambda);
     bool isHorizontalClamp();
     bool isVerticalClamp();
     void rescaleWithOriginalFontSize();
@@ -694,6 +755,14 @@ protected:
     FontDefinition _getFontDefinition() const;
 
     virtual void updateColor() override;
+    
+    void updateUniformLocations();
+    void setVertexLayout(PipelineDescriptor& vertexLayout);
+    void updateBlendState();
+    void updateEffectUniforms(BatchCommand &batch, TextureAtlas* textureAtlas, Renderer *renderer, const Mat4 &transform);
+    void updateBuffer(TextureAtlas* textureAtlas, CustomCommand& customCommand);
+
+    void updateBatchCommand(BatchCommand &batch);
 
     LabelType _currentLabelType;
     bool _contentDirty;
@@ -702,6 +771,10 @@ protected:
     int _numberOfLines;
 
     std::string _bmFontPath;
+    std::string _bmSubTextureKey;
+    Rect _bmRect;
+    bool _bmRotated;
+
     TTFConfig _fontConfig;
     float _outlineSize;
 
@@ -746,11 +819,13 @@ protected:
     Color4F _textColorF;
 
     QuadCommand _quadCommand;
-    CustomCommand _customCommand;
+
+    std::vector<BatchCommand> _batchCommands;
+    
     Mat4  _shadowTransform;
-    GLint _uniformEffectColor;
-    GLint _uniformEffectType; // 0: None, 1: Outline, 2: Shadow; Only used when outline is enabled.
-    GLint _uniformTextColor;
+    int  _uniformEffectColor;
+    int  _uniformEffectType; // 0: None, 1: Outline, 2: Shadow; Only used when outline is enabled.
+    int  _uniformTextColor;
     bool _useDistanceField;
     bool _useA8Shader;
 
@@ -760,7 +835,7 @@ protected:
     
     Color4F _shadowColor4F;
     Color3B _shadowColor3B;
-    GLubyte _shadowOpacity;
+    uint8_t _shadowOpacity;
     float _shadowBlurRadius;
 
     bool _clipEnabled;
@@ -790,7 +865,14 @@ protected:
     bool _boldEnabled;
     DrawNode* _underlineNode;
     bool _strikethroughEnabled;
-
+    
+    backend::UniformLocation _mvpMatrixLocation;
+    backend::UniformLocation _textureLocation;
+    backend::UniformLocation _alphaTextureLocation;
+    backend::UniformLocation _textColorLocation;
+    backend::UniformLocation _effectColorLocation;
+    backend::UniformLocation _effectTypeLocation;
+    
 private:
     CC_DISALLOW_COPY_AND_ASSIGN(Label);
 };

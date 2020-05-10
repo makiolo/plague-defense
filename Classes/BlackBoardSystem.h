@@ -58,7 +58,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		events.subscribe<plague::InsectInvasionEvent>(*this);
 
 #if USE_AUDIO_ENGINE
-		using namespace cocos2d::experimental;
+		using namespace cocos2d;
 #elif USE_SIMPLE_AUDIO_ENGINE
 		using namespace CocosDenshion;
 #endif
@@ -266,7 +266,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 	void receive(const plague::InsectDeadEvent& event)
 	{
 #if USE_AUDIO_ENGINE
-		using namespace cocos2d::experimental;
+		using namespace cocos2d;
 #elif USE_SIMPLE_AUDIO_ENGINE
 		using namespace CocosDenshion;
 #endif

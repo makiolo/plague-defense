@@ -36,7 +36,7 @@ struct DetectInvasionSystem : public entityx::System<DetectInvasionSystem>
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
 #if USE_AUDIO_ENGINE
-		using namespace cocos2d::experimental;
+		using namespace cocos2d;
 #elif USE_SIMPLE_AUDIO_ENGINE
 		using namespace CocosDenshion;
 #endif
@@ -57,7 +57,7 @@ struct DetectInvasionSystem : public entityx::System<DetectInvasionSystem>
 				if (!entity.has_component<plague::AutoDestroyDescription>())
 				{
 #if USE_AUDIO_ENGINE
-					using namespace cocos2d::experimental;
+					using namespace cocos2d;
 #elif USE_SIMPLE_AUDIO_ENGINE
 					using namespace CocosDenshion;
 #endif

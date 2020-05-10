@@ -28,27 +28,12 @@ public:
 	virtual ~TreeNodeLeaf()
 	{ ; }
 
-	/**
-	Empezar
-	*/
-	virtual void init() override
-	{
-		
-	}
+	virtual void init() = 0;
+	virtual void terminate(bool interrupted) = 0;
 
-	/**
-	Terminar
-
-	La variable booleana indica si el motivo a sido por interrupci�n
-	*/
-	virtual void terminate(bool interrupted) override
+	virtual void configure(myBT::Context& context, const std::string& id_flow) final
 	{
-		
-	}
-
-	virtual void _reset() final
-	{
-		this->reset();
+		this->reset(context, id_flow);
 	}
 
 	/**
@@ -91,27 +76,13 @@ public:
 
 	virtual void serialize(nlohmann::json& pipe) final
 	{
-		this->_serialize(pipe);
+		this->write(pipe);
 	}
 
 	virtual void unserialize(nlohmann::json& pipe, const ConditionRepository& conditions, const ActionRepository& actions) final
 	{
-		this->_unserialize(pipe);
+		this->read(pipe);
 	}
-
-	/*
-	virtual void _serialize(nlohmann::json& pipe) override
-	{
-		TreeNode::_serialize(pipe);
-		// pipe["status"] = _status;
-	}
-
-	virtual void _unserialize(nlohmann::json& pipe) override
-	{
-		TreeNode::_unserialize(pipe);
-		// _status = pipe["status"];
-	}
-	 */
 
 protected:
 	/**

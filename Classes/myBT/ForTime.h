@@ -28,7 +28,7 @@ public:
 		, m_ValueMin(1.0f)
 		, m_ValueMax(1.0f)
 		, _gen(_rd())
-	{ reset(); }
+	{  }
 
 	virtual ~ForTime()
 	{ ; }
@@ -75,7 +75,7 @@ public:
 					case COMPLETED:
 					{
 						// ha terminado antes de tiempo
-						child->_reset();
+						child->configure(context, id_flow);
 
 						return RUNNING;
 					}
@@ -108,23 +108,21 @@ public:
 		}
 	}
 	
-	virtual void reset() override
+	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 		m_Init = false;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe) override
+	virtual void write(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_serialize(pipe);
 		pipe["ValueSecs"] = m_ValueSecs;
 		pipe["UseRange"] = m_UseRange;
 		pipe["ValueMin"] = m_ValueMin;
 		pipe["ValueMax"] = m_ValueMax;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe) override
+	virtual void read(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_unserialize(pipe);
 		m_ValueSecs = pipe["ValueSecs"].get<double>();
 		m_UseRange = pipe["UseRange"].get<bool>();
 		m_ValueMin = pipe["ValueMin"].get<double>();

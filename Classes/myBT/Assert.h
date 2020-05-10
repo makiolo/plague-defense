@@ -23,13 +23,12 @@ public:
 		: TreeNodeComposite(name)
 		, m_ReturnCodeFinish(FAILED)
 		, m_AutoReset(false)
-	{ reset(); }
+	{  }
 
 	virtual ~Assert()
 	{ ; }
 
 	virtual Type getType() const override {return TYPE_ASSERT;}
-
 	
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
@@ -79,7 +78,7 @@ public:
 						if(m_AutoReset)
 						{
 							// reiniciamos el proceso hijo (solo en el while)
-							child1->_reset();
+							child1->configure(context, id_flow);
 
 							return RUNNING;
 						}
@@ -123,21 +122,19 @@ public:
 
 	}
 
-	virtual void reset() override
+	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 		
 	}
 
-	virtual void _serialize(nlohmann::json& pipe) override
+	virtual void write(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_serialize(pipe);
 		pipe["AutoReset"] = m_AutoReset;
 		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe) override
+	virtual void read(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_unserialize(pipe);
 		m_AutoReset = pipe["AutoReset"].get<bool>();
 		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<int>();
 	}

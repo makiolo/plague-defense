@@ -211,9 +211,8 @@ bool TMXMapInfo::parseXMLFile(const std::string& xmlFilename)
     }
     
     parser.setDelegator(this);
-    auto fullPath = FileUtils::getInstance()->fullPathForFilename(xmlFilename);
-    CCASSERT(FileUtils::getInstance()->isFileExist(fullPath), "TMXMapInfo::parseXMLFile xml file not exists");
-    return parser.parse(fullPath);
+
+    return parser.parse(FileUtils::getInstance()->fullPathForFilename(xmlFilename));
 }
 
 // the XML parser calls here with all the elements
@@ -293,7 +292,7 @@ void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts
     {
         // If this is an external tileset then start parsing that
         std::string externalTilesetFilename = attributeDict["source"].asString();
-        if (!externalTilesetFilename.empty())
+        if (externalTilesetFilename != "")
         {
             _externalTilesetFilename = externalTilesetFilename;
 
@@ -315,7 +314,7 @@ void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts
                 _currentFirstGID = 0;
             }
             _recordFirstGID = false;
-            _externalTilesetFullPath = externalTilesetFilename;
+            
             tmxMapInfo->parseXMLFile(externalTilesetFilename);
         }
         else
@@ -417,9 +416,9 @@ void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts
     {
         TMXTilesetInfo* tileset = tmxMapInfo->getTilesets().back();
         
-        double tileOffsetX = attributeDict["x"].asDouble();
+        float tileOffsetX = attributeDict["x"].asFloat();
         
-        double tileOffsetY = attributeDict["y"].asDouble();
+        float tileOffsetY = attributeDict["y"].asFloat();
         
         tileset->_tileOffset = Vec2(tileOffsetX, tileOffsetY);
         
@@ -432,19 +431,14 @@ void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts
         std::string imagename = attributeDict["source"].asString();
         tileset->_originSourceImage = imagename;
 
-        if (!_externalTilesetFullPath.empty())
-        {
-            string dir = _externalTilesetFullPath.substr(0, _externalTilesetFullPath.find_last_of('/') + 1);
-            tileset->_sourceImage = dir + imagename;
-        }
-        else if (_TMXFileName.find_last_of('/') != string::npos)
+        if (_TMXFileName.find_last_of('/') != string::npos)
         {
             string dir = _TMXFileName.substr(0, _TMXFileName.find_last_of('/') + 1);
             tileset->_sourceImage = dir + imagename;
         }
         else 
         {
-            tileset->_sourceImage = _resources + (!_resources.empty() ? "/" : "") + imagename;
+            tileset->_sourceImage = _resources + (_resources.size() ? "/" : "") + imagename;
         }
     } 
     else if (elementName == "data")
@@ -452,7 +446,7 @@ void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts
         std::string encoding = attributeDict["encoding"].asString();
         std::string compression = attributeDict["compression"].asString();
 
-        if (encoding.empty())
+        if (encoding == "")
         {
             tmxMapInfo->setLayerAttribs(tmxMapInfo->getLayerAttribs() | TMXLayerAttribNone);
             
@@ -482,7 +476,7 @@ void TMXMapInfo::startElement(void* /*ctx*/, const char *name, const char **atts
                 layerAttribs = tmxMapInfo->getLayerAttribs();
                 tmxMapInfo->setLayerAttribs(layerAttribs | TMXLayerAttribZlib);
             }
-            CCASSERT( compression.empty() || compression == "gzip" || compression == "zlib", "TMX: unsupported compression method" );
+            CCASSERT( compression == "" || compression == "gzip" || compression == "zlib", "TMX: unsupported compression method" );
         }
         else if (encoding == "csv")
         {
@@ -731,6 +725,12 @@ void TMXMapInfo::endElement(void* /*ctx*/, const char *name)
 
             tmxMapInfo->setStoringCharacters(false);
             std::string currentString = tmxMapInfo->getCurrentString();
+
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
+			// Fix bug when tilemap data is in csv format.
+			// We have to remove all '\r' from the string
+			currentString.erase(std::remove(currentString.begin(), currentString.end(), '\r'), currentString.end());
+#endif
 
             vector<string> gidTokens;
             istringstream filestr(currentString);

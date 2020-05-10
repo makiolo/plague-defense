@@ -25,9 +25,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
-
-#ifndef __CCCONFIG_H__
-#define __CCCONFIG_H__
+#pragma once
 
 #include "platform/CCPlatformConfig.h"
 
@@ -260,18 +258,18 @@ THE SOFTWARE.
 #if (CC_USE_PHYSICS)
 /** Use chipmunk physics 2d engine. */
 #ifndef CC_ENABLE_CHIPMUNK_INTEGRATION
-#define CC_ENABLE_CHIPMUNK_INTEGRATION 0
+#define CC_ENABLE_CHIPMUNK_INTEGRATION 1
 #endif
 
 /** or use box2d physics 2d engine. */
 #ifndef CC_ENABLE_BOX2D_INTEGRATION
-#define CC_ENABLE_BOX2D_INTEGRATION 1
+#define CC_ENABLE_BOX2D_INTEGRATION 0
 #endif
 #endif // CC_USE_PHYSICS
 
 /** Use 3d physics integration API. */
 #ifndef CC_USE_3D_PHYSICS
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX /*|| CC_TARGET_PLATFORM == CC_PLATFORM_WINRT*/)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID || CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 #define CC_USE_3D_PHYSICS 1
 #endif
 #endif
@@ -305,34 +303,15 @@ THE SOFTWARE.
 #define CC_USE_JPEG  1
 #endif // CC_USE_JPEG
 
-/** Support TIFF or not. If your application don't use TIFF format picture, you can undefine this macro to save package size.
- */
-#ifndef CC_USE_TIFF
-#define CC_USE_TIFF  1
-#endif // CC_USE_TIFF
-
 /** Support webp or not. If your application don't use webp format picture, you can undefine this macro to save package size.
  */
 #ifndef CC_USE_WEBP
-#if (CC_TARGET_PLATFORM != CC_PLATFORM_WINRT)
 #define CC_USE_WEBP  1
-#endif
 #endif // CC_USE_WEBP
-
-/** Support WIC (Windows Image Component) or not. Replaces PNG, TIFF and JPEG
- */
-#ifndef CC_USE_WIC
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
-#define CC_USE_WIC  1
-#undef CC_USE_TIFF
-#undef CC_USE_JPEG
-#undef CC_USE_PNG
-#endif
-#endif // CC_USE_WIC
 
 /** Enable Script binding. */
 #ifndef CC_ENABLE_SCRIPT_BINDING
-#define CC_ENABLE_SCRIPT_BINDING 0
+#define CC_ENABLE_SCRIPT_BINDING 1
 #endif
 
 /** When CC_ENABLE_SCRIPT_BINDING and CC_ENABLE_GC_FOR_NATIVE_OBJECTS are both 1
@@ -360,44 +339,6 @@ THE SOFTWARE.
   #endif
 #endif
 
-/** @def CC_ENABLE_ALLOCATOR
- * Turn on creation of global allocator and pool allocators
- * as specified by CC_ALLOCATOR_GLOBAL below.
- */
-#ifndef CC_ENABLE_ALLOCATOR
-# define CC_ENABLE_ALLOCATOR 0
-#endif
-
-/** @def CC_ENABLE_ALLOCATOR_DIAGNOSTICS
- * Turn on debugging of allocators. This is slower, uses
- * more memory, and should not be used for production builds.
- */
-#ifndef CC_ENABLE_ALLOCATOR_DIAGNOSTICS
-# define CC_ENABLE_ALLOCATOR_DIAGNOSTICS CC_ENABLE_ALLOCATOR
-#endif
-
-/** @def CC_ENABLE_ALLOCATOR_GLOBAL_NEW_DELETE
- * Turn on override of global new and delete
- * as specified by CC_ALLOCATOR_GLOBAL_NEW_DELETE below.
- */
-#ifndef CC_ENABLE_ALLOCATOR_GLOBAL_NEW_DELETE
-# define CC_ENABLE_ALLOCATOR_GLOBAL_NEW_DELETE 0
-# endif//CC_ENABLE_ALLOCATOR_GLOBAL_NEW_DELETE
-
-/** @def CC_ALLOCATOR_GLOBAL
- * Specify allocator to use for global allocator.
- */
-#ifndef CC_ALLOCATOR_GLOBAL
-# define CC_ALLOCATOR_GLOBAL cocos2d::allocator::AllocatorStrategyDefault
-#endif
-
-/** @def CC_ALLOCATOR_GLOBAL_NEW_DELETE
- * Specify allocator to use when overriding of new and delete.
- */
-#ifndef CC_ALLOCATOR_GLOBAL_NEW_DELETE
-# define CC_ALLOCATOR_GLOBAL_NEW_DELETE cocos2d::allocator::AllocatorStrategyGlobalSmallBlock
-#endif
-
 #ifndef CC_FILEUTILS_APPLE_ENABLE_OBJC
 #define CC_FILEUTILS_APPLE_ENABLE_OBJC  1
 #endif
@@ -416,7 +357,3 @@ THE SOFTWARE.
 #ifndef CC_STRIP_FPS
 #define CC_STRIP_FPS 0
 #endif
-
-#define CC_LABEL_MAX_LENGTH ((1<<16)/4)
-
-#endif // __CCCONFIG_H__

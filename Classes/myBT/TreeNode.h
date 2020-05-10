@@ -18,6 +18,7 @@ Nodo abstracto de un arbol de comportamiento
 
 namespace myBT {
 
+class TreeNode;
 class TreeNodeLeaf;
 
 enum Status {
@@ -71,6 +72,16 @@ struct FlowProgramData
 	Action actual ejecutandose
 	*/
 	myBT::TreeNodeLeaf* _current_action;
+
+	/*
+	Resultado del último estado
+	*/
+	size_t _last_state;
+
+	/*
+	Program registers
+	*/
+	std::unordered_map<TreeNode*, nlohmann::json> registers;
 };
 
 using ActionRepository = std::unordered_map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void(bool)> > >;
@@ -174,23 +185,23 @@ public:
 
 	virtual void add(TreeNode* child) = 0;
 	virtual void remove(TreeNode* child) = 0;
-	virtual void _reset() = 0;
+	virtual void configure(myBT::Context& context, const std::string& id_flow) = 0;
 	virtual void shuffle_childs() = 0;
 
 	////////////////////////////////////////////////
 
 	inline const std::string& get_name() const {return _name;}
 
+	/*
 	virtual void init() {}
-	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) = 0;
 	virtual void terminate(bool interrupted) {}
+	*/
+
+	virtual void reset(myBT::Context& context, const std::string& id_flow) = 0;
+	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) = 0;
+	
 	virtual void free_childs() {}
-	virtual bool is_trivial() const { return false; }
-
-	virtual void reset()
-	{
-
-	}
+	virtual bool is_trivial() const { return false; }	
 	
 	void set_parent(TreeNode* parent)
 	{
@@ -210,13 +221,13 @@ public:
 	virtual void serialize(nlohmann::json& pipe) = 0;
 	virtual void unserialize(nlohmann::json& pipe, const ConditionRepository& conditions, const ActionRepository& actions) = 0;
 
-	virtual void _serialize(nlohmann::json& pipe)
+	virtual void write(nlohmann::json& pipe)
 	{
 		pipe["type"] = getTypeStr();
 		pipe["name"] = _name;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe)
+	virtual void read(nlohmann::json& pipe)
 	{
 		_name = pipe["name"].get<std::string>();
 	}

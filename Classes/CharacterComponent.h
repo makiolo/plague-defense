@@ -11,7 +11,6 @@
 #include "LeftCommand.h"
 #include "RightCommand.h"
 #include "FireCommand.h"
-#include "TimerComponent.h"
 
 namespace plague {
 
@@ -37,39 +36,24 @@ struct CharacterComponent : public entityx::Component<CharacterComponent>, publi
 		events.subscribe<plague::LeftCommand>(*this);
 		events.subscribe<plague::RightCommand>(*this);
 		events.subscribe<plague::FireCommand>(*this);
-		events.subscribe<plague::TimerEvent>(*this);
 	}
 
 	void receive(const plague::LeftCommand& event)
 	{
 		if (event.to == _whoami)
-		{
 			_left = event.active;
-		}
 	}
 
 	void receive(const plague::RightCommand& event)
 	{
 		if (event.to == _whoami)
-		{
 			_right = event.active;
-		}
 	}
 
 	void receive(const plague::FireCommand& event)
 	{
 		if (event.to == _whoami)
-		{
 			_fire = true;
-		}
-	}
-
-	void receive(const plague::TimerEvent& event)
-	{
-		if (event.tag == "fire")
-		{
-			_fire = true;
-		}
 	}
 
 	entityx::Entity::Id _whoami;

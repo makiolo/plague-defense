@@ -16,7 +16,7 @@
 // #define USE_SIMPLE_AUDIO_ENGINE 0
 #if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
+using namespace cocos2d;
 #elif USE_SIMPLE_AUDIO_ENGINE
 #include "audio/include/SimpleAudioEngine.h"
 using namespace CocosDenshion;
@@ -142,6 +142,9 @@ bool MainMenuScene::init()
 		"img/menu/exit_hover.png",
 		[&](Ref* sender) {
 			cocos2d::Director::getInstance()->end();
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+			exit(0);
+#endif
 		});
 
 	float x2 = origin.x + (visibleSize.width / 2);
@@ -149,7 +152,7 @@ bool MainMenuScene::init()
 	exitButton->setPosition(Vec2(x2, y2));
 	MenuItems.pushBack(exitButton);
 	/////////////////
-
+	/*
 	auto button = cocos2d::ui::Button::create("img/menu/normal_image.png", "img/menu/disabled_image.png", "img/menu/selected_image.png");
 	button->setTitleText("A");
 	button->setTitleColor(cocos2d::Color3B::BLACK);
@@ -157,11 +160,10 @@ bool MainMenuScene::init()
 	float y3 = origin.y + (visibleSize.height / 2) - playButton->getContentSize().height - 40 - 200;
 	button->setPosition(Vec2(x3, y3));
 	this->addChild(button, 1);
+	*/
 
 	auto menu = Menu::createWithArray(MenuItems);
-
 	menu->setPosition(Vec2::ZERO);
-
 	this->addChild(menu, 1);
 
 	return true;

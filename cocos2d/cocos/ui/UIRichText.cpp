@@ -100,12 +100,11 @@ private:
     Node* _parent;      // weak ref.
     std::string _url;
     RichText::OpenUrlHandler _handleOpenUrl;
-    EventDispatcher* _eventDispatcher;  // weak ref.
     EventListenerTouchAllAtOnce* _touchListener;    // strong ref.
 };
 const std::string ListenerComponent::COMPONENT_NAME("cocos2d_ui_UIRichText_ListenerComponent");
 
-bool RichElement::init(int tag, const Color3B &color, GLubyte opacity)
+bool RichElement::init(int tag, const Color3B &color, uint8_t opacity)
 {
     _tag = tag;
     _color = color;
@@ -123,7 +122,7 @@ void RichElement::setColor(const Color3B& color)
     _color = color;
 }
 
-RichElementText* RichElementText::create(int tag, const Color3B &color, GLubyte opacity, const std::string& text,
+RichElementText* RichElementText::create(int tag, const Color3B &color, uint8_t opacity, const std::string& text,
                                          const std::string& fontName, float fontSize, uint32_t flags, const std::string& url,
                                          const Color3B& outlineColor, int outlineSize ,
                                          const Color3B& shadowColor, const cocos2d::Size& shadowOffset, int shadowBlurRadius,
@@ -140,7 +139,7 @@ RichElementText* RichElementText::create(int tag, const Color3B &color, GLubyte 
     return nullptr;
 }
     
-bool RichElementText::init(int tag, const Color3B &color, GLubyte opacity, const std::string& text,
+bool RichElementText::init(int tag, const Color3B &color, uint8_t opacity, const std::string& text,
                            const std::string& fontName, float fontSize, uint32_t flags, const std::string& url,
                            const Color3B& outlineColor, int outlineSize ,
                            const Color3B& shadowColor, const cocos2d::Size& shadowOffset, int shadowBlurRadius,
@@ -164,7 +163,7 @@ bool RichElementText::init(int tag, const Color3B &color, GLubyte opacity, const
     return false;
 }
 
-RichElementImage* RichElementImage::create(int tag, const Color3B &color, GLubyte opacity, const std::string& filePath, const std::string& url, Widget::TextureResType texType)
+RichElementImage* RichElementImage::create(int tag, const Color3B &color, uint8_t opacity, const std::string& filePath, const std::string& url, Widget::TextureResType texType)
 {
     RichElementImage* element = new (std::nothrow) RichElementImage();
     if (element && element->init(tag, color, opacity, filePath, url, texType))
@@ -176,7 +175,7 @@ RichElementImage* RichElementImage::create(int tag, const Color3B &color, GLubyt
     return nullptr;
 }
     
-bool RichElementImage::init(int tag, const Color3B &color, GLubyte opacity, const std::string& filePath, const std::string& url, Widget::TextureResType texType)
+bool RichElementImage::init(int tag, const Color3B &color, uint8_t opacity, const std::string& filePath, const std::string& url, Widget::TextureResType texType)
 {
     if (RichElement::init(tag, color, opacity))
     {
@@ -205,7 +204,7 @@ void RichElementImage::setUrl(const std::string& url)
     _url = url;
 }
 
-RichElementCustomNode* RichElementCustomNode::create(int tag, const Color3B &color, GLubyte opacity, cocos2d::Node *customNode)
+RichElementCustomNode* RichElementCustomNode::create(int tag, const Color3B &color, uint8_t opacity, cocos2d::Node *customNode)
 {
     RichElementCustomNode* element = new (std::nothrow) RichElementCustomNode();
     if (element && element->init(tag, color, opacity, customNode))
@@ -217,7 +216,7 @@ RichElementCustomNode* RichElementCustomNode::create(int tag, const Color3B &col
     return nullptr;
 }
     
-bool RichElementCustomNode::init(int tag, const Color3B &color, GLubyte opacity, cocos2d::Node *customNode)
+bool RichElementCustomNode::init(int tag, const Color3B &color, uint8_t opacity, cocos2d::Node *customNode)
 {
     if (RichElement::init(tag, color, opacity))
     {
@@ -228,7 +227,7 @@ bool RichElementCustomNode::init(int tag, const Color3B &color, GLubyte opacity,
     return false;
 }
     
-RichElementNewLine* RichElementNewLine::create(int tag, const Color3B& color, GLubyte opacity)
+RichElementNewLine* RichElementNewLine::create(int tag, const Color3B& color, uint8_t opacity)
 {
     RichElementNewLine* element = new (std::nothrow) RichElementNewLine();
     if (element && element->init(tag, color, opacity))
@@ -544,7 +543,7 @@ std::string MyXMLVisitor::getFace() const
 {
     for (auto i = _fontElements.rbegin(), iRend = _fontElements.rend(); i != iRend; ++i)
     {
-        if (!i->face.empty())
+        if (i->face.size() != 0)
             return i->face;
     }
     return "fonts/Marker Felt.ttf";
@@ -554,7 +553,7 @@ std::string MyXMLVisitor::getURL() const
 {
     for (auto i = _fontElements.rbegin(), iRend = _fontElements.rend(); i != iRend; ++i)
     {
-        if (!i->url.empty())
+        if (i->url.size() != 0)
             return i->url;
     }
     return "";
@@ -789,7 +788,7 @@ void MyXMLVisitor::textHandler(void* /*ctx*/, const char *str, size_t len)
         flags |= RichElementText::UNDERLINE_FLAG;
     if (strikethrough)
         flags |= RichElementText::STRIKETHROUGH_FLAG;
-    if (!url.empty())
+    if (url.size() > 0)
         flags |= RichElementText::URL_FLAG;
     if (std::get<0>(outline))
         flags |= RichElementText::OUTLINE_FLAG;
@@ -1472,7 +1471,7 @@ void RichText::formatText()
                     case RichElement::Type::IMAGE:
                     {
                         RichElementImage* elmtImage = static_cast<RichElementImage*>(element);
-                        handleImageRenderer(elmtImage->_filePath, elmtImage->_textureType, elmtImage->_color, elmtImage->_opacity, elmtImage->_width, elmtImage->_height, elmtImage->_url);
+                        handleImageRenderer(elmtImage->_filePath, elmtImage->_color, elmtImage->_opacity, elmtImage->_width, elmtImage->_height, elmtImage->_url);
                         break;
                     }
                     case RichElement::Type::CUSTOM:
@@ -1640,7 +1639,7 @@ namespace {
 }
 
 void RichText::handleTextRenderer(const std::string& text, const std::string& fontName, float fontSize, const Color3B &color,
-                                  GLubyte opacity, uint32_t flags, const std::string& url,
+                                  uint8_t opacity, uint32_t flags, const std::string& url,
                                   const Color3B& outlineColor, int outlineSize ,
                                   const Color3B& shadowColor, const Size& shadowOffset, int shadowBlurRadius,
                                   const Color3B& glowColor)
@@ -1740,14 +1739,9 @@ void RichText::handleTextRenderer(const std::string& text, const std::string& fo
     }
 }
 
-void RichText::handleImageRenderer(const std::string& filePath, Widget::TextureResType textureType, const Color3B &/*color*/, GLubyte /*opacity*/, int width, int height, const std::string& url)
+void RichText::handleImageRenderer(const std::string& filePath, const Color3B &/*color*/, uint8_t /*opacity*/, int width, int height, const std::string& url)
 {
-    Sprite* imageRenderer;
-    if (textureType == Widget::TextureResType::LOCAL)
-        imageRenderer = Sprite::create(filePath);
-    else
-        imageRenderer = Sprite::createWithSpriteFrameName(filePath);
-
+    Sprite* imageRenderer = Sprite::create(filePath);
     if (imageRenderer)
     {
         auto currentSize = imageRenderer->getContentSize();
@@ -1942,7 +1936,7 @@ void RichText::adaptRenderers()
 
 void RichText::pushToContainer(cocos2d::Node *renderer)
 {
-    if (_elementRenders.empty())
+    if (_elementRenders.size() <= 0)
     {
         return;
     }

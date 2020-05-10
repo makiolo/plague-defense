@@ -25,7 +25,7 @@ public:
 		, m_ReturnCodeFinish(COMPLETED)
 		, m_Random(false)
 		, m_AutoReset(false)
-	{ reset(); }
+	{  }
 
 	virtual ~Sequence() { ; }
 
@@ -33,101 +33,81 @@ public:
 	
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
-		if(!m_Init)
-		{
-			m_Init = true;
-			i = 0;
-
-			if( m_Random )
-			{
-				this->shuffle_childs();
-			}
-		}
+		int counter = context[id_flow].registers[this]["counter"].get<int>();
 
 		size_t totalChilds = TreeNodeComposite::size();
-
-		if(totalChilds > 0)
+		if(counter < totalChilds)
 		{
-			if(i < totalChilds)
-			{
-				TreeNode* child = TreeNodeComposite::get_child(i);
-				child->printTrace();
-				size_t code = child->update(context, id_flow, deltatime);
+			TreeNode* child = TreeNodeComposite::get_child(counter);
+			child->printTrace();
+			size_t code = child->update(context, id_flow, deltatime);
 
-				switch(code)
-				{
-					case RUNNING:
-					{
-						return RUNNING;
-					}
-					case COMPLETED:
-					{
-						++i;						
-						return update(context, id_flow, deltatime);
-					}
-					case FAILED:
-					{
-						return FAILED;
-					}
-					case ABORTED:
-					{
-						return ABORTED;
-					}
-					default:
-					{
-						// EXCEPCION(E_TreeBehaviours, "WARNING: Status code desconocido en Sequence::tick");
-						return PANIC_ERROR;
-					}
-				}
-			}
-			else
+			switch(code)
 			{
-				if( m_AutoReset )
+				case RUNNING:
 				{
-					// se reinicia la secuencia
-					this->_reset();
-
 					return RUNNING;
 				}
-				else
+				case COMPLETED:
 				{
-					// La secuencia ha terminado
-					return m_ReturnCodeFinish;
+					context[id_flow].registers[this]["counter"] = counter + 1;
+					return update(context, id_flow, deltatime);
+				}
+				case FAILED:
+				{
+					return FAILED;
+				}
+				case ABORTED:
+				{
+					return ABORTED;
+				}
+				default:
+				{
+					// EXCEPCION(E_TreeBehaviours, "WARNING: Status code desconocido en Sequence::tick");
+					return PANIC_ERROR;
 				}
 			}
 		}
 		else
 		{
-			// secuencia sin hijos, error de estructura
-			return PANIC_ERROR;
+			if( m_AutoReset )
+			{
+				// se reinicia la secuencia
+				this->configure(context, id_flow);
+
+				return RUNNING;
+			}
+			else
+			{
+				// La secuencia ha terminado
+				return m_ReturnCodeFinish;
+			}
 		}
 	}
 
-	virtual void reset() override
+	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
-		m_Init = false;
+		context[id_flow].registers[this]["counter"] = 0;
+
+		if (m_Random)
+		{
+			this->shuffle_childs();
+		}
 	}
 
-	virtual void _serialize(nlohmann::json& pipe) override
+	virtual void write(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_serialize(pipe);
 		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
 		pipe["Random"] = m_Random;
 		pipe["AutoReset"] = m_AutoReset;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe) override
+	virtual void read(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_unserialize(pipe);
 		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<int>();
 		m_Random = pipe["Random"].get<bool>();
 		m_AutoReset = pipe["AutoReset"].get<bool>();
 	}
-
-protected:
-	bool m_Init;
-	size_t i;
-
 };
 
 }

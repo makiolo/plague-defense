@@ -36,9 +36,9 @@ public:
 		;
 	}
 
-	virtual void _reset() final
+	virtual void configure(myBT::Context& context, const std::string& id_flow) override
 	{
-		this->reset();
+		this->reset(context, id_flow);
 
 		size_t totalChilds = TreeNodeComposite::size();
 		TreeNode* child;
@@ -46,7 +46,7 @@ public:
 		for(size_t i = 0; i < totalChilds; ++i)
 		{
 			child = _childs[i];
-			child->_reset();
+			child->configure(context, id_flow);
 		}
 	}
 
@@ -119,6 +119,7 @@ public:
 	Asumiendo que han sido creado con make_node
 	Si se ham creado desde fuera y asociado con add, es el de fuera
 	el que debe encargarse de liberar la memoria.
+	 TODO: ojo
 	*/
 	void free_childs() final
 	{
@@ -149,25 +150,9 @@ public:
 		assert(_childs.size() == 0);
 	}
 
-	void init() final
-	{
-		for(auto& child : _childs)
-		{
-			child->init();
-		}
-	}
-
-	void terminate(bool interrupted) final
-	{
-		for(auto& child : _childs)
-		{
-			child->terminate(interrupted);
-		}
-	}
-
 	virtual void serialize(nlohmann::json& pipe) final
 	{
-		this->_serialize(pipe);
+		this->write(pipe);
 		size_t i = 0;
 		for (auto& child : _childs)
 		{

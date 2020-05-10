@@ -6,7 +6,7 @@ namespace myBT {
 
 void TreeNodeComposite::unserialize(nlohmann::json& pipe, const ConditionRepository& conditions, const ActionRepository& actions)
 {
-	this->_unserialize(pipe);
+	this->read(pipe);
 	for (auto& child : pipe["childs"])
 	{
 		std::string type = child["type"].get<std::string>();
@@ -130,8 +130,8 @@ void TreeNodeComposite::write_ai(const std::string& filename, const ConditionRep
 
 	std::ofstream myfile;
 	myfile.open(filename);
-	// myfile << std::setw(4) << pipe.dump(4) << std::endl;
-    myfile << pipe.dump() << std::endl;
+	myfile << std::setw(4) << pipe.dump(4) << std::endl;
+    // myfile << pipe.dump() << std::endl;
 	myfile.close();
 }
 

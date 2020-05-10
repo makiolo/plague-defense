@@ -25,21 +25,19 @@ public:
 	explicit Condition(const std::string& name = "")
 		: TreeNodeLeaf(name)
 		, m_Inverse(false)
-	{ reset(); }
+	{  }
 
 	explicit Condition(const std::string& name, const func0& callbackCondition)
 		: TreeNodeLeaf(name)
 		, m_Inverse(false)
 		, m_tCallbackCondition(callbackCondition)
-	{ reset(); }
+	{  }
 
 	explicit Condition(const std::string& name, const ConditionRepository::mapped_type& callback)
 		: TreeNodeLeaf(name)
 		, m_Inverse(false)
 		, m_tCallbackCondition(std::get<0>(callback))
-	{
-		reset();
-	}
+	{  }
 
 	virtual ~Condition()
 	{
@@ -47,6 +45,16 @@ public:
 	}
 
 	virtual Type getType() const override {return TYPE_CONDITION;}
+
+	virtual void init() final
+	{
+
+	}
+
+	virtual void terminate(bool interrupted) final
+	{
+
+	}
 
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
@@ -64,7 +72,7 @@ public:
 		return this->_status;
 	}
 
-	virtual void reset() override
+	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 		
 	}
@@ -86,15 +94,13 @@ public:
 		return this;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe) override
+	virtual void write(nlohmann::json& pipe) override
 	{
-		TreeNodeLeaf::_serialize(pipe);
 		pipe["Inverse"] = m_Inverse;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe) override
+	virtual void read(nlohmann::json& pipe) override
 	{
-		TreeNodeLeaf::_unserialize(pipe);
 		m_Inverse = pipe["Inverse"].get<bool>();
 	}
 

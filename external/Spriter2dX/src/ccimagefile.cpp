@@ -31,7 +31,7 @@ namespace Spriter2dX
 	void CCImageFile::renderSprite(se::UniversalObjectInterface* spriteInfo)
 	{
         auto sprite = nextSprite();
-        sprite->setOpacity((GLubyte)(spriteInfo->getAlpha())*255);
+        sprite->setOpacity((uint8_t)(spriteInfo->getAlpha())*255);
         sprite->setPosition(float(spriteInfo->getPosition().x), -float(spriteInfo->getPosition().y));
         sprite->setRotation(float(se::toDegrees(spriteInfo->getAngle())));
         sprite->setScale(float(spriteInfo->getScale().x), float(spriteInfo->getScale().y));

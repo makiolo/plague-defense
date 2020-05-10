@@ -37,8 +37,8 @@ NS_CC_BEGIN
 class CC_DLL ObjectFactory
 {
 public:
-    typedef cocos2d::Ref* (*Instance)();
-    typedef std::function<cocos2d::Ref* ()> InstanceFunc;
+    typedef cocos2d::Ref* (*Instance)(void);
+    typedef std::function<cocos2d::Ref* (void)> InstanceFunc;
     struct CC_DLL TInfo
     {
         TInfo();

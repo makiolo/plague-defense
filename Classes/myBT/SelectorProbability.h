@@ -22,7 +22,7 @@ class SelectorProbability : public TreeNodeComposite
 public:
 	explicit SelectorProbability(const std::string& _name = "")
 			: TreeNodeComposite(_name)
-	{ reset(); }
+	{  }
 
 	virtual ~SelectorProbability()
 	{ ; }
@@ -58,7 +58,7 @@ public:
 
 			if(lotto_now)
 			{
-				child->_reset();
+				child->configure(context, id_flow);
 			}
 
 			switch(code)
@@ -96,21 +96,19 @@ public:
 		}
 	}
 
-	virtual void reset() override
+	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 		_iter = 0;
 		_request_lotto = true;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe) override
+	virtual void write(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_serialize(pipe);
 		// TODO ?
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe) override
+	virtual void read(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_unserialize(pipe);
 		// TODO ?
 	}
 

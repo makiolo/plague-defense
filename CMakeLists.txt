@@ -29,11 +29,19 @@ set(APP_NAME PlagueDefense)
 
 project(${APP_NAME})
 
-set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
-set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
+if(XCODE)
+    if(NOT DEFINED CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET)
+        SET (CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 8.0)
+    endif()
+endif()
 
-include(CocosBuildSet)
-add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
+if(NOT DEFINED BUILD_ENGINE_DONE) # to test MyGame into root project
+    set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
+    set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
+
+    include(CocosBuildSet)
+    add_subdirectory(${COCOS2DX_ROOT_PATH}/cocos ${ENGINE_BINARY_PATH}/cocos/core)
+endif()
 
 # record sources, headers, resources...
 set(GAME_SOURCE)
@@ -57,6 +65,7 @@ list(APPEND GAME_SOURCE
         Classes/AppDelegate.cpp
         Classes/Level01.cpp
         Classes/MainMenuScene.cpp
+        Classes/PhysicsShapeCache.cpp
         )
 list(APPEND GAME_HEADER
         Classes/AppDelegate.h
@@ -140,13 +149,8 @@ target_include_directories(${APP_NAME}
 	PRIVATE ${CMAKE_SOURCE_DIR}/external/Spriter2dX/SpriterPlusPlus/tinyxml2
 )
 
-if(LINUX OR APPLE OR ANDROID)
-    add_definitions(-DUSE_AUDIO_ENGINE=1)
-    add_definitions(-DUSE_SIMPLE_AUDIO_ENGINE=0)
-else()
-    add_definitions(-DUSE_AUDIO_ENGINE=0)
-    add_definitions(-DUSE_SIMPLE_AUDIO_ENGINE=1)
-endif()
+add_definitions(-DUSE_AUDIO_ENGINE=1)
+add_definitions(-DUSE_SIMPLE_AUDIO_ENGINE=0)
 
 # mark app resources
 setup_cocos_app_config(${APP_NAME})
@@ -213,21 +217,22 @@ elseif(APPLE)
 endif()
 if(APPLE)
     set_target_properties(${APP_NAME} PROPERTIES RESOURCE "${APP_UI_RES}")
+    set_xcode_property(${APP_NAME} INSTALL_PATH "\$(LOCAL_APPS_DIR)")
+
     if(MACOSX)
-        set_target_properties(${APP_NAME} PROPERTIES
-                              MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/mac/Info.plist"
-                              )
+        set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/mac/Info.plist")
     elseif(IOS)
-        cocos_pak_xcode(${APP_NAME} INFO_PLIST "iOSBundleInfo.plist.in")
+        set_target_properties(${APP_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/proj.ios_mac/ios/Info.plist")
         set_xcode_property(${APP_NAME} ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
-        set_xcode_property(${APP_NAME} DEVELOPMENT_TEAM "")
-        set_xcode_property(${APP_NAME} CODE_SIGN_IDENTITY "iPhone Developer")
     endif()
+
+    # For code-signing, set the DEVELOPMENT_TEAM:
+    #set_xcode_property(${APP_NAME} DEVELOPMENT_TEAM "GRLXXXX2K9")
 elseif(WINDOWS)
     cocos_copy_target_dll(${APP_NAME})
 endif()
 
 if(LINUX OR WINDOWS)
-    set(APP_RES_DIR "$<TARGET_FILE_DIR:${APP_NAME}>/Resources")
-    cocos_copy_target_res(${APP_NAME} COPY_TO ${APP_RES_DIR} FOLDERS ${GAME_RES_FOLDER})
+    cocos_get_resource_path(APP_RES_DIR ${APP_NAME})
+    cocos_copy_target_res(${APP_NAME} LINK_TO ${APP_RES_DIR} FOLDERS ${GAME_RES_FOLDER})
 endif()

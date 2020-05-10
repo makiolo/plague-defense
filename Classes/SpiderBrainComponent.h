@@ -24,6 +24,11 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
 		
 	}
 
+	~SpiderBrainComponent()
+	{
+		bt.free_childs();
+	}
+
 	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, plague::Transform& transform)
 	{
 		actions["go_to_spawn"] = {
@@ -82,6 +87,9 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
 		auto fullpath = cocos2d::FileUtils::getInstance()->getWritablePath() + "/spider.json";
 		bt.write_ai(fullpath, conditions, actions);
 #endif
+
+		bt.configure(context, bt.get_name());
+
 		is_configured = true;
 	}
 

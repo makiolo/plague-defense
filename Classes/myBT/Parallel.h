@@ -35,12 +35,28 @@ public:
 		, m_FailedMode(NONE)
 		, m_CompletedMode(NONE)
 		, m_AbortedMode(NONE)
-	{ reset(); }
+	{  }
 
 	virtual ~Parallel()
 	{ ; }
 
 	virtual Type getType() const override {return TYPE_PARALLEL;}
+
+	virtual void configure(myBT::Context& context, const std::string& id_flow) final
+	{
+		this->reset(context, id_flow);
+
+		size_t totalChilds = TreeNodeComposite::size();
+		TreeNode* child;
+
+		for (size_t i = 0; i < totalChilds; ++i)
+		{
+			child = _childs[i];
+			std::stringstream ss;
+			ss << id_flow << "/" << child->get_name();
+			child->configure(context, ss.str());
+		}
+	}
 
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
@@ -80,7 +96,7 @@ public:
 			}
 			else if(m_FailedMode == RESET && code == FAILED)
 			{ // reinicia los hijos que han terminado
-				child->_reset();
+				child->configure(context, id_flow);
 			}
 
 			// TODO: anyComplete && allComplete no estan implementados
@@ -91,13 +107,13 @@ public:
 				allComplete = (code == COMPLETED);
 			else if(m_CompletedMode == RESET && code == COMPLETED)
 			{ // reinicia los hijos que han terminado
-				child->_reset();
+				child->configure(context, id_flow);
 			}
 
 			// reinicia los hijos que han terminado
 			if(m_AbortedMode == RESET && code == ABORTED)
 			{
-				child->_reset();
+				child->configure(context, id_flow);
 			}
 
 		}
@@ -135,22 +151,20 @@ public:
 		return candidato;
 	}
 
-	virtual void reset() override
+	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 		
 	}
 
-	virtual void _serialize(nlohmann::json& pipe) override
+	virtual void write(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_serialize(pipe);
 		pipe["FailedMode"] = m_FailedMode;
 		pipe["CompletedMode"] = m_CompletedMode;
 		pipe["AbortedMode"] = m_AbortedMode;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe) override
+	virtual void read(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_unserialize(pipe);
 		m_FailedMode = pipe["FailedMode"].get<size_t>();
 		m_CompletedMode = pipe["CompletedMode"].get<size_t>();
 		m_AbortedMode = pipe["AbortedMode"].get<size_t>();

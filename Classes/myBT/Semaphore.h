@@ -140,7 +140,7 @@ public:
 		}
 	}
 
-	virtual void reset()
+	virtual void reset(myBT::Context& context, const std::string& id_flow)
 	{
 		if(m_Resource)
 		{

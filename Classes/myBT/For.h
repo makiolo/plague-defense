@@ -30,7 +30,7 @@ public:
 		, m_CountMin(1)
 		, m_CountMax(1)
 		, _gen(_rd())
-	{ reset(); }
+	{  }
 
 	virtual ~For()
 	{
@@ -39,7 +39,6 @@ public:
 
 	virtual Type getType() const override {return TYPE_FOR;}
 
-	
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		size_t totalChilds = TreeNodeComposite::size();
@@ -79,7 +78,7 @@ public:
 						// contabilizamos la ejecucion
 						++m_Cycle;
 
-						child->_reset();
+						child->configure(context, id_flow);
 
 						return RUNNING;
 					}
@@ -109,23 +108,21 @@ public:
 		}
 	}
 
-	virtual void reset() override
+	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 		m_Init = false;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe) override
+	virtual void write(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_serialize(pipe);
 		pipe["Count"] = m_Count;
 		pipe["UseRange"] = m_UseRange;
 		pipe["CountMin"] = m_CountMin;
 		pipe["CountMax"] = m_CountMax;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe) override
+	virtual void read(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_unserialize(pipe);
 		m_Count = pipe["Count"].get<int>();
 		m_UseRange = pipe["UseRange"].get<bool>();
 		m_CountMin = pipe["CountMin"].get<int>();

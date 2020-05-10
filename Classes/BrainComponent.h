@@ -29,7 +29,7 @@ public:
 
 	~BrainComponent()
 	{
-
+		bt.free_childs();
 	}
 
 	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, plague::Transform& transform, plague::CountSensorComponent& count_sensor)
@@ -254,6 +254,7 @@ public:
 #endif
 
 #endif
+		bt.configure(context, bt.get_name());
 	}
 
 	void update_fw(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt, plague::Transform& transform)

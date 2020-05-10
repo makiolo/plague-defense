@@ -1,8 +1,8 @@
 #include "Level01.h"
 #include "Level01Constants.h"
 //
-#include "SimpleAudioEngine.h"
 #include "entityx/entityx.h"
+#include "PhysicsShapeCache.h"
 
 // COMPONENT
 #include "Sprite.h"
@@ -34,17 +34,18 @@
 #include "MainMenuScene.h"
 // SPAWNERS
 #include "utils.h"
+// Networking
+#include <network/WebSocket.h>
+// Publicidad
 #ifdef SDKBOX_ENABLED
 #include "PluginAdMob/PluginAdMob.h"
 #endif
 // AI
 #include "myBT/myBT.h"
 // Sounds
-// #define USE_AUDIO_ENGINE 1
-// #define USE_SIMPLE_AUDIO_ENGINE 0
 #if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
-using namespace cocos2d::experimental;
+using namespace cocos2d;
 #elif USE_SIMPLE_AUDIO_ENGINE
 #include "audio/include/SimpleAudioEngine.h"
 using namespace CocosDenshion;
@@ -58,7 +59,7 @@ Level01::Level01()
 }
 Level01::~Level01()
 {
-
+	//delete websocket;
 }
 
 
@@ -67,21 +68,8 @@ Scene* Level01::createScene()
     return Level01::create();
 }
 
-// Print useful error message instead of segfaulting when files are not there.
-/*
-static void problemLoading(const char* filename)
-{
-    printf("Error while loading: %s\n", filename);
-    printf("Depending on how you compiled you might have to add 'Resources/' in front of filenames in HelloWorldScene.cpp\n");
-}
-*/
-
-// on "init" you need to initialize your instance
 bool Level01::init()
 {
-	//////////////////////////////
-	// 1. super init first
-	// if ( !Scene::init() )
 	if (!Scene::initWithPhysics())
 	{
 		return false;
@@ -103,10 +91,12 @@ bool Level01::init()
 	// plague::make_sky(this);
 	// plague::make_particle_system(this);
 	
-	// auto building = ex.entities.create();
-	// building.assign<plague::SceneComponent>(this);
-	// building.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
-	// building.assign<plague::Sprite>("img/building/newlevel01.png", true, true);
+	/*
+	auto building = ex.entities.create();
+	building.assign<plague::SceneComponent>(this);
+	building.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
+	building.assign<plague::Sprite>("img/building/newlevel01.png", true, true);
+	*/
 
 	auto scenary = ex.entities.create();
 	scenary.assign<plague::DebugBar>(this, ex.events);
@@ -117,7 +107,7 @@ bool Level01::init()
 	character.assign<plague::Sprite>("img/character/character.png", true, false);
 	character.assign<plague::CharacterComponent>(character.id(), 250.0f);
 	character.assign<plague::CountSensorComponent>();
-	character.assign<plague::TimerComponent>("fire", 3);
+	//character.assign<plague::TimerComponent>("fire", 3);
 	// character.assign<plague::BrainComponent>(character.id(), "brain");
 
 	// auto character2 = ex.entities.create();
@@ -127,7 +117,7 @@ bool Level01::init()
 	// character2.assign<plague::CharacterComponent>(character2.id(), 100.0f);
 	// character2.assign<plague::CountSensorComponent>();
 	// character2.assign<plague::BrainComponent>(character2.id(), "brain2");
-    //
+
 	// auto character3 = ex.entities.create();
 	// character3.assign<plague::SceneComponent>(this);
 	// character3.assign<plague::Transform>(plague::level01::player, 0.21f);  // position and scale
@@ -135,6 +125,33 @@ bool Level01::init()
 	// character3.assign<plague::CharacterComponent>(character3.id(), 200.0f);
 	// character3.assign<plague::CountSensorComponent>();
 	// character3.assign<plague::BrainComponent>(character3.id(), "brain3");
+
+	// https://www.freecodecamp.org/news/an-embarrassing-tale-why-my-server-could-only-handle-10-players-3b83b6fa8136/
+	// https://sergiodxa.com/articles/scalable-real-time-applications/
+	//websocket = new network::WebSocket();
+	//websocket->init(*this, "ws://broker.hivemq.com:8000");
+
+	/*
+	
+	IA da ordees Seek/Flee ---> Al CharacterController
+	Character da controles de usuario (izquierda, derecha), imitando a su fantasma IA, o el humano directamente al AnimationController
+	El AnimationController elige la mejor animación que cumple con el comando --> Finalmente cada animación aplica el movimiento asociado
+
+	La curva de movimiento, en lugar de ser Lineal, podriamos utilizar las curvas Skew de Cocos
+
+	Animación: Andar     VelMax:   20        AccMax: 1000        Curva: Senoidal       Direccion:  (0, 0, -1)         Duración: 3s          Distancia: 5 metros
+	Animación: Salto     VelMax:   20        AccMax: 1000        Curva: Senoidal       Direccion:  (0, 0, -1)         Duración: 3s          Distancia: 5 metros
+
+	*/
+	//
+	// Dragonbones tiene eventos de sonido y eventos custom, probarlos.
+	// https://github.com/DragonBones/DragonBonesCPP/tree/master/Cocos2DX_3.x/src/dragonBones/cocos2dx
+	//
+
+
+	// PhysicsShapeCache::getInstance();
+
+
 
 	ex.systems.add<plague::MovementSystem>();
 	ex.systems.add<plague::InputSystem>(this, character.id());
@@ -170,4 +187,25 @@ void Level01::render(cocos2d::Renderer* renderer, const cocos2d::Mat4& eyeTransf
 	cocos2d::Scene::render(renderer, eyeTransform, eyeProjection);
 	ex.systems.update_all(1.0f / 60.0f);
 }
+
+void Level01::onOpen(cocos2d::network::WebSocket* ws)
+{
+	std::cout << "pause" << std::endl;
+}
+
+void Level01::onMessage(cocos2d::network::WebSocket* ws, const cocos2d::network::WebSocket::Data& data) 
+{
+	std::cout << "pause" << std::endl;
+}
+
+void Level01::onClose(cocos2d::network::WebSocket* ws) 
+{
+	std::cout << "pause" << std::endl;
+}
+
+void Level01::onError(cocos2d::network::WebSocket* ws, const cocos2d::network::WebSocket::ErrorCode& error) 
+{
+	std::cout << "pause" << std::endl;
+}
+
 

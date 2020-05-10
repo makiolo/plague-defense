@@ -27,34 +27,30 @@ public:
 		 , m_tCallbackStartSimple(nullptr)
 		 , m_tCallbackUpdateSimple(nullptr)
 		 , m_tCallbackFinishSimple(nullptr)
-	{ reset(); }
+	{  }
 
 	explicit Action(const std::string& _name, const func0& callbackStartSimple, const func1& callbackUpdateSimple, const func2& callbackFinishSimple)
 		: TreeNodeLeaf(_name)
 		, m_tCallbackStartSimple(callbackStartSimple)
 		, m_tCallbackUpdateSimple(callbackUpdateSimple)
 		, m_tCallbackFinishSimple(callbackFinishSimple)
-	{
-		reset();
-	}
+	{  }
 
 	explicit Action(const std::string& _name, const ActionRepository::mapped_type& callbacks)
 		: TreeNodeLeaf(_name)
 		, m_tCallbackStartSimple(std::get<0>(callbacks))
 		, m_tCallbackUpdateSimple(std::get<1>(callbacks))
 		, m_tCallbackFinishSimple(std::get<2>(callbacks))
-	{
-		reset();
-	}
+	{  }
 
 	virtual ~Action()
 	{
 		
 	}
 
-	virtual Type getType() const override {return TYPE_ACTION;}
+	virtual Type getType() const override { return TYPE_ACTION; }
 
-	virtual void reset() override
+	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 		
 	}
@@ -95,22 +91,12 @@ public:
 
 		// el context lleva una maquina de estados por flujo
 		_change_state(context, id_flow, this);
-		/*
-		if (this->_status == INITIAL)
-		{
-			init();
-		}
-		*/
 		
 		// ejecutar la acci�n
 		this->_status = update(deltatime);
 
-		/*
-		if (this->_status != RUNNING)
-		{
-			terminate(this->_status != COMPLETED);
-		}
-		*/
+		// TODO: refactor esto, hay que borrar status del nodo
+		// context._last_state = this->_status;
 		
 		return this->_status;
 	}

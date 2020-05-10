@@ -27,7 +27,7 @@ public:
 		 , m_Random(false)
 		 , m_AutoReset(false)
 		 , m_Priority(false)
-	{ reset(); }
+	{  }
 
 	virtual ~Selector()
 	{ ; }
@@ -84,7 +84,7 @@ public:
 						if (m_AutoReset)
 						{
 							// se reinicia el selector
-							child->_reset();
+							child->configure(context, id_flow);
 						}
 
 						return COMPLETED;
@@ -120,7 +120,7 @@ public:
 				if( m_AutoReset )
 				{
 					// se reinicia el selector
-					this->_reset();
+					this->configure(context, id_flow);
 
 					return RUNNING;
 				}
@@ -138,23 +138,21 @@ public:
 		}
 	}
 
-	virtual void reset() override
+	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 		_init = false;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe) override
+	virtual void write(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_serialize(pipe);
 		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
 		pipe["Random"] = m_Random;
 		pipe["AutoReset"] = m_AutoReset;
 		pipe["Priority"] = m_Priority;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe) override
+	virtual void read(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_unserialize(pipe);
 		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<int>();
 		m_Random = pipe["Random"].get<bool>();
 		m_AutoReset = pipe["AutoReset"].get<bool>();

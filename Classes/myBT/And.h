@@ -26,7 +26,7 @@ public:
 		: TreeNodeComposite(name)
 		, m_Inverse(false)
 		, m_Lazy(true)
-	{ reset(); }
+	{  }
 
 	virtual ~And()
 	{
@@ -90,21 +90,19 @@ public:
 
 	}
 
-	virtual void reset() override
+	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 
 	}
 
-	virtual void _serialize(nlohmann::json& pipe) override
+	virtual void write(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_serialize(pipe);
 		pipe["Inverse"] = m_Inverse;
 		pipe["Lazy"] = m_Lazy;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe) override
+	virtual void read(nlohmann::json& pipe) override
 	{
-		TreeNodeComposite::_unserialize(pipe);
 		m_Inverse = pipe["Inverse"].get<bool>();
 		m_Lazy = pipe["Lazy"].get<bool>();
 	}

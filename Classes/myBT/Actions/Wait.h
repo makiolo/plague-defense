@@ -31,20 +31,18 @@ public:
         }
 	}
     
-	virtual void reset() override
+	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 		m_Count = 0.0f;
 	}
 
-	virtual void _serialize(nlohmann::json& pipe) override
+	virtual void write(nlohmann::json& pipe) override
 	{
-		Action::_serialize(pipe);
 		pipe["Time"] = m_Time;
 	}
 
-	virtual void _unserialize(nlohmann::json& pipe) override
+	virtual void read(nlohmann::json& pipe) override
 	{
-		Action::_unserialize(pipe);
 		m_Time = pipe["Time"];
 	}
 
