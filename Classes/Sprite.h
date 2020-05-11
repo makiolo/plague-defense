@@ -11,12 +11,12 @@ namespace plague {
 
 struct Sprite : public entityx::Component<Sprite>
 {
-	explicit Sprite(const std::string& appearance_, bool down_ = false, bool left_ = false)
+	explicit Sprite(const std::string& appearance_, uint8_t opacity_ = 255, bool down_ = false, bool left_ = false)
 		: sprite(cocos2d::Sprite::create(appearance_))
-		, appearance(appearance_)
+		, configured(false)
+		, opacity(opacity_)
 		, down(down_)
 		, left(left_)
-		, configured(false)
 	{
 		sprite->retain();
 	}
@@ -24,8 +24,7 @@ struct Sprite : public entityx::Component<Sprite>
 	~Sprite()
 	{
 		sprite->removeFromParent();
-		sprite->setVisible(false);
-		sprite->autorelease();
+		sprite->release();
 	}
 
 	cocos2d::Sprite* get() const
@@ -33,32 +32,41 @@ struct Sprite : public entityx::Component<Sprite>
 		return sprite;
 	}
 
+	void reset()
+	{
+		if (down)
+		{
+			if (!left)
+			{
+				sprite->setAnchorPoint(cocos2d::Vec2(0.5, 0.0));
+			}
+			else
+			{
+				sprite->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
+			}
+		}
+		sprite->setOpacity(opacity);
+		sprite->setPosition(cocos2d::Vec2::ZERO);
+		sprite->setScale(1);
+	}
 
 	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, plague::Transform& transform, plague::SceneComponent& scene)
 	{
 		if(!configured)
 		{
 			transform.configure_fw(es, events, scene);
-			if (down)
-			{
-				if (!left)
-				{
-					sprite->setAnchorPoint(cocos2d::Vec2(0.5, 0.0));
-				}
-				else
-				{
-					sprite->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
-				}
-			}
+			reset();
 			transform.get()->addChild(sprite);
 			configured = true;
 		}
 	}
 
 
-	bool configured;
+	// constructor
 	cocos2d::Sprite* sprite;
-	std::string appearance;
+	bool configured;
+	// configure
+	uint8_t opacity;
 	bool down;
 	bool left;
 };

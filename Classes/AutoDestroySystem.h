@@ -8,6 +8,8 @@
 #include <cocos2d.h>
 #include <entityx/entityx.h>
 #include "AutoDestroyDescription.h"
+#include "LinkedEntityComponent.h"
+#include "EntityWillDestroyEvent.h"
 
 namespace plague {
 
@@ -31,6 +33,16 @@ struct AutoDestroySystem : public entityx::System<AutoDestroySystem> {
 				// animate and destroy
 				auto entity_id = entity.id();
 				auto entity = es.get(entity_id);
+
+				if(entity.has_component<LinkedEntityCompomnent>())
+				{
+					auto linked = entity.component<LinkedEntityCompomnent>().get();
+					auto child_entity = es.get(linked->child_id);
+					// 
+					child_entity.assign<AutoDestroyDescription>(autodestroy.linked_life);
+					events.emit<plague::EntityWillDestroy>(linked->child_id, autodestroy.linked_life);
+				}
+
 				entity.destroy();
 			}
 		});

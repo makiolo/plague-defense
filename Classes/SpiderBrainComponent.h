@@ -31,17 +31,58 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
 
 	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, plague::Transform& transform)
 	{
+		// TODO: crear un steeringbehavioursSystem
+		// Recibe peticiones de seek, flee, follow path, etc
+		//
+		//
+		// TODO: usar el contexto para pasar parametros custom a las acciones
+		// y así, tener un verdadero fly weight con el arbol compartido.
+		//
+		//
+		// Comandos jugador:
+		//				izq, der, y fire
+		// Comandos torreta:
+		//				Actualizarse, Venderla, Algoritmo de disparo
+		// Especiales del jugador:
+		//				Aceite hirviendo
+		//
+		//
+		// Comandos enemigo
+		//				izq, der, subir, bajar, esquivar
+		//	
+		//
+		//	Habilidades pasivas (ActiveSkillComponent):
+		//				Aura de vida: cura aliados cercanos
+		//				Division al morir
+		//	Habilidades activas: (PassiveSkillComponent)
+		//				Curar enemigos
+		//
+		//
+		//	Condiciones para perder:
+		//		- El jugador muere por cualquier causa
+		//		- Pierdes todas las vidas -> Las estrellas se asignan en función de las vidas.
+		//
+		//
+		//  Una habilidad depende de cierto sistema para funcionar.
+		//  Chequear que esta instalado? por sanity ?
+		//
+		//
+		//  Al principio todas las torretas son iguales, pero vas
+		//  abriendo la niebla de las actualizaciones en cada partida
+		//
+		//
+
 		actions["go_to_spawn"] = {
 			[&]() {
-				const float velocity = 100.0f;
-				cocos2d::Vec2 spawn_point = transform.get()->getPosition();
-				cocos2d::Vec2 start_point(level01::column1, spawn_point.y);
-				float start_time = spawn_point.distance(start_point) / velocity;
-				transform.get()->runAction(cocos2d::MoveBy::create(start_time, start_point - spawn_point));
+				const float velocity = 300.0f;
+				cocos2d::Vec2 pointA = transform.get()->getPosition();
+				cocos2d::Vec2 pointB(level01::column1, pointA.y);
+				float start_time = pointA.distance(pointB) / velocity;
+				transform.get()->runAction(cocos2d::MoveBy::create(start_time, pointB - pointA));
 			}, [&](double deltatime) {
-				cocos2d::Vec2 spawn_point = transform.get()->getPosition();
-				cocos2d::Vec2 start_point(level01::column1, spawn_point.y);
-				if(spawn_point.distanceSquared(start_point) > (1.0f*1.0f))
+				cocos2d::Vec2 pointA = transform.get()->getPosition();
+				cocos2d::Vec2 pointB(level01::column1, pointA.y);
+				if(pointA.distanceSquared(pointB) > (1.0f*1.0f))
 					return myBT::RUNNING;
 				else
 					return myBT::COMPLETED;
@@ -52,15 +93,15 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
 
 		actions["go_to_roof"] = {
 			[&]() {
-				const float velocity = 100.0f;
-				cocos2d::Vec2 spawn_point = transform.get()->getPosition();
-				cocos2d::Vec2 start_point(level01::column3, level01::ceil);
-				float start_time = spawn_point.distance(start_point) / velocity;
-				transform.get()->runAction(cocos2d::MoveBy::create(start_time, start_point - spawn_point));
+				const float velocity = 300.0f;
+				cocos2d::Vec2 pointA = transform.get()->getPosition();
+				cocos2d::Vec2 pointB(level01::column3, level01::ceil);
+				float start_time = pointA.distance(pointB) / velocity;
+				transform.get()->runAction(cocos2d::MoveBy::create(start_time, pointB - pointA));
 			}, [&](double deltatime) {
-				cocos2d::Vec2 spawn_point = transform.get()->getPosition();
-				cocos2d::Vec2 start_point(level01::column3, level01::ceil);
-				if (spawn_point.distanceSquared(start_point) > (1.0f * 1.0f))
+				cocos2d::Vec2 pointA = transform.get()->getPosition();
+				cocos2d::Vec2 pointB(level01::column3, level01::ceil);
+				if (pointA.distanceSquared(pointB) > (1.0f * 1.0f))
 					return myBT::RUNNING;
 				else
 					return myBT::COMPLETED;

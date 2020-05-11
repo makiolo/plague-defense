@@ -11,6 +11,8 @@
 #include "Sprite.h"
 #include "PhysicsIntrospectionComponent.h"
 #include "PhysicsDescription.h"
+#include "Transform.h"
+#include "PhysicsIntrospectionComponent.h"
 
 namespace plague {
 	
@@ -24,6 +26,7 @@ struct PhysicsComponent : public entityx::Component<PhysicsComponent>
 {
 	explicit PhysicsComponent(plague::Sprite& sprite, plague::PhysicsDescription& physics_desc)
 		: physicsBody(cocos2d::PhysicsBody::createCircle(sprite.get()->getContentSize().width / 2.0, cocos2d::PhysicsMaterial(physics_desc.density, physics_desc.restitution, physics_desc.friction)))
+		, configured(false)
 	{
 		physicsBody->retain();
 	}
@@ -31,12 +34,23 @@ struct PhysicsComponent : public entityx::Component<PhysicsComponent>
 	~PhysicsComponent()
 	{
 		physicsBody->removeFromWorld();
-		physicsBody->autorelease();
+		physicsBody->release();
 	}
 
 	cocos2d::PhysicsBody* get() const
 	{
 		return physicsBody;
+	}
+
+	void configure_fw(Transform& transform, PhysicsIntrospectionComponent& introspection)
+	{
+		if(!configured)
+		{
+			// physicsBody->autorelease();
+			transform.get()->setPhysicsBody(physicsBody);
+			transform.get()->setUserData((void*)&introspection);
+			configured = true;
+		}
 	}
 
 	void update_collision_bitmask(PhysicsMask mask)
@@ -63,6 +77,7 @@ struct PhysicsComponent : public entityx::Component<PhysicsComponent>
 	}
 
 	cocos2d::PhysicsBody* physicsBody;
+	bool configured;
 };
 
 }

@@ -61,8 +61,7 @@ struct PhysicsBuilderSystem : public entityx::System<PhysicsBuilderSystem>
 			}
 
 			// Aplicar fisica al transform
-			transform.get()->setPhysicsBody(physics_component->get());
-			transform.get()->setUserData((void*)&introspection);
+			physics_component->configure_fw(transform, introspection);
 
 			// desacoplamiento del motor de propulsion
 			entity.component<plague::PhysicsDescription>().remove();

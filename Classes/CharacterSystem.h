@@ -16,6 +16,7 @@
 #include "StammableComponent.h"
 #include "Level01Constants.h"
 #include "SceneComponent.h"
+#include "ParticleFireWorksComponent.h"
 
 namespace plague {
 
@@ -87,6 +88,9 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 		projectil.assign<plague::PhysicsDescription>();
 		projectil.assign<plague::PhysicsIntrospectionComponent>();
 		// Hace que explote, en caso de colision 
+		// TODO: crear otro concepto que es "RebotableComponent"
+		// Si la tienes, acepta un rebote contra torretas, pero despues del rebote
+		// se convierte en "StammableComponent"
 		projectil.assign<plague::StammableComponent>();
 		// Apariencia
 		//
@@ -94,6 +98,7 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 		projectil.assign<plague::SceneComponent>(scene);
 		projectil.assign<plague::Transform>(spawn_point, 0.2f);  // position and scale
 		projectil.assign<plague::Sprite>("img/character/piedra.png");
+		projectil.assign<plague::ParticleFireworksCompomnent>( projectil.id() );
 	}
 
 };

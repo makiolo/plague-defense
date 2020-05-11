@@ -16,8 +16,9 @@ namespace plague {
 
 struct SceneComponent : public entityx::Component<SceneComponent>
 {
-	explicit SceneComponent(cocos2d::Scene* scene_)
+	explicit SceneComponent(cocos2d::Scene* scene_, int zorder_ = 0)
 		: scene(scene_)
+		, zorder(zorder_)
 	{
 		
 	}
@@ -27,8 +28,8 @@ struct SceneComponent : public entityx::Component<SceneComponent>
 		return scene;
 	}
 
-	// need scene, but i dont owner
 	cocos2d::Scene* scene;
+	int zorder;
 };
 
 }

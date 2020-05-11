@@ -26,6 +26,8 @@
 #endif
 #include "SpiderBrainComponent.h"
 #include "SceneComponent.h"
+#include "ParticleFireWorksComponent.h"
+#include "LinkedEntityComponent.h"
 
 namespace plague {
 
@@ -72,6 +74,13 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 
 	void spwan_spider_normal(entityx::EntityManager& es, entityx::EventManager& events, float start_x, float velocity, std::mt19937& gen, std::uniform_int_distribution<> step_dist, std::uniform_real_distribution<> wait_dist, std::normal_distribution<> offset_dist)
 	{
+		cocos2d::Scene* scene = cocos2d::Director::getInstance()->getRunningScene();
+
+		entityx::Entity fireworks = es.create();
+		fireworks.assign<plague::SceneComponent>(scene, 10);
+		fireworks.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
+		fireworks.assign<plague::ParticleFireworksCompomnent>( fireworks.id() );
+
 		entityx::Entity spider = es.create();
 		// Marca la entidad como de tipo Insecto
 		spider.assign<plague::InsectComponent>();
@@ -81,10 +90,10 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		// Comportamiento IA
 		spider.assign<plague::SpiderBrainComponent>(spider.id(), "spider");
 		// Apariencia
-		cocos2d::Scene* scene = cocos2d::Director::getInstance()->getRunningScene();
 		spider.assign<plague::SceneComponent>(scene);
 		spider.assign<plague::Transform>(plague::level01::enemies, 1.0f);  // position and scale
 		spider.assign<plague::Sprite>("img/enemy/spider.png");
+		spider.assign<plague::LinkedEntityCompomnent>( fireworks.id() );
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override

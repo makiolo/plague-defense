@@ -11,9 +11,9 @@ struct Transform : public entityx::Component<Transform>
 {
 	explicit Transform(cocos2d::Vec2 position_, float scale_)
 		: node(cocos2d::Node::create())
+		, configured(false)
 		, position(position_)
 		, scale(scale_)
-		, configured(false)
 	{
 		node->retain();
 	}
@@ -21,8 +21,7 @@ struct Transform : public entityx::Component<Transform>
 	~Transform()
 	{
 		node->removeFromParent();
-		node->setVisible(false);
-		node->autorelease();
+		node->release();
 	}
 
 	cocos2d::Node* get() const
@@ -30,19 +29,25 @@ struct Transform : public entityx::Component<Transform>
 		return node;
 	}
 
+	void reset()
+	{
+		node->setPosition(position);
+		node->setScale(scale);
+	}
+
 	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, SceneComponent& scene)
 	{
 		if(!configured)
 		{			
-			node->setPosition(position);
-			node->setScale(scale);
-			scene.get()->addChild(node);
+			reset();
+			scene.get()->addChild(node, scene.zorder);
 			configured = true;
 		}
 	}
 
-	bool configured;
 	cocos2d::Node* node;
+	bool configured;
+	//
 	cocos2d::Vec2 position;
 	float scale;
 };

@@ -9,13 +9,15 @@ namespace plague {
 
 struct AutoDestroyDescription : public entityx::Component<AutoDestroyDescription>
 {
-	explicit AutoDestroyDescription(float life_ = 0.0f)
+	explicit AutoDestroyDescription(float life_ = 0.0f, float linked_life_ = 2.0f)
 		: life(life_)
+		, linked_life(linked_life_)
 	{
 		;
 	}
 
 	float life;
+	float linked_life;
 };
 
 }

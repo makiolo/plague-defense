@@ -53,18 +53,15 @@ struct InputSystem : public entityx::System<InputSystem>,
 		
 	{
 		_listener = cocos2d::EventListenerKeyboard::create();
-		_listener->retain();
 		_listener->onKeyPressed = CC_CALLBACK_2(InputSystem::onKeyPressed, this);
 		_listener->onKeyReleased = CC_CALLBACK_2(InputSystem::onKeyReleased, this);
 
 		_listener_touch = cocos2d::EventListenerTouchOneByOne::create();
-		_listener_touch->retain();
 		_listener_touch->onTouchBegan = CC_CALLBACK_2(InputSystem::onTouchBegan, this);
 		_listener_touch->onTouchMoved = CC_CALLBACK_2(InputSystem::onTouchMoved, this);
 		_listener_touch->onTouchEnded = CC_CALLBACK_2(InputSystem::onTouchEnded, this);
 
 		_listener_mouse = cocos2d::EventListenerMouse::create();
-		_listener_mouse->retain();
 		_listener_mouse->onMouseMove = CC_CALLBACK_1(InputSystem::onMouseMove, this);
 		_listener_mouse->onMouseUp = CC_CALLBACK_1(InputSystem::onMouseUp, this);
 		_listener_mouse->onMouseDown = CC_CALLBACK_1(InputSystem::onMouseDown, this);
@@ -74,8 +71,11 @@ struct InputSystem : public entityx::System<InputSystem>,
 		_scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_listener_touch, _scene);
 		_scene->getEventDispatcher()->addEventListenerWithSceneGraphPriority(_listener_mouse, _scene);
 
-
-
+		
+		/*
+		 * Compònente: NavMeshComponent
+		 * Dependencias 
+		 */ 
 
 		using namespace cocos2d;
 
@@ -93,10 +93,7 @@ struct InputSystem : public entityx::System<InputSystem>,
 
 		cocos2d::Size size = cocos2d::Director::getInstance()->getWinSize();
 
-		//_camera = cocos2d::Camera::createPerspective(60.0f, size.width / size.height, 1.0f, 1000.0f);
-
-		_camera = cocos2d::Camera::createOrthographic(10, 10, 1, 100);
-		//_camera->setViewport(cocos2d::Viewport(0, 0, 1080, 1920));
+		_camera = cocos2d::Camera::createPerspective(60.0f, size.width / size.height, 1.0f, 1000.0f);
 
 		_camera->setPosition3D(cocos2d::Vec3(.0f, 20.0f, 20.0f));
 		_camera->lookAt(cocos2d::Vec3(0.0f, 0.0f, 0.0f), cocos2d::Vec3(0.0f, 1.0f, 0.0f));
@@ -104,27 +101,27 @@ struct InputSystem : public entityx::System<InputSystem>,
 		_scene->addChild(_camera);
 
 		navmesh = cocos2d::NavMesh::create("grid/all_tiles_tilecache.bin", "grid/grid.gset");
-		navmesh->setDebugDrawEnable(false);
-
 		_scene->setNavMesh(navmesh);
-		_scene->setNavMeshDebugCamera(_camera);
 
+		const bool debug_navmesh = false;
+		navmesh->setDebugDrawEnable(debug_navmesh);
+		if(debug_navmesh)
+		{
+			_scene->setNavMeshDebugCamera(_camera);
 
-		auto ambientLight = cocos2d::AmbientLight::create(cocos2d::Color3B(64, 64, 64));
-		ambientLight->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
-		_scene->addChild(ambientLight);
+			auto ambientLight = cocos2d::AmbientLight::create(cocos2d::Color3B(64, 64, 64));
+			ambientLight->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
+			_scene->addChild(ambientLight);
 
-		auto dirLight = DirectionLight::create(Vec3(1.2f, -1.1f, 0.5f), cocos2d::Color3B(255, 255, 255));
-		dirLight->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
-		_scene->addChild(dirLight);
-
-		
-
+			auto dirLight = DirectionLight::create(Vec3(1.2f, -1.1f, 0.5f), cocos2d::Color3B(255, 255, 255));
+			dirLight->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
+			_scene->addChild(dirLight);
+		}
 
 		// Crear materiales despues de crear luces
 		auto material = cocos2d::Material::createWithFilename("materials/3d_effects.material");
-		//material->setTechnique("normal");
 		sprite->setMaterial(material);
+
 	}
 
 	virtual ~InputSystem()
@@ -194,13 +191,13 @@ struct InputSystem : public entityx::System<InputSystem>,
 		_mouse_x = e->getCursorX();
 		_mouse_y = e->getCursorY();
 
-		/*
-		cocos2d::Size visibleSize = cocos2d::Director::getInstance()->getVisibleSize();
-		cocos2d::Vec2 origin = cocos2d::Director::getInstance()->getVisibleOrigin();
-		cocos2d::Vec2 location = (cocos2d::Vec2(_mouse_x, _mouse_y) + origin);
-		location.x /= visibleSize.width;
-		location.y /= visibleSize.height;
-		*/
+		//
+		//		escribir en el 3d, utilizando coordenadas 2d (un area menor a la pantalla)
+		//		leer del mundo 3d (un area menor al objeto 3d), y traerlo recibido en 2d
+		//
+		//		Funcionalidad a conseguir para traducir el navmesh a 2D.
+		//
+
 		cocos2d::Vec2 location = e->getLocation();
 
 		if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT)
