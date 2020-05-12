@@ -42,7 +42,7 @@ void make_clouds(cocos2d::Scene* scene, entityx::EntityManager& entities)
 
 		entity.assign<plague::SceneComponent>(scene, -1);
 		entity.assign<plague::Transform>(position, scale);
-		entity.assign<plague::Sprite>("img/decoration/cloud.png");
+		entity.assign<plague::Sprite>("img/decoration/cloud.png", 128);
 		entity.assign<plague::CloudComponent>();
 	}
 }

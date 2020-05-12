@@ -17,6 +17,7 @@
 #include "Level01Constants.h"
 #include "SceneComponent.h"
 #include "ParticleFireWorksComponent.h"
+#include "SpriterModelComponent.h"
 
 namespace plague {
 
@@ -34,9 +35,9 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
-		es.each<plague::Transform, plague::CharacterComponent>([&](entityx::Entity entity, plague::Transform& transform, plague::CharacterComponent& character)
+		es.each<plague::Transform, plague::CharacterComponent, plague::SpriterModelComponent>([&](entityx::Entity entity, plague::Transform& transform, plague::CharacterComponent& character, plague::SpriterModelComponent& spriter)
 		{
-			character.configure_fw(es, events);
+			character.configure_fw(es, events, spriter);
 		});
 	}
 
@@ -51,12 +52,12 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 			if (character._left)
 			{
 				position.x -= velocity * dt;
+				scale_x *= -1;
 			}
 
 			if (character._right)
 			{
 				position.x += velocity * dt;
-				scale_x *= -1;
 			}
 
 			if(position.x <= level01::left_limit.x)
@@ -69,6 +70,11 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 			{
 				transform.get()->setPosition(position);
 				transform.get()->setScaleX(scale_x);
+				character.play("walk");
+			}
+			else
+			{
+				character.play("idle");
 			}
 
 			if (character._fire)

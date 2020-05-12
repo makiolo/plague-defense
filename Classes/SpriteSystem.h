@@ -17,6 +17,7 @@
 #include "ParticleFireWorksComponent.h"
 #include "LinkedEntityComponent.h"
 #include "LayerColorComponent.h"
+#include "SpriterModelComponent.h"
 
 namespace plague {
 
@@ -45,6 +46,9 @@ struct SpriteSystem : public entityx::System<SpriteSystem>
 		});
 		es.each<plague::LayerColorCompomnent, plague::Transform, plague::SceneComponent>([&](entityx::Entity entity, plague::LayerColorCompomnent& layer, plague::Transform& transform, plague::SceneComponent& scene) {
 			layer.configure_fw(es, events, transform, scene);
+		});
+		es.each<plague::SpriterModelComponent, plague::Transform, plague::SceneComponent>([&](entityx::Entity entity, plague::SpriterModelComponent& spriter, plague::Transform& transform, plague::SceneComponent& scene) {
+			spriter.configure_fw(es, events, transform, scene);
 		});
 	}
 

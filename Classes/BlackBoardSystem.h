@@ -76,10 +76,10 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 	{
 		cocos2d::Scene* scene = cocos2d::Director::getInstance()->getRunningScene();
 
-		entityx::Entity fireworks = es.create();
-		fireworks.assign<plague::SceneComponent>(scene, 10);
-		fireworks.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
-		fireworks.assign<plague::ParticleFireworksCompomnent>( fireworks.id() );
+		// entityx::Entity fireworks = es.create();
+		// fireworks.assign<plague::SceneComponent>(scene, 10);
+		// fireworks.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
+		// fireworks.assign<plague::ParticleFireworksCompomnent>( fireworks.id() );
 
 		entityx::Entity spider = es.create();
 		// Marca la entidad como de tipo Insecto
@@ -93,7 +93,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		spider.assign<plague::SceneComponent>(scene);
 		spider.assign<plague::Transform>(plague::level01::enemies, 1.0f);  // position and scale
 		spider.assign<plague::Sprite>("img/enemy/spider.png");
-		spider.assign<plague::LinkedEntityCompomnent>( fireworks.id() );
+		// spider.assign<plague::LinkedEntityCompomnent>( fireworks.id() );
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override

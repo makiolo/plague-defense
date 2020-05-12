@@ -36,22 +36,22 @@ bool Level00::init()
 	sdkbox::PluginAdMob::init();
 #endif
 
-	auto paraNode = ParallaxNode::create();
-
-	auto fondo1 = Sprite::create("parallax/fondo1.png");
-	auto fondo2 = Sprite::create("parallax/fondo2.png");
-	auto fondo3 = Sprite::create("parallax/fondo3.png");
-
-	// background image is moved at a ratio of 0.4x, 0.5y
-	paraNode->addChild(fondo1, -1, Vec2(0.4f, 0.5f), Vec2::ZERO);
-
-	// tiles are moved at a ratio of 2.2x, 1.0y
-	paraNode->addChild(fondo2, 1, Vec2(2.2f, 1.0f), Vec2(0, -200));
-
-	// top image is moved at a ratio of 3.0x, 2.5y
-	paraNode->addChild(fondo3, 2, Vec2(3.0f, 2.5f), Vec2(200, 800));
-
-	this->addChild(paraNode, 1);
+	// auto paraNode = ParallaxNode::create();
+    //
+	// auto fondo1 = Sprite::create("parallax/fondo1.png");
+	// auto fondo2 = Sprite::create("parallax/fondo2.png");
+	// auto fondo3 = Sprite::create("parallax/fondo3.png");
+    //
+	// // background image is moved at a ratio of 0.4x, 0.5y
+	// paraNode->addChild(fondo1, -1, Vec2(0.4f, 0.5f), Vec2::ZERO);
+    //
+	// // tiles are moved at a ratio of 2.2x, 1.0y
+	// paraNode->addChild(fondo2, 1, Vec2(2.2f, 1.0f), Vec2(0, -200));
+    //
+	// // top image is moved at a ratio of 3.0x, 2.5y
+	// paraNode->addChild(fondo3, 2, Vec2(3.0f, 2.5f), Vec2(200, 800));
+    //
+	// this->addChild(paraNode, 1);
 
 
 	/*

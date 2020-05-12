@@ -11,6 +11,7 @@
 #include "LeftCommand.h"
 #include "RightCommand.h"
 #include "FireCommand.h"
+#include "SpriterModelComponent.h"
 
 namespace plague {
 
@@ -28,35 +29,52 @@ struct CharacterComponent : public entityx::Component<CharacterComponent>, publi
 
 	virtual ~CharacterComponent()
 	{
-
+		
 	}
 
-	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events)
+	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, SpriterModelComponent& spriter_)
 	{
 		events.subscribe<plague::LeftCommand>(*this);
 		events.subscribe<plague::RightCommand>(*this);
 		events.subscribe<plague::FireCommand>(*this);
+		spriter = &spriter_;
+	}
+
+	void play(const std::string& name)
+	{
+		if(spriter)
+		{
+			spriter->entity->setCurrentAnimation(name);
+			// spriter->entity->startResumePlayback();
+		}
 	}
 
 	void receive(const plague::LeftCommand& event)
 	{
 		if (event.to == _whoami)
+		{
 			_left = event.active;
+		}
 	}
 
 	void receive(const plague::RightCommand& event)
 	{
 		if (event.to == _whoami)
+		{
 			_right = event.active;
+		}
 	}
 
 	void receive(const plague::FireCommand& event)
 	{
 		if (event.to == _whoami)
+		{
 			_fire = true;
+		}
 	}
 
 	entityx::Entity::Id _whoami;
+	SpriterModelComponent* spriter;
 	float velocity;
 	bool _left;
 	bool _right;

@@ -15,6 +15,7 @@
 #include "TimerComponent.h"
 #include "LayerColorComponent.h"
 #include "ParticleFireWorksComponent.h"
+#include "SpriterModelComponent.h"
 // SYSTEMS
 #include "MovementClouds.h"
 #include "InputKeyboard.h"
@@ -31,7 +32,6 @@
 #include "SpriteSystem.h"
 #include "CountSensorSystem.h"
 #include "TimerSystem.h"
-#include "AnimationSystem.h"
 
 // SCENES
 #include "MainMenuScene.h"
@@ -90,12 +90,12 @@ bool Level01::init()
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/birds.mp3", true);
 #endif
 
-	// plague::make_clouds(this, ex.entities);
+	plague::make_clouds(this, ex.entities);
 
-	// auto sky = ex.entities.create();
-	// sky.assign<plague::SceneComponent>(this, -2);
-	// sky.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);
-	// sky.assign<plague::LayerColorCompomnent>();
+	auto sky = ex.entities.create();
+	sky.assign<plague::SceneComponent>(this, -2);
+	sky.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);
+	sky.assign<plague::LayerColorCompomnent>(128);
 
 	auto building = ex.entities.create();
 	building.assign<plague::SceneComponent>(this);
@@ -106,13 +106,15 @@ bool Level01::init()
 	scenary.assign<plague::DebugBar>(this, ex.events);
 
 	auto character = ex.entities.create();
-	character.assign<plague::SceneComponent>(this);
-	character.assign<plague::Transform>(plague::level01::player, 0.15f);  // position and scale
-	character.assign<plague::Sprite>("img/character/character.png", 255, true, false);
+	character.assign<plague::SceneComponent>(this, 5);
+	character.assign<plague::Transform>(plague::level01::player, 1.0f);  // position and scale
+	// character.assign<plague::Sprite>("img/character/character.png", 255, true, false);
 	character.assign<plague::CharacterComponent>(character.id(), 250.0f);
-	character.assign<plague::CountSensorComponent>();
-	character.assign<plague::ParticleFireworksCompomnent>( character.id() );
-	//character.assign<plague::TimerComponent>("fire", 3);
+	// character.assign<plague::ParticleFireworksCompomnent>( character.id() );
+	character.assign<plague::SpriterModelComponent>("spriterpro/GreyGuy/player.scml", "Player", "flip");
+
+	// character.assign<plague::CountSensorComponent>();
+	// character.assign<plague::TimerComponent>("fire", 3);
 	// character.assign<plague::BrainComponent>(character.id(), "brain");
 
 	// auto character2 = ex.entities.create();
@@ -191,7 +193,6 @@ bool Level01::init()
 	ex.systems.add<plague::SpriteSystem>();
 	ex.systems.add<plague::CountSensorSystem>();
 	ex.systems.add<plague::TimerSystem>();
-	ex.systems.add<plague::AnimationSystem>();
 	ex.systems.configure();
 
     return true;
