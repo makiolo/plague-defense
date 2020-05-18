@@ -16,6 +16,7 @@
 #include "LayerColorComponent.h"
 #include "ParticleFireWorksComponent.h"
 #include "SpriterModelComponent.h"
+#include "LabelWithTTFUIComponent.h"
 // SYSTEMS
 #include "MovementClouds.h"
 #include "InputKeyboard.h"
@@ -90,20 +91,60 @@ bool Level01::init()
 	SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/birds.mp3", true);
 #endif
 
-	plague::make_clouds(this, ex.entities);
 
+	// plague::make_clouds(this, ex.entities);
+
+	/*
 	auto sky = ex.entities.create();
-	sky.assign<plague::SceneComponent>(this, -2);
+	sky.assign<plague::SceneComponent>(this);
 	sky.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);
 	sky.assign<plague::LayerColorCompomnent>(128);
+	*/
 
+	/*
 	auto building = ex.entities.create();
 	building.assign<plague::SceneComponent>(this);
-	building.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
-	building.assign<plague::Sprite>("img/building/newlevel01.png", 128, true, true);
+	building.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);
+	building.assign<plague::Sprite>("img/building/newlevel01.png", 128, cocos2d::Vec2::ANCHOR_BOTTOM_LEFT);
+	*/
 
+	// scenary.assign<plague::DebugBar>(this, ex.events);
+
+
+
+
+	// Gestión textos
 	auto scenary = ex.entities.create();
-	scenary.assign<plague::DebugBar>(this, ex.events);
+	scenary.assign<plague::SceneComponent>(this);
+	scenary.assign<plague::Transform>(cocos2d::Vec2(800, 200), 2.5f);  // position and scale
+	scenary.assign<plague::Sprite>("gui/bocadillo.png", 255, cocos2d::Vec2::ANCHOR_MIDDLE, cocos2d::Vec2(0, -12), 0.3f);
+	// Sombra
+	scenary.assign<plague::LabelWithTTFUICompomnent<float> >(cocos2d::Color4B(0, 0, 0, 255), "Hola mundo", 32, cocos2d::Vec2(1, -1), 0); // sombra zorder=0
+	// Iluminado
+	scenary.assign<plague::LabelWithTTFUICompomnent<bool> >(cocos2d::Color4B(64, 64, 64, 255), "Hola mundo", 32, cocos2d::Vec2(-1, 1), 0); // sombra zorder=0
+	// Letra
+	scenary.assign<plague::LabelWithTTFUICompomnent<int> >(cocos2d::Color4B(128, 128, 128, 255), "Hola mundo", 32, cocos2d::Vec2(0, 0), 1);//Letra blanca zorder=1
+
+
+
+
+
+
+
+
+
+
+
+	/*
+	auto scenary_shadow = ex.entities.create();
+	scenary_shadow.assign<plague::SceneComponent>(this, 1);
+	scenary_shadow.assign<plague::Transform>(cocos2d::Vec2(950, 200), 3.0f);  // position and scale
+	scenary_shadow.assign<plague::LabelWithTTFUICompomnent>(cocos2d::Color4B(0, 0, 0, 255), "Press start", 32, cocos2d::Vec2(2, -2));
+	*/
+
+
+
+
 
 	auto character = ex.entities.create();
 	character.assign<plague::SceneComponent>(this, 5);

@@ -18,7 +18,7 @@ struct DebugBar : public entityx::Component<DebugBar>, public entityx::Receiver<
 	explicit DebugBar(cocos2d::Scene* scene, entityx::EventManager& events)
 		: _scene(scene)
 	{
-		_label = cocos2d::Label::createWithTTF("Lifes: 0", "fonts/Marker Felt.ttf", 24);
+		_label = cocos2d::Label::createWithTTF("Lifes: 0", "fonts/arial.ttf", 36);
 		// _label->retain();
 		if (_label == nullptr)
 		{
@@ -41,8 +41,6 @@ struct DebugBar : public entityx::Component<DebugBar>, public entityx::Receiver<
 	virtual ~DebugBar()
 	{
 		_label->removeFromParent();
-		// _label->setVisible(false);
-		// _label->autorelease();
 	}
 
 	void receive(const plague::LifeLostEvent& command)

@@ -28,6 +28,42 @@
 
 USING_NS_CC;
 
+/*
+static uint32_t alloc_count = 0;
+
+void* operator new(size_t size)
+{
+    alloc_count += 1;
+    size_t sizeof_director = sizeof(Director);
+    size_t sizeof_cfg = sizeof(Configuration);
+    size_t sizeof_eventcustom = sizeof(EventCustom);
+    if (size != MAX_LOG_LENGTH && size != sizeof_director && size != sizeof_cfg && size != sizeof_eventcustom && size > 8 && size != 56 && size != 64 && size != 32 && size != 28)
+    {
+        //CCLOG("Allocation %l bytes.", size);
+    }
+    return malloc(size);
+}
+
+void operator delete(void* ptr)
+{
+    // CCLOG("Deallocation ptr.");
+    alloc_count -= 1;
+}
+
+struct MemoryChecker
+{
+    MemoryChecker()
+    {
+        
+    }
+
+    ~MemoryChecker()
+    {
+        CCLOG("Total count: %l", alloc_count);
+    }
+};
+*/
+
 int WINAPI _tWinMain(HINSTANCE hInstance,
                        HINSTANCE hPrevInstance,
                        LPTSTR    lpCmdLine,

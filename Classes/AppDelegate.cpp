@@ -67,8 +67,12 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if(!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#if 1
         glview = GLViewImpl::createWithRect("PlagueDefense", cocos2d::Rect(0, 0, windowResolutionSize.width, windowResolutionSize.height));
-		// dynamic_cast<GLViewImpl*>(glview)->setFullscreen();
+#else
+        glview = GLViewImpl::createWithRect("PlagueDefense", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
+		dynamic_cast<GLViewImpl*>(glview)->setFullscreen();
+#endif
 #else
         glview = GLViewImpl::create("PlagueDefense");
 #endif

@@ -18,6 +18,7 @@
 #include "LinkedEntityComponent.h"
 #include "LayerColorComponent.h"
 #include "SpriterModelComponent.h"
+#include "LabelWithTTFUIComponent.h"
 
 namespace plague {
 
@@ -49,6 +50,15 @@ struct SpriteSystem : public entityx::System<SpriteSystem>
 		});
 		es.each<plague::SpriterModelComponent, plague::Transform, plague::SceneComponent>([&](entityx::Entity entity, plague::SpriterModelComponent& spriter, plague::Transform& transform, plague::SceneComponent& scene) {
 			spriter.configure_fw(es, events, transform, scene);
+		});
+		es.each<plague::LabelWithTTFUICompomnent<int>, plague::Transform, plague::SceneComponent>([&](entityx::Entity entity, plague::LabelWithTTFUICompomnent<int>& label, plague::Transform& transform, plague::SceneComponent& scene) {
+			label.configure_fw(es, events, transform, scene);
+		});
+		es.each<plague::LabelWithTTFUICompomnent<float>, plague::Transform, plague::SceneComponent>([&](entityx::Entity entity, plague::LabelWithTTFUICompomnent<float>& label, plague::Transform& transform, plague::SceneComponent& scene) {
+			label.configure_fw(es, events, transform, scene);
+		});
+		es.each<plague::LabelWithTTFUICompomnent<bool>, plague::Transform, plague::SceneComponent>([&](entityx::Entity entity, plague::LabelWithTTFUICompomnent<bool>& label, plague::Transform& transform, plague::SceneComponent& scene) {
+			label.configure_fw(es, events, transform, scene);
 		});
 	}
 

@@ -11,12 +11,13 @@ namespace plague {
 
 struct Sprite : public entityx::Component<Sprite>
 {
-	explicit Sprite(const std::string& appearance_, uint8_t opacity_ = 255, bool down_ = false, bool left_ = false)
+	explicit Sprite(const std::string& appearance_, uint8_t opacity_ = 255, cocos2d::Vec2 anchor_point_ = cocos2d::Vec2::ANCHOR_MIDDLE, const cocos2d::Vec2& offset_position_ = cocos2d::Vec2::ZERO, float offset_scale_ = 1.0f)
 		: sprite(cocos2d::Sprite::create(appearance_))
 		, configured(false)
 		, opacity(opacity_)
-		, down(down_)
-		, left(left_)
+		, anchor_point(anchor_point_)
+		, offset_position(offset_position_)
+		, offset_scale(offset_scale_)
 	{
 		sprite->retain();
 	}
@@ -34,20 +35,10 @@ struct Sprite : public entityx::Component<Sprite>
 
 	void reset()
 	{
-		if (down)
-		{
-			if (!left)
-			{
-				sprite->setAnchorPoint(cocos2d::Vec2(0.5, 0.0));
-			}
-			else
-			{
-				sprite->setAnchorPoint(cocos2d::Vec2(0.0, 0.0));
-			}
-		}
+		sprite->setAnchorPoint(anchor_point);
 		sprite->setOpacity(opacity);
-		sprite->setPosition(cocos2d::Vec2::ZERO);
-		sprite->setScale(1);
+		sprite->setPosition(offset_position);
+		sprite->setScale(offset_scale);
 	}
 
 	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, plague::Transform& transform, plague::SceneComponent& scene)
@@ -65,10 +56,11 @@ struct Sprite : public entityx::Component<Sprite>
 	// constructor
 	cocos2d::Sprite* sprite;
 	bool configured;
+	cocos2d::Vec2 offset_position;
+	float offset_scale;
 	// configure
 	uint8_t opacity;
-	bool down;
-	bool left;
+	cocos2d::Vec2 anchor_point;
 };
 
 }
