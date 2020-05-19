@@ -49,7 +49,6 @@
 // Sounds
 #if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
-using namespace cocos2d;
 #elif USE_SIMPLE_AUDIO_ENGINE
 #include "audio/include/SimpleAudioEngine.h"
 using namespace CocosDenshion;
@@ -118,12 +117,7 @@ bool Level01::init()
 	scenary.assign<plague::SceneComponent>(this);
 	scenary.assign<plague::Transform>(cocos2d::Vec2(800, 200), 2.5f);  // position and scale
 	scenary.assign<plague::Sprite>("gui/bocadillo.png", 255, cocos2d::Vec2::ANCHOR_MIDDLE, cocos2d::Vec2(0, -12), 0.3f);
-	// Sombra
-	scenary.assign<plague::LabelWithTTFUICompomnent<float> >(cocos2d::Color4B(0, 0, 0, 255), "Hola mundo", 32, cocos2d::Vec2(1, -1), 0); // sombra zorder=0
-	// Iluminado
-	scenary.assign<plague::LabelWithTTFUICompomnent<bool> >(cocos2d::Color4B(64, 64, 64, 255), "Hola mundo", 32, cocos2d::Vec2(-1, 1), 0); // sombra zorder=0
-	// Letra
-	scenary.assign<plague::LabelWithTTFUICompomnent<int> >(cocos2d::Color4B(128, 128, 128, 255), "Hola mundo", 32, cocos2d::Vec2(0, 0), 1);//Letra blanca zorder=1
+	scenary.assign<plague::LabelWithTTFUICompomnent>(cocos2d::Color4B(128, 128, 128, 255), "Hola mundo", 32, cocos2d::Vec2(0, 0), 1);//Letra blanca zorder=1
 
 
 

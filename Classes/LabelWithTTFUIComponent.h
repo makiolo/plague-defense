@@ -4,6 +4,8 @@
 //
 // use: 
 //
+// https://docs.cocos2d-x.org/cocos2d-x/v4/en/ui_components/labels.html
+// 
 #pragma once
 #ifndef _LabelWithTTFUICompomnent_H_
 #define _LabelWithTTFUICompomnent_H_
@@ -15,8 +17,7 @@
 
 namespace plague {
 
-template <typename T>
-struct LabelWithTTFUICompomnent : public entityx::Component<LabelWithTTFUICompomnent<T> >
+struct LabelWithTTFUICompomnent : public entityx::Component<LabelWithTTFUICompomnent >
 {
 	explicit LabelWithTTFUICompomnent(const cocos2d::Color4B& color_, const std::string& initial_text, float font_size = 18, const cocos2d::Vec2& offset_ = cocos2d::Vec2::ZERO, int offset_zorder_ = 0, float offset_scale_ = 1.0f, const cocos2d::Size& dimensions = cocos2d::Size(500, 100), cocos2d:: TextHAlignment hAlignment_ = cocos2d::TextHAlignment::CENTER, const std::string& font_family = "fonts/SourceCodePro-Black.otf", cocos2d::TextVAlignment vAlignment_ = cocos2d::TextVAlignment::CENTER)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
@@ -53,6 +54,8 @@ struct LabelWithTTFUICompomnent : public entityx::Component<LabelWithTTFUICompom
 		node->setTextColor(color);
 		node->setHorizontalAlignment(HAlignment);
 		node->setVerticalAlignment(Valignment);
+		node->enableShadow();
+		node->enableOutline(cocos2d::Color4B::WHITE, 1);
 	}
 
 	void configure_fw(entityx::EntityManager& es, entityx::EventManager& events, plague::Transform& transform, plague::SceneComponent& scene)

@@ -12,11 +12,8 @@
 // Spriter-Pro
 #include "AnimationNode.h"
 // Sonido
-// #define USE_AUDIO_ENGINE 1
-// #define USE_SIMPLE_AUDIO_ENGINE 0
 #if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
-using namespace cocos2d;
 #elif USE_SIMPLE_AUDIO_ENGINE
 #include "audio/include/SimpleAudioEngine.h"
 using namespace CocosDenshion;
@@ -25,21 +22,6 @@ using namespace CocosDenshion;
 USING_NS_CC;
 
 namespace plague {
-
-/*
-	if (playButton == nullptr ||
-		playButton->getContentSize().width <= 0 ||
-		playButton->getContentSize().height <= 0)
-	{
-		// throw std::exception("Error loading play button.");
-	}
-	else
-	{
-		float x = origin.x + visibleSize.width / 2;
-		float y = origin.y + visibleSize.height / 2;
-		playButton->setPosition(Vec2(x, y));
-	}
-*/
 
 MainMenuScene::MainMenuScene()
 {
@@ -115,7 +97,7 @@ bool MainMenuScene::init()
 	/////////////////////////////////////////////////////////////
 
 
-	Vector<MenuItem*> MenuItems;
+	Vector<MenuItem*> menu_items;
 
 	auto playButton = MenuItemImage::create(
 		"img/menu/play.png",
@@ -134,7 +116,7 @@ bool MainMenuScene::init()
 	float x = origin.x + (visibleSize.width / 2);
 	float y = origin.y + (visibleSize.height / 2) + 120;;
 	playButton->setPosition(Vec2(x, y));
-	MenuItems.pushBack(playButton);
+	menu_items.pushBack(playButton);
 	/////////////
 
 	auto exitButton = MenuItemImage::create(
@@ -150,19 +132,54 @@ bool MainMenuScene::init()
 	float x2 = origin.x + (visibleSize.width / 2);
 	float y2 = origin.y + (visibleSize.height / 2) - playButton->getContentSize().height - 40 + 120;
 	exitButton->setPosition(Vec2(x2, y2));
-	MenuItems.pushBack(exitButton);
+	menu_items.pushBack(exitButton);
+
 	/////////////////
-	/*
-	auto button = cocos2d::ui::Button::create("img/menu/normal_image.png", "img/menu/disabled_image.png", "img/menu/selected_image.png");
-	button->setTitleText("A");
-	button->setTitleColor(cocos2d::Color3B::BLACK);
+
+	auto button = cocos2d::ui::Button::create("img/menu/default.png", "img/menu/default_hover.png", "img/menu/default_disabled.png");
+	// button->setEnabled(false);
+	button->setTitleText("TEST");
+	button->setTitleFontSize(64);
+	// button->setTitleColor(cocos2d::Color3B::BLACK);
+
+	button->getTitleRenderer()->setTextColor(cocos2d::Color4B::GREEN);
+	button->getTitleRenderer()->enableShadow(cocos2d::Color4B::BLUE);
+	button->getTitleRenderer()->enableOutline(cocos2d::Color4B::RED, 1);
+	// button->setScale(10);
+	button->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
+		switch (type)
+		{
+			case ui::Widget::TouchEventType::BEGAN:
+				std::cout << "Button 1 press" << std::endl;
+				break;
+			case ui::Widget::TouchEventType::ENDED:
+				std::cout << "Button 1 released" << std::endl;
+				break;
+			default:
+				
+				break;
+		}
+	});
 	float x3 = origin.x + (visibleSize.width / 2);
 	float y3 = origin.y + (visibleSize.height / 2) - playButton->getContentSize().height - 40 - 200;
 	button->setPosition(Vec2(x3, y3));
 	this->addChild(button, 1);
-	*/
 
-	auto menu = Menu::createWithArray(MenuItems);
+	//////////////////////
+	/*
+	 * writeable text ------> TextField
+	 * readonly text -------> Label
+	 * campo booleano ------> CheckBox
+	 * clamped float -------> Slider
+	 * Actions/Lambdas -----> Button
+	 *
+	 * Other stuff:
+	 * Indicar progreso ----> LoadingBar
+	 *
+	 */
+	/////////////////////////////////////////////////////////////////
+
+	auto menu = Menu::createWithArray(menu_items);
 	menu->setPosition(Vec2::ZERO);
 	this->addChild(menu, 1);
 
