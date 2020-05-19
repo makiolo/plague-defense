@@ -77,6 +77,7 @@ struct InputSystem : public entityx::System<InputSystem>,
 		 * Dependencias 
 		 */ 
 
+
 		using namespace cocos2d;
 
 		std::vector<Vec3> trianglesList = Bundle3D::getTrianglesList("grid/grid.obj");
@@ -121,7 +122,6 @@ struct InputSystem : public entityx::System<InputSystem>,
 		// Crear materiales despues de crear luces
 		auto material = cocos2d::Material::createWithFilename("materials/3d_effects.material");
 		sprite->setMaterial(material);
-
 	}
 
 	virtual ~InputSystem()
