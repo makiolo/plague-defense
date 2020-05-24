@@ -4,6 +4,16 @@
 // SCENES
 // #include "Level00.h"
 #include "Level01.h"
+
+// COMPONENTS
+#include "SceneComponent.h"
+#include "Transform.h"
+#include "ButtonUIComponent.h"
+#include "LabelWithTTFUIComponent.h"
+
+// SYSTEM
+#include "CocosGeneratorSystem.h"
+
 // 
 #include "ui/CocosGUI.h"
 #ifdef SDKBOX_ENABLED
@@ -12,12 +22,7 @@
 // Spriter-Pro
 #include "AnimationNode.h"
 // Sonido
-#if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
-#elif USE_SIMPLE_AUDIO_ENGINE
-#include "audio/include/SimpleAudioEngine.h"
-using namespace CocosDenshion;
-#endif
 
 USING_NS_CC;
 
@@ -55,135 +60,69 @@ bool MainMenuScene::init()
 	// sdkbox::PluginSdkboxPlay::loadAllGameData();
 #endif
 
-#if USE_AUDIO_ENGINE
+    // Configure audio
 	AudioEngine::pauseAll();
 	AudioEngine::play2d("sounds/negro.mp3");
 	AudioEngine::preload("sounds/anilla.mp3");
-#elif USE_SIMPLE_AUDIO_ENGINE
-	SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/negro.mp3", true);
-	SimpleAudioEngine::getInstance()->preloadEffect("sounds/anilla.mp3");
-#endif
+
 
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
 
-	//path to your scml in your Resources folder
-	auto scml = FileUtils::getInstance()->fullPathForFilename("img/enemy/spider/spider.scml");
 
-	//AnimationNode is a container which can play multiple animations sourced from a single model.
-	auto spriter = Spriter2dX::AnimationNode::create(scml);
-
-	//If the images used in your animation are in a spritesheet you've 
-	//loaded into the Cocos2d frame cache, instantiate the AnimationNode like
-	//this to load images from there instead:
-	// auto spriter = Spriter2dX::AnimationNode::create(scml, Spriter2dX::AnimationNode::cacheLoader());
+	auto spider = ex.entities.create();
+	spider.assign<plague::SceneComponent>(this, 5);
+	spider.assign<plague::Transform>(Vec2(300, 300), 0.3f);  // position and scale
+	spider.assign<plague::SpriterModelComponent>("img/enemy/spider/spider.scml", "Player", "walk");
 
 
-	//createEntity gives you a SpriterEngine::EntityInstance that you can manipulate.
-	//(refer to SpriterPlusPlus API)
-	//You can keep an EntityInstance* as long as your AnimationNode instance is
-	//retained; it will delete them when it is deleted.
-	auto entity = spriter->play("Player");
-	if (entity)
-	{
-		entity->setCurrentAnimation("walk");
-		// entity->setTimeRatio(1.0f / 60.0f);
-		spriter->setPosition(Vec2(300, 300));
-		spriter->setScale(0.3);
-		this->addChild(spriter, 5);
-	}
 
-	/////////////////////////////////////////////////////////////
+	float button_x = origin.x + (visibleSize.width / 2);
+	float button_y = origin.y + (visibleSize.height / 2) + 120;
+	auto button = ex.entities.create();
+	button.assign<plague::SceneComponent>(this);
+	button.assign<plague::Transform>(cocos2d::Vec2(button_x, button_y), 1.0f);
+	button.assign<plague::LabelWithTTFUICompomnent>(cocos2d::Color4B(128, 128, 128, 255), "PLAY", 32, 1, cocos2d::Vec2::ZERO, 2.5f);
+	button.assign<plague::ButtonUICompomnent>(	"img/menu/default.png", 
+												"img/menu/default_hover.png", 
+												"img/menu/default_disabled.png",
+												[]() {
+													cocos2d::AudioEngine::play2d("sounds/anilla.mp3");
+													// Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, Level01::create()));
+													Director::getInstance()->replaceScene(cocos2d::TransitionFlipX::create(1, Level01::create()));
+													// Director::getInstance()->replaceScene(Level01::create());
+												});
 
 
-	Vector<MenuItem*> menu_items;
+	float button2_x = origin.x + (visibleSize.width / 2);
+	float button2_y = origin.y + (visibleSize.height / 2) - 200 - 40 + 120;
+	auto button2 = ex.entities.create();
+	button2.assign<plague::SceneComponent>(this);
+	button2.assign<plague::Transform>(cocos2d::Vec2(button2_x, button2_y), 1.0f);
+	button2.assign<plague::LabelWithTTFUICompomnent>(cocos2d::Color4B(128, 128, 128, 255), "EXIT", 32, 1, cocos2d::Vec2::ZERO, 2.5f);
+	button2.assign<plague::ButtonUICompomnent>(	"img/menu/default.png", 
+												"img/menu/default_hover.png", 
+												"img/menu/default_disabled.png",
+												[]() {
+													AudioEngine::end();
+													cocos2d::Director::getInstance()->end();
+										#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
+													exit(0);
+										#endif
+												});
 
-	auto playButton = MenuItemImage::create(
-		"img/menu/play.png",
-		"img/menu/play_hover.png",
-		[&](Ref* sender) {
-#if USE_AUDIO_ENGINE
-			AudioEngine::play2d("sounds/anilla.mp3");
-#elif USE_SIMPLE_AUDIO_ENGINE
-			SimpleAudioEngine::getInstance()->playEffect("sounds/anilla.mp3");
-#endif
-			// Director::getInstance()->replaceScene(cocos2d::TransitionFade::create(2, Level01::create()));
-			Director::getInstance()->replaceScene(cocos2d::TransitionFlipX::create(1, Level01::create()));
-			// Director::getInstance()->replaceScene(Level01::create());
-		});
 
-	float x = origin.x + (visibleSize.width / 2);
-	float y = origin.y + (visibleSize.height / 2) + 120;;
-	playButton->setPosition(Vec2(x, y));
-	menu_items.pushBack(playButton);
-	/////////////
-
-	auto exitButton = MenuItemImage::create(
-		"img/menu/exit.png",
-		"img/menu/exit_hover.png",
-		[&](Ref* sender) {
-			cocos2d::Director::getInstance()->end();
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
-			exit(0);
-#endif
-		});
-
-	float x2 = origin.x + (visibleSize.width / 2);
-	float y2 = origin.y + (visibleSize.height / 2) - playButton->getContentSize().height - 40 + 120;
-	exitButton->setPosition(Vec2(x2, y2));
-	menu_items.pushBack(exitButton);
-
-	/////////////////
-
-	auto button = cocos2d::ui::Button::create("img/menu/default.png", "img/menu/default_hover.png", "img/menu/default_disabled.png");
-	// button->setEnabled(false);
-	button->setTitleText("TEST");
-	button->setTitleFontSize(64);
-	// button->setTitleColor(cocos2d::Color3B::BLACK);
-
-	button->getTitleRenderer()->setTextColor(cocos2d::Color4B::GREEN);
-	button->getTitleRenderer()->enableShadow(cocos2d::Color4B::BLUE);
-	button->getTitleRenderer()->enableOutline(cocos2d::Color4B::RED, 1);
-	// button->setScale(10);
-	button->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type) {
-		switch (type)
-		{
-			case ui::Widget::TouchEventType::BEGAN:
-				std::cout << "Button 1 press" << std::endl;
-				break;
-			case ui::Widget::TouchEventType::ENDED:
-				std::cout << "Button 1 released" << std::endl;
-				break;
-			default:
-				
-				break;
-		}
-	});
-	float x3 = origin.x + (visibleSize.width / 2);
-	float y3 = origin.y + (visibleSize.height / 2) - playButton->getContentSize().height - 40 - 200;
-	button->setPosition(Vec2(x3, y3));
-	this->addChild(button, 1);
-
-	//////////////////////
-	/*
-	 * writeable text ------> TextField
-	 * readonly text -------> Label
-	 * campo booleano ------> CheckBox
-	 * clamped float -------> Slider
-	 * Actions/Lambdas -----> Button
-	 *
-	 * Other stuff:
-	 * Indicar progreso ----> LoadingBar
-	 *
-	 */
-	/////////////////////////////////////////////////////////////////
-
-	auto menu = Menu::createWithArray(menu_items);
-	menu->setPosition(Vec2::ZERO);
-	this->addChild(menu, 1);
+	ex.systems.add<plague::CocosGeneratorSystem>();
+	ex.systems.configure();
 
 	return true;
+}
+
+void MainMenuScene::render(cocos2d::Renderer* renderer, const cocos2d::Mat4& eyeTransform, const cocos2d::Mat4* eyeProjection)
+{
+	cocos2d::Scene::render(renderer, eyeTransform, eyeProjection);
+	ex.systems.update_all(1.0f / 60.0f);
 }
 
 }

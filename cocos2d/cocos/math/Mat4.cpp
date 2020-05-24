@@ -154,17 +154,18 @@ void Mat4::createOrthographicOffCenter(float left, float right, float bottom, fl
     memset(dst, 0, MATRIX_SIZE);
     dst->m[0] = 2 / (right - left);
     dst->m[5] = 2 / (top - bottom);
-    dst->m[10] = 2 / (zNearPlane - zFarPlane);
 
     dst->m[12] = (left + right) / (left - right);
     dst->m[13] = (top + bottom) / (bottom - top);
-    dst->m[14] = (zNearPlane + zFarPlane) / (zNearPlane - zFarPlane);
     dst->m[15] = 1;
 
 //// https://metashapes.com/blog/opengl-metal-projection-matrix-problem/
 #ifdef CC_USE_METAL
     dst->m[10] = 1 / (zNearPlane - zFarPlane);
     dst->m[14] = zNearPlane / (zNearPlane - zFarPlane);
+#else
+    dst->m[10] = 2 / (zNearPlane - zFarPlane);
+    dst->m[14] = (zNearPlane + zFarPlane) / (zNearPlane - zFarPlane);
 #endif
 }
     

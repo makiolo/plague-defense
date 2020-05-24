@@ -11,7 +11,6 @@
 #include <cocos2d.h>
 #include "entityx/entityx.h"
 #include "Transform.h"
-#include "Level01Constants.h"
 
 namespace plague {
 

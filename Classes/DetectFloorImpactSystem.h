@@ -14,11 +14,7 @@
 #include "StammableComponent.h"
 #include "Level01Constants.h"
 #include "ProjectilComponent.h"
-#if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
-#elif USE_SIMPLE_AUDIO_ENGINE
-#include "audio/include/SimpleAudioEngine.h"
-#endif
 
 namespace plague {
 
@@ -36,29 +32,12 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 
 	void configure(entityx::EntityManager& es, entityx::EventManager& events) override
 	{
-#if USE_AUDIO_ENGINE
-		using namespace cocos2d;
-#elif USE_SIMPLE_AUDIO_ENGINE
-		using namespace CocosDenshion;
-#endif
-
-#if USE_AUDIO_ENGINE
-		AudioEngine::preload("sounds/rock_impact.mp3");
-		AudioEngine::preload("sounds/insect_impact.mp3");
-#elif USE_SIMPLE_AUDIO_ENGINE
-		SimpleAudioEngine::getInstance()->preloadEffect("sounds/rock_impact.mp3");
-		SimpleAudioEngine::getInstance()->preloadEffect("sounds/insect_impact.mp3");
-#endif
+		cocos2d::AudioEngine::preload("sounds/rock_impact.mp3");
+		cocos2d::AudioEngine::preload("sounds/insect_impact.mp3");
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
 	{
-#if USE_AUDIO_ENGINE
-		using namespace cocos2d;
-#elif USE_SIMPLE_AUDIO_ENGINE
-		using namespace CocosDenshion;
-#endif
-
 		es.each<plague::Transform, plague::PhysicsComponent, plague::StammableComponent>([=](entityx::Entity entity, plague::Transform& transform, plague::PhysicsComponent& physics, plague::StammableComponent& gravity)
 		{
 			// projectile is dynamic
@@ -69,19 +48,11 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 				{
 					if (entity.has_component<plague::ProjectilComponent>())
 					{
-#if USE_AUDIO_ENGINE
-						AudioEngine::play2d("sounds/rock_impact.mp3");
-#elif USE_SIMPLE_AUDIO_ENGINE
-						SimpleAudioEngine::getInstance()->playEffect("sounds/rock_impact.mp3");
-#endif
+						cocos2d::AudioEngine::play2d("sounds/rock_impact.mp3");
 					}
 					else
 					{
-#if USE_AUDIO_ENGINE
-						AudioEngine::play2d("sounds/insect_impact.mp3");
-#elif USE_SIMPLE_AUDIO_ENGINE
-						SimpleAudioEngine::getInstance()->playEffect("sounds/insect_impact.mp3");
-#endif
+						cocos2d::AudioEngine::play2d("sounds/insect_impact.mp3");
 					}
 
 					//  TODO: retrasar la destrucción, pero hacerlo invisible

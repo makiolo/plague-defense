@@ -19,7 +19,7 @@ namespace plague {
 
 struct LabelWithTTFUICompomnent : public entityx::Component<LabelWithTTFUICompomnent >
 {
-	explicit LabelWithTTFUICompomnent(const cocos2d::Color4B& color_, const std::string& initial_text, float font_size = 18, const cocos2d::Vec2& offset_ = cocos2d::Vec2::ZERO, int offset_zorder_ = 0, float offset_scale_ = 1.0f, const cocos2d::Size& dimensions = cocos2d::Size(500, 100), cocos2d:: TextHAlignment hAlignment_ = cocos2d::TextHAlignment::CENTER, const std::string& font_family = "fonts/SourceCodePro-Black.otf", cocos2d::TextVAlignment vAlignment_ = cocos2d::TextVAlignment::CENTER)
+	explicit LabelWithTTFUICompomnent(const cocos2d::Color4B& color_, const std::string& initial_text, float font_size = 18, int offset_zorder_ = 1, const cocos2d::Vec2& offset_ = cocos2d::Vec2::ZERO, float offset_scale_ = 1.0f, const cocos2d::Size& dimensions = cocos2d::Size(500, 100), cocos2d:: TextHAlignment hAlignment_ = cocos2d::TextHAlignment::CENTER, const std::string& font_family = "fonts/SourceCodePro-Black.otf", cocos2d::TextVAlignment vAlignment_ = cocos2d::TextVAlignment::CENTER)
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 		: node(cocos2d::Label::createWithTTF(initial_text, font_family, font_size, dimensions, hAlignment_, vAlignment_))
 #else

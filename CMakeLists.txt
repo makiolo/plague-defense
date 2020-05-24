@@ -142,8 +142,8 @@ add_subdirectory(${CMAKE_SOURCE_DIR}/external/Spriter2dX)
 
 target_link_libraries(${APP_NAME} spriter2dx cocos2d)
 target_include_directories(${APP_NAME}
-        PRIVATE Classes
-        PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
+	PRIVATE Classes
+	PRIVATE ${COCOS2DX_ROOT_PATH}/cocos/audio/include/
 	PRIVATE ${CMAKE_SOURCE_DIR}/external/Spriter2dX/src
 	PRIVATE ${CMAKE_SOURCE_DIR}/external/Spriter2dX/SpriterPlusPlus/spriterengine
 	PRIVATE ${CMAKE_SOURCE_DIR}/external/Spriter2dX/SpriterPlusPlus/tinyxml2
@@ -236,3 +236,73 @@ if(LINUX OR WINDOWS)
     cocos_get_resource_path(APP_RES_DIR ${APP_NAME})
     cocos_copy_target_res(${APP_NAME} LINK_TO ${APP_RES_DIR} FOLDERS ${GAME_RES_FOLDER})
 endif()
+
+macro(generate_ycm_extra_conf)
+
+	set(extra_parameters "")
+
+
+	get_target_property(dirs ${APP_NAME} INCLUDE_DIRECTORIES)
+	if(dirs)
+		foreach(dir ${dirs})
+			set(extra_parameters ${extra_parameters} -I${dir})
+		endforeach()
+	endif()
+
+	get_target_property(dirs cocos2d INCLUDE_DIRECTORIES)
+	if(dirs)
+		foreach(dir ${dirs})
+			set(extra_parameters ${extra_parameters} -I${dir})
+		endforeach()
+	endif()
+
+	get_target_property(dirs spriter2dx INCLUDE_DIRECTORIES)
+	if(dirs)
+		foreach(dir ${dirs})
+			set(extra_parameters ${extra_parameters} -I${dir})
+		endforeach()
+	endif()
+
+	get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+	if(dirs)
+		foreach(dir ${dirs})
+			set(extra_parameters ${extra_parameters} -I${dir})
+		endforeach()
+	endif()
+
+
+	get_target_property(dirs ${APP_NAME} COMPILE_DEFINITIONS)
+	if(dirs)
+		foreach(dir ${dirs})
+			set(extra_parameters ${extra_parameters} -D${dir})
+		endforeach()
+	endif()
+
+	get_target_property(dirs cocos2d COMPILE_DEFINITIONS)
+	if(dirs)
+		foreach(dir ${dirs})
+			set(extra_parameters ${extra_parameters} -D${dir})
+		endforeach()
+	endif()
+
+	get_target_property(dirs spriter2dx COMPILE_DEFINITIONS)
+	if(dirs)
+		foreach(dir ${dirs})
+			set(extra_parameters ${extra_parameters} -D${dir})
+		endforeach()
+	endif()
+
+	get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY COMPILE_DEFINITIONS)
+	if(dirs)
+		foreach(dir ${dirs})
+			set(extra_parameters ${extra_parameters} -D${dir})
+		endforeach()
+	endif()
+
+	STRING(REGEX REPLACE ";" "\n" extra_parameters "${extra_parameters}")
+
+	FILE(WRITE "${CMAKE_CURRENT_SOURCE_DIR}/.ycm_extra_conf.txt" "${extra_parameters}\n")
+endmacro()
+
+generate_ycm_extra_conf()
+

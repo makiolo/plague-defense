@@ -2,31 +2,16 @@
 //
 #include "MainMenuScene.h"
 
-//
-
-// #define USE_AUDIO_ENGINE 1
-// #define USE_SIMPLE_AUDIO_ENGINE 0
-
 #if USE_AUDIO_ENGINE && USE_SIMPLE_AUDIO_ENGINE
 #error "Don't use AudioEngine and SimpleAudioEngine at the same time. Please just select one in your game!"
 #endif
 
-#if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
-#elif USE_SIMPLE_AUDIO_ENGINE
-#include "audio/include/SimpleAudioEngine.h"
-using namespace CocosDenshion;
-#endif
 
 USING_NS_CC;
 
 static cocos2d::Size windowResolutionSize = cocos2d::Size(1080 / 2.0f,   1920 / 2.0f);
 static cocos2d::Size designResolutionSize = cocos2d::Size(1080,          1920);
-/*
-static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
-static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
-static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
-*/
 
 AppDelegate::AppDelegate()
 {
@@ -35,11 +20,7 @@ AppDelegate::AppDelegate()
 
 AppDelegate::~AppDelegate() 
 {
-#if USE_AUDIO_ENGINE
-    AudioEngine::end();
-#elif USE_SIMPLE_AUDIO_ENGINE
-    SimpleAudioEngine::end();
-#endif
+    
 }
 
 // if you want a different context, modify the value of glContextAttrs
@@ -52,29 +33,25 @@ void AppDelegate::initGLContextAttrs()
     GLView::setGLContextAttrs(glContextAttrs);
 }
 
-// if you want to use the package manager to install more packages,  
-// don't modify or remove this function
-static int register_all_packages()
-{
-    return 0; //flag for packages manager
-}
-
 bool AppDelegate::applicationDidFinishLaunching() {
 
     // initialize director
     auto director = Director::getInstance();
-    auto glview = director->getOpenGLView();
+    GLView* glview = director->getOpenGLView();
     if(!glview) {
+		GLViewImpl* newglview;
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 #if 1
-        glview = GLViewImpl::createWithRect("PlagueDefense", cocos2d::Rect(0, 0, windowResolutionSize.width, windowResolutionSize.height));
+        newglview = GLViewImpl::createWithRect("PlagueDefense", cocos2d::Rect(1000, 0, windowResolutionSize.width, windowResolutionSize.height));
+        glfwSetWindowPos(newglview->getWindow(), 2000, 30);
 #else
-        glview = GLViewImpl::createWithRect("PlagueDefense", cocos2d::Rect(0, 0, designResolutionSize.width, designResolutionSize.height));
-		dynamic_cast<GLViewImpl*>(glview)->setFullscreen();
+        newglview = GLViewImpl::createWithRect("PlagueDefense", cocos2d::Rect(1000, 0, designResolutionSize.width, designResolutionSize.height));
+		newglview->setFullscreen();
 #endif
 #else
-        glview = GLViewImpl::create("PlagueDefense");
+        newglview = GLViewImpl::create("PlagueDefense");
 #endif
+		glview = dynamic_cast<GLView*>(newglview);
         director->setOpenGLView(glview);
     }
 
@@ -110,8 +87,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // FileUtils::getInstance()->addSearchPath("res");
 
-    register_all_packages();
-
     // create a scene. it's an autorelease object
     auto scene = plague::MainMenuScene::createScene();
 
@@ -125,12 +100,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 void AppDelegate::applicationDidEnterBackground() {
     Director::getInstance()->stopAnimation();
 
-#if USE_AUDIO_ENGINE
     AudioEngine::pauseAll();
-#elif USE_SIMPLE_AUDIO_ENGINE
-    SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
-    SimpleAudioEngine::getInstance()->pauseAllEffects();
-#endif
 }
 
 // this function will be called when the app is active again
@@ -138,10 +108,5 @@ void AppDelegate::applicationWillEnterForeground()
 {
     Director::getInstance()->startAnimation();
 
-#if USE_AUDIO_ENGINE
     AudioEngine::resumeAll();
-#elif USE_SIMPLE_AUDIO_ENGINE
-    SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
-    SimpleAudioEngine::getInstance()->resumeAllEffects();
-#endif
 }

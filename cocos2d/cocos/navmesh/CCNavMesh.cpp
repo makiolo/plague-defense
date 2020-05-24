@@ -259,6 +259,10 @@ bool NavMesh::loadGeomFile()
                     &v[0], &v[1], &v[2], &v[3], &v[4], &v[5], &rad, &bidir, &area, &flags);
                 _geomData->offMeshConRads[_geomData->offMeshConCount] = rad;
                 _geomData->offMeshConDirs[_geomData->offMeshConCount] = (unsigned char)bidir;
+                if(area != 5)
+                {
+                    printf("");
+                }
                 _geomData->offMeshConAreas[_geomData->offMeshConCount] = (unsigned char)area;
                 _geomData->offMeshConFlags[_geomData->offMeshConCount] = (unsigned short)flags;
                 _geomData->offMeshConCount++;

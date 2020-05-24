@@ -73,38 +73,64 @@ struct InputSystem : public entityx::System<InputSystem>,
 
 		
 		/*
-		 * Compònente: NavMeshComponent
-		 * Dependencias 
+		 * NavMesh:
+		 * 
+		 * 	Sprite3D
+		 * 			Physics3DShape
+		 * 			Physics3DComponent
+		 * 	Material
+		 * 	Camera
+		 * 	NavMesh
 		 */ 
-
+		/*
+			Obstaculo:
+				SceneComponent
+				Transdorm
+				Sprite3D
+				NavMeshObstacle (Componente de Sprite3D)
+		*/
+		/*
+			Agente:
+				SceneComponent
+				Transform
+				Sprite3D
+				NavMeshAgent (Componente de Sprite3D)
+		*/
 
 		using namespace cocos2d;
 
-		std::vector<Vec3> trianglesList = Bundle3D::getTrianglesList("grid/grid.obj");
 		Physics3DRigidBodyDes rbDes;
-		rbDes.mass = 0.0f;
-		rbDes.shape = Physics3DShape::createMesh(&trianglesList[0], (int)trianglesList.size() / 3);
+		{
+			std::vector<Vec3> trianglesList = Bundle3D::getTrianglesList("grid/grid2.obj");
+			rbDes.mass = 0.0f;
+			rbDes.shape = Physics3DShape::createMesh(&trianglesList[0], (int)trianglesList.size() / 3);
+		}
 		auto rigidBody = Physics3DRigidBody::create(&rbDes);
 		auto component = Physics3DComponent::create(rigidBody);
-		auto sprite = Sprite3D::create("grid/grid.obj");
+		auto sprite = Sprite3D::create("grid/grid2.obj");
+		//sprite->setScale(60);
+		sprite->setPosition3D(cocos2d::Vec3(0,0,0));
 		sprite->addComponent(component);
 		sprite->setCameraMask((unsigned short)CameraFlag::USER1);
 		_scene->addChild(sprite);
 
-
 		cocos2d::Size size = cocos2d::Director::getInstance()->getWinSize();
 
-		_camera = cocos2d::Camera::createPerspective(60.0f, size.width / size.height, 1.0f, 1000.0f);
+		
 
-		_camera->setPosition3D(cocos2d::Vec3(.0f, 20.0f, 20.0f));
-		_camera->lookAt(cocos2d::Vec3(0.0f, 0.0f, 0.0f), cocos2d::Vec3(0.0f, 1.0f, 0.0f));
+		_camera = cocos2d::Camera::create();
+		_camera->setPosition3D(cocos2d::Vec3(0.0f, 65.7f, 0.0f));
+		_camera->lookAt(cocos2d::Vec3(0.0f, 0.0f, 0.0f), cocos2d::Vec3(0.0f, 0.0f, -1.0f));
+		// cocos2d::Mat4 viewProj = _camera->getViewProjectionMatrix();
+
 		_camera->setCameraFlag(cocos2d::CameraFlag::USER1);
 		_scene->addChild(_camera);
 
-		navmesh = cocos2d::NavMesh::create("grid/all_tiles_tilecache.bin", "grid/grid.gset");
+		navmesh = cocos2d::NavMesh::create("grid/grid2_all_tiles_tilecache.bin", "grid/grid2.gset");
+		
 		_scene->setNavMesh(navmesh);
 
-		const bool debug_navmesh = false;
+		const bool debug_navmesh = true;
 		navmesh->setDebugDrawEnable(debug_navmesh);
 		if(debug_navmesh)
 		{
@@ -164,8 +190,7 @@ struct InputSystem : public entityx::System<InputSystem>,
 		_touching = true;
 
 		// read touch position
-		cocos2d::Vec2 touchLocation = touch->getLocationInView();
-		touchLocation = cocos2d::Director::getInstance()->convertToGL(touchLocation);
+		cocos2d::Vec2 touchLocation = touch->getLocation();
 		touchLocation = convertToNodeSpace(touchLocation);
 
 		_mouse_x = touchLocation.x;
@@ -202,6 +227,13 @@ struct InputSystem : public entityx::System<InputSystem>,
 
 		if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_LEFT)
 		{
+			/*
+				Agente:
+					SceneComponent
+					Transform
+					Sprite3D
+					NavMeshAgent (Componente de Sprite3D)
+			*/
 			cocos2d::Vec3 nearP(location.x, location.y, 0.0f), farP(location.x, location.y, 1.0f);
 
 			auto size = cocos2d::Director::getInstance()->getWinSize();
@@ -217,6 +249,7 @@ struct InputSystem : public entityx::System<InputSystem>,
 			param.maxSpeed = 8.0f;
 			param.maxAcceleration = 1000.0f;
 			auto agent = cocos2d::NavMeshAgent::create(param);
+			agent->setAutoTraverseOffMeshLink(true);
 			auto agentNode = cocos2d::Sprite3D::create("grid/cylinder.obj");
 			agentNode->setPosition3D(posAgent);
 			agentNode->addComponent(agent);
@@ -225,7 +258,7 @@ struct InputSystem : public entityx::System<InputSystem>,
 			//auto material = cocos2d::Material::createWithFilename("materials/2d_effects.material");
 			//agentNode->setMaterial(material);
 
-			_scene->addChild(agentNode);
+			_scene->addChild(agentNode, 1);
 			agents.push_back(agent);
 		}
 		else if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_RIGHT)
@@ -238,13 +271,134 @@ struct InputSystem : public entityx::System<InputSystem>,
 
 			cocos2d::Physics3DWorld::HitResult result;
 			_scene->getPhysics3DWorld()->rayCast(nearP, farP, &result);
+
+			NavMeshAgent::MoveCallback callback = [](NavMeshAgent *agent, float totalTimeAfterMove){
+
+				if (agent->isOnOffMeshLink())
+				{
+					agent->setAutoTraverseOffMeshLink(false);
+					agent->setAutoOrientation(false);
+
+					OffMeshLinkData linkdata = agent->getCurrentOffMeshLinkData();
+
+					agent->getOwner()->setPosition3D(linkdata.endPosition);
+					agent->completeOffMeshLink();
+
+					agent->setAutoTraverseOffMeshLink(true);
+					agent->setAutoOrientation(true);
+				}
+
+				/*
+				AgentUserData *data = static_cast<AgentUserData *>(agent->getUserData());
+				if (agent->isOnOffMeshLink()){
+					agent->setAutoTraverseOffMeshLink(false);
+					agent->setAutoOrientation(false);
+					OffMeshLinkData linkdata = agent->getCurrentOffMeshLinkData();
+
+					agent->getOwner()->setPosition3D(jump(&linkdata.startPosition, &linkdata.endPosition, 10.0f, data->time));
+					Vec3 dir = linkdata.endPosition - linkdata.startPosition;
+					dir.y = 0.0f;
+					dir.normalize();
+					Vec3 axes;
+					Vec3 refAxes = Vec3(-1.0f, 0.0f, 1.0f);
+					refAxes.normalize();
+					Vec3::cross(refAxes, dir, &axes);
+					float angle = Vec3::dot(refAxes, dir);
+					agent->getOwner()->setRotationQuat(Quaternion(axes, acosf(angle)));
+					data->time += 0.01f;
+					if (1.0f < data->time){
+						agent->completeOffMeshLink();
+						agent->setAutoOrientation(true);
+						data->time = 0.0f;
+					}
+				}
+				*/
+			};
+
 			for (auto& agent : agents)
 			{
-				agent->move(result.hitPosition);
+				agent->move(result.hitPosition, callback);
+				//agent->move(result.hitPosition);
 			}
+
+			cocos2d::Vec3 testPoint(0.5f, 0.5f, 0.5f);
+
+			/*
+			// https://metashapes.com/blog/opengl-metal-projection-matrix-problem/
+			Project
+				Punto en world space * getViewProjectionMatrix() (Projection * View)
+				
+							                                                        local space = Local space
+                	 	  						                     world matrix * local space = world space
+				                                       view matrix * world matrix * local space = Camera space
+				                  projecttion matrix * view matrix * world matrix * local space = NDC Space (-1, +1)
+			  GLviewport matrix * projecttion matrix * view matrix * world matrix * local space = GLviewport Space (0, 0, width, height)
+			OCOSviewport matrix * projecttion matrix * view matrix * world matrix * local space = COCOSViewport Space (0, 0, width, height)
+
+
+				world space -------> project() --------------> COCOSviewport space
+				world space -------> projectGL() ------------> GLviewport space
+
+
+				COCOSviewport space -----> unproject() ------> world space
+				GLviewport space -----> unprojectGL() -------> world space
+
+
+				Análisis de unproject():
+
+				COCOSViewport Space (0, 0, width, height)
+				a mano lo convierte en 
+				NDC Space (-1, +1) = projecttion matrix * view matrix * world space
+				inversa projection matrix * NDC Space (-1, +1) = inversa projection matrix * projecttion matrix * view matrix * world space
+				inversa projection matrix * NDC Space (-1, +1) = view matrix * world space
+				inversa view matrix * inversa projection matrix * NDC Space (-1, +1) = inversa view matrix * view matrix * world space
+				inversa view matrix * inversa projection matrix * NDC Space (-1, +1) = world space
+
+				inversa view matrix * inversa projection matrix * NDC Space (-1, +1) = getViewProjectionMatrix().getInversed() * NDC Space (-1, +1)
+
+				getViewProjectionMatrix().getInversed() * NDC Space (-1, +1)
+
+
+				v^-1 * p^-1 * NDC Space
+				(projecttion matrix * view matrix)^-1 * NDC Space (-1, +1)
+
+
+				v^-1 * p^-1 = (p*v)^-1 ???
+
+				(AB)^-1 = B^-1 * A^-1
+
+
+				Falta ver los métodos del Director.
+
+				Nodo tiene los métodos para llegar a Local Space = (world matrix)^-1 * world space
+			*/
+
+			// opengl screen space(1920x1080) -> cocos screen space(1920x1080)
+
+			// de world space a viewport port space
+			cocos2d::Vec2 projected = cocos2d::Director::getInstance()->getRunningScene()->getDefaultCamera()->project(testPoint);
+			cocos2d::Vec2 projectedGL = cocos2d::Director::getInstance()->getRunningScene()->getDefaultCamera()->projectGL(testPoint);
+
+			// De viewport space a world space
+			cocos2d::Vec3 unprojected = cocos2d::Director::getInstance()->getRunningScene()->getDefaultCamera()->unproject(testPoint);
+			cocos2d::Vec3 unprojectedGL = cocos2d::Director::getInstance()->getRunningScene()->getDefaultCamera()->unprojectGL(testPoint);
+
+			cocos2d::Vec2 projected2 = _camera->project(testPoint);
+			cocos2d::Vec2 projectedGL2 = _camera->projectGL(testPoint);
+			cocos2d::Vec3 unprojected2 = _camera->unproject(testPoint);
+			cocos2d::Vec3 unprojectedGL2 = _camera->unprojectGL(testPoint);
+
+			std::cout << "hola" << std::endl;
 		}
-		else if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_MIDDLE)
+		else if (e->getMouseButton() == cocos2d::EventMouse::MouseButton::BUTTON_4)
 		{
+			/*
+				Obstaculo:
+					SceneComponent
+					Transdorm
+					Sprite3D
+					NavMeshObstacle (Componente de Sprite3D)
+			*/
 			cocos2d::Vec3 nearP(location.x, location.y, 0.0f), farP(location.x, location.y, 1.0f);
 
 			auto size = cocos2d::Director::getInstance()->getWinSize();
@@ -255,13 +409,14 @@ struct InputSystem : public entityx::System<InputSystem>,
 			_scene->getPhysics3DWorld()->rayCast(nearP, farP, &result);
 
 			cocos2d::Vec3 pos = result.hitPosition;
-			auto obstacle = cocos2d::NavMeshObstacle::create(1.035f, 2.6465f);
+			pos.y = 0.0f;
+			auto obstacle = cocos2d::NavMeshObstacle::create(1.1f, 3.0f);
 			auto obstacleNode = cocos2d::Sprite3D::create("grid/tower.obj");
 			
 			obstacleNode->setPosition3D(pos);
 			obstacleNode->addComponent(obstacle);
 			obstacleNode->setCameraMask((unsigned short)cocos2d::CameraFlag::USER1);
-			_scene->addChild(obstacleNode);
+			_scene->addChild(obstacleNode, 1);
 		}
 	}
 

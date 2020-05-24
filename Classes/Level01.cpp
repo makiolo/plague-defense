@@ -30,7 +30,7 @@
 #include "PhysicsBuilderSystem.h"
 #include "BrainSystem.h"
 #include "SteeringBehavioursSystem.h"
-#include "SpriteSystem.h"
+#include "CocosGeneratorSystem.h"
 #include "CountSensorSystem.h"
 #include "TimerSystem.h"
 
@@ -46,13 +46,8 @@
 #endif
 // AI
 #include "myBT/myBT.h"
-// Sounds
-#if USE_AUDIO_ENGINE
+// Sound
 #include "audio/include/AudioEngine.h"
-#elif USE_SIMPLE_AUDIO_ENGINE
-#include "audio/include/SimpleAudioEngine.h"
-using namespace CocosDenshion;
-#endif
 
 USING_NS_CC;
 
@@ -62,7 +57,7 @@ Level01::Level01()
 }
 Level01::~Level01()
 {
-	//delete websocket;
+	
 }
 
 
@@ -83,31 +78,23 @@ bool Level01::init()
 	// sdkbox::PluginAdMob::show("home");
 #endif
 
-#if USE_AUDIO_ENGINE
 	AudioEngine::pauseAll();
 	AudioEngine::play2d("sounds/birds.mp3");
-#elif USE_SIMPLE_AUDIO_ENGINE
-	SimpleAudioEngine::getInstance()->playBackgroundMusic("sounds/birds.mp3", true);
-#endif
-
 
 	// plague::make_clouds(this, ex.entities);
 
-	/*
 	auto sky = ex.entities.create();
 	sky.assign<plague::SceneComponent>(this);
 	sky.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);
 	sky.assign<plague::LayerColorCompomnent>(128);
-	*/
 
-	/*
 	auto building = ex.entities.create();
 	building.assign<plague::SceneComponent>(this);
 	building.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);
 	building.assign<plague::Sprite>("img/building/newlevel01.png", 128, cocos2d::Vec2::ANCHOR_BOTTOM_LEFT);
-	*/
 
-	// scenary.assign<plague::DebugBar>(this, ex.events);
+
+
 
 
 
@@ -117,7 +104,8 @@ bool Level01::init()
 	scenary.assign<plague::SceneComponent>(this);
 	scenary.assign<plague::Transform>(cocos2d::Vec2(800, 200), 2.5f);  // position and scale
 	scenary.assign<plague::Sprite>("gui/bocadillo.png", 255, cocos2d::Vec2::ANCHOR_MIDDLE, cocos2d::Vec2(0, -12), 0.3f);
-	scenary.assign<plague::LabelWithTTFUICompomnent>(cocos2d::Color4B(128, 128, 128, 255), "Hola mundo", 32, cocos2d::Vec2(0, 0), 1);//Letra blanca zorder=1
+	scenary.assign<plague::LabelWithTTFUICompomnent>(cocos2d::Color4B(128, 128, 128, 255), "Hola mundo", 32);
+	scenary.assign<plague::DebugBar>(this, ex.events);
 
 
 
@@ -213,19 +201,19 @@ bool Level01::init()
 	ex.systems.add<plague::BlackboardSystem>();
 	// personaje
 	ex.systems.add<plague::CharacterSystem>();
-	// detecci�n superior (fuera de mapa)
+	// deteccion superior (fuera de mapa)
 	ex.systems.add<plague::DetectInvasionSystem>();
-	// detecci�n inferior (fuera de mapa)
+	// deteccion inferior (fuera de mapa)
 	ex.systems.add<plague::DetectFloorImpactSystem>();
-	// sistema f�sico
+	// sistema fisico
 	ex.systems.add<plague::PhysicsSystem>(this);
-	// generador de f�sica
+	// generador de fisica
 	ex.systems.add<plague::PhysicsBuilderSystem>();
 	// actualizar IA
 	ex.systems.add<plague::BrainSystem>();
 	// Steering behaviours system
 	ex.systems.add<plague::SteeringBehavioursSystem>();
-	ex.systems.add<plague::SpriteSystem>();
+	ex.systems.add<plague::CocosGeneratorSystem>();
 	ex.systems.add<plague::CountSensorSystem>();
 	ex.systems.add<plague::TimerSystem>();
 	ex.systems.configure();

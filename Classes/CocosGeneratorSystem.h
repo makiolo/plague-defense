@@ -1,13 +1,13 @@
 /*
  * Responsable de crear los sprites
  */
-/* System class SpriteSystem
+/* System class CocosGeneratorSystem
 *
 *  Ricardo Marmolejo García 2019
 */
 #pragma once
-#ifndef _SpriteSystem_H_
-#define _SpriteSystem_H_
+#ifndef _CocosGeneratorSystem_H_
+#define _CocosGeneratorSystem_H_
 
 #include <cocos2d.h>
 #include "entityx/entityx.h"
@@ -19,17 +19,19 @@
 #include "LayerColorComponent.h"
 #include "SpriterModelComponent.h"
 #include "LabelWithTTFUIComponent.h"
+#include "ButtonUIComponent.h"
+#include "LabelWithTTFUIComponent.h"
 
 namespace plague {
 
-struct SpriteSystem : public entityx::System<SpriteSystem>
+struct CocosGeneratorSystem : public entityx::System<CocosGeneratorSystem>
 {
-	explicit SpriteSystem()
+	explicit CocosGeneratorSystem()
 	{
 		
 	}
 
-	virtual ~SpriteSystem()
+	virtual ~CocosGeneratorSystem()
 	{
 		
 	}
@@ -53,6 +55,9 @@ struct SpriteSystem : public entityx::System<SpriteSystem>
 		});
 		es.each<plague::LabelWithTTFUICompomnent, plague::Transform, plague::SceneComponent>([&](entityx::Entity entity, plague::LabelWithTTFUICompomnent& label, plague::Transform& transform, plague::SceneComponent& scene) {
 			label.configure_fw(es, events, transform, scene);
+		});
+		es.each<plague::ButtonUICompomnent, plague::Transform, plague::SceneComponent, plague::LabelWithTTFUICompomnent>([&](entityx::Entity entity, plague::ButtonUICompomnent& button, plague::Transform& transform, plague::SceneComponent& scene, plague::LabelWithTTFUICompomnent& label) {
+			button.configure_fw(es, events, transform, scene, label);
 		});
 	}
 
