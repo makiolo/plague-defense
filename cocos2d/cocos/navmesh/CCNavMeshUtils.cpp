@@ -110,25 +110,22 @@ void MeshProcess::process(struct dtNavMeshCreateParams* params
     for (int i = 0; i < params->polyCount; ++i)
     {
         if (polyAreas[i] == DT_TILECACHE_WALKABLE_AREA)
-            polyAreas[i] = 0;
+            polyAreas[i] = NAVMESH_AREA_GROUND;
 
-        if (polyAreas[i] == 0)
-            polyFlags[i] = 1;
-
-        //if (polyAreas[i] == SAMPLE_POLYAREA_GROUND ||
-        //	polyAreas[i] == SAMPLE_POLYAREA_GRASS ||
-        //	polyAreas[i] == SAMPLE_POLYAREA_ROAD)
-        //{
-        //	polyFlags[i] = SAMPLE_POLYFLAGS_WALK;
-        //}
-        //else if (polyAreas[i] == SAMPLE_POLYAREA_WATER)
-        //{
-        //	polyFlags[i] = SAMPLE_POLYFLAGS_SWIM;
-        //}
-        //else if (polyAreas[i] == SAMPLE_POLYAREA_DOOR)
-        //{
-        //	polyFlags[i] = SAMPLE_POLYFLAGS_WALK | SAMPLE_POLYFLAGS_DOOR;
-        //}
+        if (polyAreas[i] == NAVMESH_AREA_GROUND ||
+        	polyAreas[i] == NAVMESH_AREA_GRASS ||
+        	polyAreas[i] == NAVMESH_AREA_ROAD)
+        {
+        	polyFlags[i] = NAVMESH_FLAG_WALK;
+        }
+        else if (polyAreas[i] == NAVMESH_AREA_WATER)
+        {
+        	polyFlags[i] = NAVMESH_FLAG_SWIM;
+        }
+        else if (polyAreas[i] == NAVMESH_AREA_DOOR)
+        {
+        	polyFlags[i] = NAVMESH_FLAG_WALK | NAVMESH_FLAG_DOOR;
+        }
     }
 
     // Pass in off-mesh connections.

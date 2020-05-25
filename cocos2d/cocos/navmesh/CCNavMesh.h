@@ -95,7 +95,53 @@ public:
     @param end The end search position in world coordinate system.
     @param pathPoints the key points of path.
     */
-    void findPath(const Vec3 &start, const Vec3 &end, std::vector<Vec3> &pathPoints);
+    void findPath(const Vec3 &start, const Vec3 &end, std::vector<Vec3> &pathPoints, const int queryFilterType = 0);
+
+	/// Sets the traversal cost of the area.
+	void setAreaCost(const int i, const float cost, const int queryFilterType = 0)
+	{
+		dtQueryFilter* filter =_crowed->getEditableFilter(queryFilterType);
+		filter->setAreaCost(i, cost);
+	}
+
+	/// Sets the include flags for the filter.
+	void setIncludeFlags(const unsigned short flags, const int queryFilterType = 0)
+	{
+		dtQueryFilter* filter =_crowed->getEditableFilter(queryFilterType);
+		filter->setIncludeFlags(flags);
+	}
+
+	/// Sets the exclude flags for the filter.
+	void setExcludeFlags(const unsigned short flags, const int queryFilterType = 0)
+	{
+		dtQueryFilter* filter =_crowed->getEditableFilter(queryFilterType);
+		filter->setExcludeFlags(flags);
+	}
+
+	/// Returns the traversal cost of the area.
+	float getAreaCost(const int i, const int queryFilterType = 0) const
+	{ 
+		dtQueryFilter* filter =_crowed->getEditableFilter(queryFilterType);
+		return filter->getAreaCost(i);
+	}
+
+	/// Returns the include flags for the filter.
+	/// Any polygons that include one or more of these flags will be
+	/// included in the operation.
+	unsigned short getIncludeFlags(const int queryFilterType = 0) const
+	{
+		dtQueryFilter* filter =_crowed->getEditableFilter(queryFilterType);
+		return filter->getIncludeFlags();
+	}
+
+	/// Returns the exclude flags for the filter.
+	/// Any polygons that include one ore more of these flags will be
+	/// excluded from the operation.
+	unsigned short getExcludeFlags(const int queryFilterType = 0) const
+	{
+		dtQueryFilter* filter =_crowed->getEditableFilter(queryFilterType);
+		return filter->getExcludeFlags();
+	}
 
 CC_CONSTRUCTOR_ACCESS:
     NavMesh();

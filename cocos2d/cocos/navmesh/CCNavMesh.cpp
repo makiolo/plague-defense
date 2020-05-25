@@ -30,6 +30,7 @@
 #include "recast/Detour/DetourCommon.h"
 #include "recast/DebugUtils/DetourDebugDraw.h"
 #include <sstream>
+#include <iostream>
 
 NS_CC_BEGIN
 
@@ -259,9 +260,8 @@ bool NavMesh::loadGeomFile()
                     &v[0], &v[1], &v[2], &v[3], &v[4], &v[5], &rad, &bidir, &area, &flags);
                 _geomData->offMeshConRads[_geomData->offMeshConCount] = rad;
                 _geomData->offMeshConDirs[_geomData->offMeshConCount] = (unsigned char)bidir;
-                if(area != 5)
                 {
-                    printf("");
+					std::cout << "Area: " << area << std::endl;
                 }
                 _geomData->offMeshConAreas[_geomData->offMeshConCount] = (unsigned char)area;
                 _geomData->offMeshConFlags[_geomData->offMeshConCount] = (unsigned short)flags;
@@ -488,19 +488,19 @@ void NavMesh::update(float dt)
     }
 }
 
-void cocos2d::NavMesh::findPath(const Vec3 &start, const Vec3 &end, std::vector<Vec3> &pathPoints)
+void cocos2d::NavMesh::findPath(const Vec3 &start, const Vec3 &end, std::vector<Vec3> &pathPoints, const int queryFilterType)
 {
     static const int MAX_POLYS = 256;
     static const int MAX_SMOOTH = 2048;
     float ext[3];
     ext[0] = 2; ext[1] = 4; ext[2] = 2;
-    dtQueryFilter filter;
     dtPolyRef startRef, endRef;
     dtPolyRef polys[MAX_POLYS];
     int npolys = 0;
-    _navMeshQuery->findNearestPoly(&start.x, ext, &filter, &startRef, 0);
-    _navMeshQuery->findNearestPoly(&end.x, ext, &filter, &endRef, 0);
-    _navMeshQuery->findPath(startRef, endRef, &start.x, &end.x, &filter, polys, &npolys, MAX_POLYS);
+	const dtQueryFilter* filter =_crowed->getFilter(queryFilterType);
+    _navMeshQuery->findNearestPoly(&start.x, ext, filter, &startRef, 0);
+    _navMeshQuery->findNearestPoly(&end.x, ext, filter, &endRef, 0);
+    _navMeshQuery->findPath(startRef, endRef, &start.x, &end.x, filter, polys, &npolys, MAX_POLYS);
 
     if (npolys)
     {
@@ -555,7 +555,7 @@ void cocos2d::NavMesh::findPath(const Vec3 &start, const Vec3 &end, std::vector<
             float result[3];
             dtPolyRef visited[16];
             int nvisited = 0;
-            _navMeshQuery->moveAlongSurface(polys[0], iterPos, moveTgt, &filter,
+            _navMeshQuery->moveAlongSurface(polys[0], iterPos, moveTgt, filter,
                 result, visited, &nvisited, 16);
 
             npolys = fixupCorridor(polys, npolys, MAX_POLYS, visited, nvisited);

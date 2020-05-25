@@ -322,7 +322,7 @@ void NavMeshAgent::preUpdate(float delta)
         _totalTimeAfterMove = 0.0f;
         dtPolyRef pRef = 0;
         float nearestPos[3];
-        _navMeshQuery->findNearestPoly(&_destination.x, _crowd->getQueryExtents(), _crowd->getFilter(0), &pRef, nearestPos);
+        _navMeshQuery->findNearestPoly(&_destination.x, _crowd->getQueryExtents(), _crowd->getFilter(_param.queryFilterType), &pRef, nearestPos);
         _crowd->requestMoveTarget(_agentID, pRef, nearestPos);
         _needMove = false;
     }

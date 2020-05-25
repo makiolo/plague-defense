@@ -127,10 +127,22 @@ struct InputSystem : public entityx::System<InputSystem>,
 		_scene->addChild(_camera);
 
 		navmesh = cocos2d::NavMesh::create("grid/grid2_all_tiles_tilecache.bin", "grid/grid2.gset");
+		navmesh->setAreaCost(NAVMESH_AREA_GROUND, 10000.0f);
+		navmesh->setAreaCost(NAVMESH_AREA_WATER, 10000.0f);
+		navmesh->setAreaCost(NAVMESH_AREA_ROAD, 1.0f);
+		navmesh->setAreaCost(NAVMESH_AREA_DOOR, 1.0f);
+		navmesh->setAreaCost(NAVMESH_AREA_GRASS, 1.0f);
+		navmesh->setAreaCost(NAVMESH_AREA_JUMP, 1.0f);
+
+		// navmesh->setIncludeFlags(NAVMESH_FLAG_ALL ^ NAVMESH_FLAG_DISABLED);
+		// navmesh->setExcludeFlags(0);
+
+		navmesh->setIncludeFlags(NAVMESH_FLAG_WALK);
+		navmesh->setExcludeFlags(NAVMESH_FLAG_SWIM);
 		
 		_scene->setNavMesh(navmesh);
 
-		const bool debug_navmesh = true;
+		const bool debug_navmesh = false;
 		navmesh->setDebugDrawEnable(debug_navmesh);
 		if(debug_navmesh)
 		{
@@ -248,6 +260,7 @@ struct InputSystem : public entityx::System<InputSystem>,
 			param.height = 1.8f;
 			param.maxSpeed = 8.0f;
 			param.maxAcceleration = 1000.0f;
+			param.queryFilterType = 0;
 			auto agent = cocos2d::NavMeshAgent::create(param);
 			agent->setAutoTraverseOffMeshLink(true);
 			auto agentNode = cocos2d::Sprite3D::create("grid/cylinder.obj");
@@ -272,14 +285,14 @@ struct InputSystem : public entityx::System<InputSystem>,
 			cocos2d::Physics3DWorld::HitResult result;
 			_scene->getPhysics3DWorld()->rayCast(nearP, farP, &result);
 
-			NavMeshAgent::MoveCallback callback = [](NavMeshAgent *agent, float totalTimeAfterMove){
+			cocos2d::NavMeshAgent::MoveCallback callback = [](cocos2d::NavMeshAgent *agent, float totalTimeAfterMove){
 
 				if (agent->isOnOffMeshLink())
 				{
 					agent->setAutoTraverseOffMeshLink(false);
 					agent->setAutoOrientation(false);
 
-					OffMeshLinkData linkdata = agent->getCurrentOffMeshLinkData();
+					cocos2d::OffMeshLinkData linkdata = agent->getCurrentOffMeshLinkData();
 
 					agent->getOwner()->setPosition3D(linkdata.endPosition);
 					agent->completeOffMeshLink();

@@ -45,6 +45,26 @@ NS_CC_BEGIN
  * @{
  */
 
+enum SamplePolyAreas
+{
+	NAVMESH_AREA_GROUND,
+	NAVMESH_AREA_WATER,
+	NAVMESH_AREA_ROAD,
+	NAVMESH_AREA_DOOR,
+	NAVMESH_AREA_GRASS,
+	NAVMESH_AREA_JUMP,
+};
+
+enum SamplePolyFlags
+{
+	NAVMESH_FLAG_WALK		= 0x01,		// Ability to walk (ground, grass, road)
+	NAVMESH_FLAG_SWIM		= 0x02,		// Ability to swim (water).
+	NAVMESH_FLAG_DOOR		= 0x04,		// Ability to move through doors.
+	NAVMESH_FLAG_JUMP		= 0x08,		// Ability to jump.
+	NAVMESH_FLAG_DISABLED	= 0x10,		// Disabled polygon
+	NAVMESH_FLAG_ALL		= 0xffff	// All abilities.
+};
+
 struct LinearAllocator : public dtTileCacheAlloc
 {
     unsigned char* buffer;
