@@ -14,7 +14,7 @@ Nodo abstracto de un arbol de comportamiento
 #include <string>
 #include <tuple>
 #include <unordered_map>
-#include "nlohmann/json.hpp"
+#include <nlohmann/json.hpp>
 
 namespace myBT {
 

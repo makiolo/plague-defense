@@ -1,4 +1,4 @@
-#ifdef GL_ES
+inplevel#ifdef GL_ES
 precision mediump float;
 #endif
 

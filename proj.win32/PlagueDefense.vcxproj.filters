@@ -161,7 +161,7 @@
     <ClInclude Include="..\Classes\CountdownSystem.h">
       <Filter>src\systems</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\DebugBar.h">
+    <ClInclude Include="..\Classes\DebugBarComponent.h">
       <Filter>src\components\property</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\MainMenuScene.h">
@@ -170,13 +170,13 @@
     <ClInclude Include="..\Classes\Level01.h">
       <Filter>src\scenes</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\StartGame.h">
+    <ClInclude Include="..\Classes\StartGameEvent.h">
       <Filter>src\events</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\AutoDestroyDescription.h">
       <Filter>src\components\description</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\CountDownReset.h">
+    <ClInclude Include="..\Classes\CountDownResetEvent.h">
       <Filter>src\events</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\DebugPhysicsCommand.h">
@@ -224,7 +224,7 @@
     <ClInclude Include="..\Classes\DetectInvasionSystem.h">
       <Filter>src\systems</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\ExitGameCommand.h">
+    <ClInclude Include="..\Classes\ExitGameEvent.h">
       <Filter>src\events</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\PhysicsSystem.h">

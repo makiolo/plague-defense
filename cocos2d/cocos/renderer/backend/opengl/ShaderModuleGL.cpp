@@ -26,6 +26,8 @@
 
 #include "platform/CCPlatformMacros.h"
 #include "base/ccMacros.h"
+#include <fstream>
+#include "platform/CCFileUtils.h"
 
 CC_BACKEND_BEGIN
 
@@ -53,10 +55,24 @@ void ShaderModuleGL::compileShader(ShaderStage stage, const std::string &source)
     
     GLint status = 0;
     glGetShaderiv(_shader, GL_COMPILE_STATUS, &status);
+
     if (! status)
     {
         CCLOG("cocos2d: ERROR: Failed to compile shader:\n%s", source.c_str());
-        CCLOG("cocos2d: %s", getErrorLog(_shader));
+        char* errorShader = getErrorLog(_shader);
+
+        auto fullpath = cocos2d::FileUtils::getInstance()->getWritablePath() + "/error_shader.log";
+
+        std::ofstream myfile;
+        myfile.open(fullpath);
+        myfile << "Source:" << std::endl;
+        myfile << source << std::endl;
+        myfile << "-------------------" << std::endl;
+        myfile << "Error:" << std::endl;
+        myfile << errorShader << std::endl;
+        myfile.close();
+
+        CCLOG("cocos2d: %s", errorShader);
         deleteShader();
         CCASSERT(false, "Shader compile failed!");
     }

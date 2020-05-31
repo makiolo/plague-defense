@@ -1,0 +1,26 @@
+material agent
+{
+	technique normal
+	{
+		pass 0
+		{
+			shader
+			{
+				albedo_color = 0.99,0.1,0.1
+				roughness = 0.66
+				metallic = 0.65
+				ambient_color = 0.7,0.7,0.7
+
+				vertexShader = Shaders/pbr.vsh
+				fragmentShader = Shaders/pbr.fsh
+				defines = USE_ALBEDO_MAP 0;USE_NORMAL_MAP 0;USE_AMBIENT_MAP 0;USE_ROUGHNESS_MAP 0;USE_METALLIC_MAP 0;MAX_POINT_LIGHT_NUM 1;MAX_SPOT_LIGHT_NUM 0;MAX_DIRECTIONAL_LIGHT_NUM 0;HAS_TANGENT 0
+			}
+            renderState
+            {
+                cullFace = true
+                cullFaceSide = BACK
+                depthTest = true
+            }
+		}
+	}
+}

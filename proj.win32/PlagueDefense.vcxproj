@@ -168,9 +168,9 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\CharacterComponent.h" />
     <ClInclude Include="..\Classes\CharacterSystem.h" />
     <ClInclude Include="..\Classes\Cloud.h" />
-    <ClInclude Include="..\Classes\CountDownReset.h" />
+    <ClInclude Include="..\Classes\CountDownResetEvent.h" />
     <ClInclude Include="..\Classes\CountdownSystem.h" />
-    <ClInclude Include="..\Classes\DebugBar.h" />
+    <ClInclude Include="..\Classes\DebugBarComponent.h" />
     <ClInclude Include="..\Classes\DebugPhysicsCommand.h" />
     <ClInclude Include="..\Classes\design-patterns-cpp14\common.h" />
     <ClInclude Include="..\Classes\design-patterns-cpp14\factory.h" />
@@ -191,7 +191,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\entityx\quick.h" />
     <ClInclude Include="..\Classes\entityx\System.h" />
     <ClInclude Include="..\Classes\entityx\tags\TagsComponent.h" />
-    <ClInclude Include="..\Classes\ExitGameCommand.h" />
+    <ClInclude Include="..\Classes\ExitGameEvent.h" />
     <ClInclude Include="..\Classes\FireCommand.h" />
     <ClInclude Include="..\Classes\GravityComponent.h" />
     <ClInclude Include="..\Classes\GravitySystem.h" />
@@ -213,7 +213,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\ProjectilComponent.h" />
     <ClInclude Include="..\Classes\RightCommand.h" />
     <ClInclude Include="..\Classes\Sprite.h" />
-    <ClInclude Include="..\Classes\StartGame.h" />
+    <ClInclude Include="..\Classes\StartGameEvent.h" />
     <ClInclude Include="..\Classes\Transform.h" />
     <ClInclude Include="..\Classes\utils.h" />
     <ClInclude Include="main.h" />

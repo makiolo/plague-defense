@@ -10,4 +10,3 @@ void main(void)
 {
     gl_FragColor = texture2D(u_sampler0, TextureCoordOut) * u_color;
 }
-

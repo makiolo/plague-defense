@@ -66,7 +66,7 @@ class BaseSystem : entityx::help::NonCopyable {
 /**
  * Use this class when implementing Systems.
  *
- * struct MovementSystem : public System<MovementSystem> {
+ * struct CloudSystem : public System<CloudSystem> {
  *   void update(EntityManager &entities, EventManager &events, TimeDelta dt) {
  *     // Do stuff to/with entities...
  *   }
@@ -100,7 +100,7 @@ class SystemManager : entityx::help::NonCopyable {
    * Must be called before Systems can be used.
    *
    * eg.
-   * std::shared_ptr<MovementSystem> movement = entityx::make_shared<MovementSystem>();
+   * std::shared_ptr<CloudSystem> movement = entityx::make_shared<CloudSystem>();
    * system.add(movement);
    */
   template <typename S>
@@ -114,7 +114,7 @@ class SystemManager : entityx::help::NonCopyable {
    * Must be called before Systems can be used.
    *
    * eg.
-   * auto movement = system.add<MovementSystem>();
+   * auto movement = system.add<CloudSystem>();
    */
   template <typename S, typename ... Args>
   std::shared_ptr<S> add(Args && ... args) {

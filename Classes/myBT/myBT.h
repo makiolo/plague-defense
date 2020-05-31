@@ -24,7 +24,6 @@ fuera de la librer�a. Cumple la regla ODR.
 #include "Action.h"
 #include "Condition.h"
 #include "While.h"
-// #include "Semaphore.h"
 #include "And.h"
 #include "Or.h"
 // #include "Subject.h"

@@ -1,0 +1,45 @@
+material navmesh
+{
+	technique normal
+	{
+		pass 0
+		{
+			shader
+			{
+				//albedo_color = 0.45,0.5,0.7
+				roughness = 0.66
+				metallic = 0.65
+				ambient_color = 0.7,0.7,0.7
+
+				vertexShader = Shaders/pbr.vsh
+				fragmentShader = Shaders/pbr.fsh
+				defines = USE_ALBEDO_MAP 1;USE_NORMAL_MAP 1;USE_AMBIENT_MAP 0;USE_ROUGHNESS_MAP 0;USE_METALLIC_MAP 0;MAX_POINT_LIGHT_NUM 1;MAX_SPOT_LIGHT_NUM 0;MAX_DIRECTIONAL_LIGHT_NUM 0
+
+				sampler texture0
+				{
+					path = terracotta/terracotta_diffuse2.png
+                    mipmap = false
+                    wrapS = REPEAT
+                    wrapT = REPEAT
+                    minFilter = LINEAR
+                    magFilter = LINEAR
+				}
+				sampler texture1
+				{
+					path = terracotta/terracotta_normal2.png
+                    mipmap = false
+                    wrapS = REPEAT
+                    wrapT = REPEAT
+                    minFilter = LINEAR
+                    magFilter = LINEAR
+				}
+			}
+            renderState
+            {
+                cullFace = true
+                cullFaceSide = BACK
+                depthTest = true
+            }
+		}
+	}
+}

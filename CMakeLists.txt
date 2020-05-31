@@ -35,7 +35,7 @@ if(XCODE)
     endif()
 endif()
 
-if(NOT DEFINED BUILD_ENGINE_DONE) # to test MyGame into root project
+if(NOT DEFINED BUILD_ENGINE_DONE) # to test MyGame into root projec
     set(COCOS2DX_ROOT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cocos2d)
     set(CMAKE_MODULE_PATH ${COCOS2DX_ROOT_PATH}/cmake/Modules/)
 
@@ -63,9 +63,9 @@ list(APPEND GAME_SOURCE
         Classes/entityx/help/Timer.cc
         Classes/myBT/TreeNodeComposite.cpp
         Classes/AppDelegate.cpp
-        Classes/Level01.cpp
-        Classes/MainMenuScene.cpp
-        Classes/PhysicsShapeCache.cpp
+        Classes/engine/scene/Level01.cpp
+        Classes/engine/scene/MainMenuScene.cpp
+        Classes/engine/thirdparty/physics/PhysicsShapeCache.cpp
         )
 list(APPEND GAME_HEADER
         Classes/AppDelegate.h

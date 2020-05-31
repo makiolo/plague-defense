@@ -33,7 +33,7 @@ public:
 	
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
-		int counter = context[id_flow].registers[this]["counter"].get<int>();
+        size_t counter = context[id_flow].registers[this]["counter"].get<size_t>();
 
 		size_t totalChilds = TreeNodeComposite::size();
 		if(counter < totalChilds)
