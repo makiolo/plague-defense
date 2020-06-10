@@ -14,6 +14,8 @@ struct Transform : public entityx::Component<Transform>
 		, configured(false)
 		, position(position_)
 		, scale(scale_)
+		, current_action(nullptr)
+		, running(false)
 	{
 		node->retain();
 	}
@@ -23,6 +25,28 @@ struct Transform : public entityx::Component<Transform>
 		node->removeFromParent();
 		node->release();
 	}
+
+	void runAction(cocos2d::Action* action)
+    {
+	    if(running) {
+            running = false;
+            current_action->release();
+        }
+	    current_action = node->runAction(action);
+	    if(!current_action->isDone())
+        {
+	        running = true;
+	        current_action->retain();
+        }
+    }
+
+    bool isDone() const
+    {
+	    if(running) {
+	        return current_action->isDone();
+        }
+	    return true;
+    }
 
 	cocos2d::Node* get() const
 	{
@@ -50,6 +74,8 @@ struct Transform : public entityx::Component<Transform>
 	//
 	cocos2d::Vec2 position;
 	float scale;
+	cocos2d::Action* current_action;
+	bool running;
 };
 
 }

@@ -1,7 +1,7 @@
 /*
  * Componente (Sensor) que contiene los contadores principales de su entorno
  */
-/* Component class CountSensorComponent
+/* Component class EnemyCountSensorComponent
 *
 *  Ricardo Marmolejo García 2019
 */
@@ -14,9 +14,9 @@
 
 namespace plague {
 
-struct CountSensorComponent : public entityx::Component<CountSensorComponent>
+struct EnemyCountSensorComponent : public entityx::Component<EnemyCountSensorComponent>
 {
-	explicit CountSensorComponent()
+	explicit EnemyCountSensorComponent()
 		: x(0)
 	{
 		

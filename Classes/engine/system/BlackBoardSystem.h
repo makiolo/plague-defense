@@ -8,6 +8,8 @@
 
 #include <cocos2d.h>
 #include <random>
+#include <engine/component/ai/sensor/ProjectilCountSensorComponent.h>
+#include <engine/component/CombatPointsComponent.h>
 #include "entityx/entityx.h"
 #include "engine/event/StartGameEvent.h"
 #include "engine/event/CountDownResetEvent.h"
@@ -68,18 +70,23 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		// fireworks.assign<plague::ParticleFireworksCompomnent>( fireworks.id() );
 
 		entityx::Entity spider = es.create();
-		// Marca la entidad como de tipo Insecto
+		// Vida
+		// Ataque
+		// Defensa
+		// void on_hit()
+		// {
+		//     me.vida -= (other.ataque - me.defensa);
+		// }
 		spider.assign<plague::InsectComponent>();
-		// Fisica
 		spider.assign<plague::PhysicsDescription>(false);
 		spider.assign<plague::PhysicsIntrospectionComponent>();
-		// Comportamiento IA
-		spider.assign<plague::SpiderBrainComponent>(spider.id(), "spider");
-		// Apariencia
-		spider.assign<plague::SceneComponent>(scene);
-		spider.assign<plague::Transform>(plague::level01::enemies + cocos2d::Vec2(start_x, 0), 1.0f);  // position and scale
+		spider.assign<plague::SpiderBrainComponent>("spider");
+		spider.assign<plague::SceneComponent>(scene, 3);
+		spider.assign<plague::Transform>(plague::level01::enemies, 1.0f);  // position and scale
 		spider.assign<plague::Sprite2DComponent>("img/enemy/spider.png");
-		// spider.assign<plague::LinkedEntityCompomnent>( fireworks.id() );
+        spider.assign<plague::ProjectilCountSensorComponent>();
+        // spider.assign<plague::LinkedEntityCompomnent>( fireworks.id() );
+        spider.assign<plague::CombatPointsComponent>();
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
@@ -102,7 +109,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				// spawn level
 				if(_level == 1)
 				{
-					for (int stage = 0; stage < 3; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
@@ -113,7 +120,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				}
 				else if (_level == 2)
 				{
-					for (int stage = 0; stage < 5; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
@@ -124,7 +131,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				}
 				else if (_level == 3)
 				{
-					for (int stage = 0; stage < 6; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						// spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
@@ -135,7 +142,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				}
 				else if (_level == 4)
 				{
-					for (int stage = 0; stage < 6; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
@@ -146,7 +153,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				}
 				else if (_level == 5)
 				{
-					for (int stage = 0; stage < 6; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						// spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
@@ -157,7 +164,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				}
 				else if (_level == 6)
 				{
-					for (int stage = 0; stage < 4; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
@@ -168,7 +175,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				}
 				else if (_level == 7)
 				{
-					for (int stage = 0; stage < 7; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
@@ -179,7 +186,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				}
 				else if (_level == 8)
 				{
-					for (int stage = 0; stage < 8; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
@@ -190,7 +197,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				}
 				else if (_level == 9)
 				{
-					for (int stage = 0; stage < 8; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
@@ -201,7 +208,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				}
 				else if (_level == 10)
 				{
-					for (int stage = 0; stage < 20; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						spwan_spider_normal(es, events, level01::column1, 250.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 250.0f, gen, step_dist, wait_dist, offset_dist);
@@ -212,7 +219,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				}
 				else if (_level == 11)
 				{
-					for (int stage = 0; stage < 40; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						spwan_spider_normal(es, events, level01::column1, 250.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 250.0f, gen, step_dist, wait_dist, offset_dist);
@@ -223,7 +230,7 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				}
 				else if (_level == 12)
 				{
-					for (int stage = 0; stage < 40; ++stage)
+					for (int stage = 0; stage < 1; ++stage)
 					{
 						spwan_spider_normal(es, events, level01::column1, 350.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 350.0f, gen, step_dist, wait_dist, offset_dist);

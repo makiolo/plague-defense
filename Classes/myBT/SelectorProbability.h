@@ -15,8 +15,6 @@
 
 namespace myBT {
 
-// TODO: hacer un selector EQUI probable?
-
 class SelectorProbability : public TreeNodeComposite
 {
 public:
@@ -53,7 +51,7 @@ public:
 			}
 
 			TreeNode* child = TreeNodeComposite::get_child(_iter);
-			child->printTrace();
+			child->printTrace(context, id_flow);
 			size_t code = child->update(context, id_flow, deltatime);
 
 			if(lotto_now)

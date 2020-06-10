@@ -62,3 +62,4 @@ struct Sprite3DCompomnent : public entityx::Component<Sprite3DCompomnent>
 }
 
 #endif
+

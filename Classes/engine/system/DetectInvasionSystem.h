@@ -44,8 +44,7 @@ struct DetectInvasionSystem : public entityx::System<DetectInvasionSystem>
 				{
 					cocos2d::AudioEngine::play2d("sounds/escape.mp3");
 
-					//  TODO: retrasar la destrucción, pero hacerlo invisible
-					entity.assign<plague::AutoDestroyDescription>(0.5f);
+					entity.assign<plague::AutoDestroyDescription>(0.01f);
 					events.emit<plague::InsectInvasionEvent>();
 				}
 			}

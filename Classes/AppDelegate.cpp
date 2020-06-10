@@ -20,7 +20,7 @@ AppDelegate::AppDelegate()
 
 AppDelegate::~AppDelegate() 
 {
-    
+	
 }
 
 // if you want a different context, modify the value of glContextAttrs
@@ -43,7 +43,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
 #if 1
         newglview = GLViewImpl::createWithRect("PlagueDefense", cocos2d::Rect(1000, 0, windowResolutionSize.width, windowResolutionSize.height));
-        glfwSetWindowPos(newglview->getWindow(), 2000, 30);
+        // glfwSetWindowPos(newglview->getWindow(), 2000, 30);
 #else
         newglview = GLViewImpl::createWithRect("PlagueDefense", cocos2d::Rect(1000, 0, designResolutionSize.width, designResolutionSize.height));
 		newglview->setFullscreen();

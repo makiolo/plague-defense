@@ -19,7 +19,6 @@ namespace plague {
 enum PhysicsMask {
 	DYNAMIC = 0x01,
 	STATIC = 0x02,
-	DEAD = 0x03,  // TODO: unused
 };
 
 struct PhysicsComponent : public entityx::Component<PhysicsComponent>
@@ -46,7 +45,6 @@ struct PhysicsComponent : public entityx::Component<PhysicsComponent>
 	{
 		if(!configured)
 		{
-			// physics_body->autorelease();
 			transform.get()->setPhysicsBody(physics_body);
 			transform.get()->setUserData((void*)&introspection);
 			configured = true;

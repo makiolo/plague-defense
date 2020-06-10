@@ -95,7 +95,7 @@ protected:
 	*/
 	std::string _id_flow_initial;
 
-	/*
+	/**
 	Es interesante guardar el estado de los nodos hoja para consultas
 	*/
 	size_t _status;

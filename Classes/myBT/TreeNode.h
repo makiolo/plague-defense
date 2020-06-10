@@ -30,6 +30,15 @@ enum Status {
 	PANIC_ERROR = 5
 };
 
+/*
+ * Nuevos candidatos:
+ *
+ *          AND --> bool
+ *          OR  --> bool
+ *          NOT --> bool
+ *          ALL --> vector of bool
+ *          ANY --> vector of bool
+ */
 enum Type {
 	TYPE_ACTION,
 	TYPE_TRIVIAL_ACTION,
@@ -82,6 +91,11 @@ struct FlowProgramData
 	Program registers
 	*/
 	std::unordered_map<TreeNode*, nlohmann::json> registers;
+
+	/*
+	 * Trace
+	 */
+	std::vector<std::string> traces;
 };
 
 using ActionRepository = std::unordered_map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void(bool)> > >;
@@ -176,9 +190,55 @@ public:
 		
 	}
 
-	void printTrace()
+	void clearTraces(myBT::Context& context)
+    {
+	    for(auto flow : context)
+        {
+	        flow.second.traces.clear();
+        }
+    }
+
+    int strcat_reverse(char* buffer, const char* what, int counter) const
+    {
+        for(int i=((int)strlen(what)-1); i>=0; --i)
+        {
+            buffer[counter--] = what[i];
+        }
+        return counter;
+    }
+
+	void printTrace(myBT::Context& context, const std::string& id_flow)
 	{
-		
+	    const bool verbose = true;
+        int counter = BUFSIZ - 1;
+        buffer_trace[counter] = '\0';
+        counter = counter - 1;
+
+	    if(verbose)
+        {
+            for (myBT::TreeNode* pNode = this; pNode != nullptr; pNode = pNode->get_parent())
+            {
+                counter = strcat_reverse(buffer_trace, pNode->get_name().c_str(), counter);
+                counter = strcat_reverse(buffer_trace, " -> ", counter);
+            }
+
+            char* finalStr;
+            if(counter >= 0)
+            {
+                finalStr = &(buffer_trace[counter + 1 + strlen(" -> root -> ")]);
+            }
+            else
+            {
+                finalStr = "Trace is so long ...";
+            }
+
+            context[id_flow].traces.emplace_back(finalStr);
+        }
+        else
+        {
+            context[id_flow].traces.emplace_back(this->get_name());
+        }
+
 	}
 
 	////////////////////////////////////////////////
@@ -190,19 +250,12 @@ public:
 
 	////////////////////////////////////////////////
 
-	inline const std::string& get_name() const {return _name;}
-
-	/*
-	virtual void init() {}
-	virtual void terminate(bool interrupted) {}
-	*/
-
+    virtual std::string get_name() const {return _name;}
 	virtual void reset(myBT::Context& context, const std::string& id_flow) = 0;
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) = 0;
 	
 	virtual void free_childs() {}
-	virtual bool is_trivial() const { return false; }	
-	
+
 	void set_parent(TreeNode* parent)
 	{
 		_parent = parent;
@@ -235,6 +288,7 @@ public:
 protected:
 	TreeNode* _parent;
 	std::string _name;
+    char buffer_trace[BUFSIZ];
 
 };
 

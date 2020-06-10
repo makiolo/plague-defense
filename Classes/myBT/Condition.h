@@ -22,19 +22,19 @@ class Condition : public TreeNodeLeaf
 public:
 	using func0 = typename std::tuple_element<0, ConditionRepository::mapped_type>::type;
 
-	explicit Condition(const std::string& name = "")
-		: TreeNodeLeaf(name)
+	explicit Condition(std::string name = "")
+		: TreeNodeLeaf(std::move(name))
 		, m_Inverse(false)
 	{  }
 
-	explicit Condition(const std::string& name, const func0& callbackCondition)
-		: TreeNodeLeaf(name)
+	explicit Condition(std::string name, func0 callbackCondition)
+		: TreeNodeLeaf(std::move(name))
 		, m_Inverse(false)
-		, m_tCallbackCondition(callbackCondition)
+		, m_tCallbackCondition(std::move(callbackCondition))
 	{  }
 
-	explicit Condition(const std::string& name, const ConditionRepository::mapped_type& callback)
-		: TreeNodeLeaf(name)
+	explicit Condition(std::string name, const ConditionRepository::mapped_type& callback)
+		: TreeNodeLeaf(std::move(name))
 		, m_Inverse(false)
 		, m_tCallbackCondition(std::get<0>(callback))
 	{  }
@@ -55,6 +55,14 @@ public:
 	{
 
 	}
+
+    virtual std::string get_name() const override
+    {
+	    if(m_Inverse)
+	        return std::string("not " + _name);
+	    else
+    	    return _name;
+    }
 
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
@@ -87,12 +95,14 @@ public:
 		m_tCallbackCondition = callbackCondition;
 	}
 
+	/*
 	Condition* set_inverse_ex()
 	{
 		m_Inverse = true;
-		this->_name.insert(0,"!");
+		this->_name.insert(0,"not ");
 		return this;
 	}
+	*/
 
 	virtual void write(nlohmann::json& pipe) override
 	{

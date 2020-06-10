@@ -11,6 +11,8 @@ Accion primitiva
 #ifndef _ACTION_H_
 #define _ACTION_H_
 
+#include <utility>
+
 #include "TreeNodeLeaf.h"
 
 namespace myBT {
@@ -22,22 +24,22 @@ public:
 	using func1 = typename std::tuple_element<1, ActionRepository::mapped_type>::type;
 	using func2 = typename std::tuple_element<2, ActionRepository::mapped_type>::type;
 
-	explicit Action(const std::string& _name = "")
-		 : TreeNodeLeaf(_name)
+	explicit Action(std::string _name = "")
+		 : TreeNodeLeaf(std::move(_name))
 		 , m_tCallbackStartSimple(nullptr)
 		 , m_tCallbackUpdateSimple(nullptr)
 		 , m_tCallbackFinishSimple(nullptr)
 	{  }
 
-	explicit Action(const std::string& _name, const func0& callbackStartSimple, const func1& callbackUpdateSimple, const func2& callbackFinishSimple)
-		: TreeNodeLeaf(_name)
-		, m_tCallbackStartSimple(callbackStartSimple)
-		, m_tCallbackUpdateSimple(callbackUpdateSimple)
-		, m_tCallbackFinishSimple(callbackFinishSimple)
+	explicit Action(std::string _name, func0 callbackStartSimple, func1 callbackUpdateSimple, func2 callbackFinishSimple)
+		: TreeNodeLeaf(std::move(_name))
+		, m_tCallbackStartSimple(std::move(callbackStartSimple))
+		, m_tCallbackUpdateSimple(std::move(callbackUpdateSimple))
+		, m_tCallbackFinishSimple(std::move(callbackFinishSimple))
 	{  }
 
-	explicit Action(const std::string& _name, const ActionRepository::mapped_type& callbacks)
-		: TreeNodeLeaf(_name)
+	explicit Action(std::string _name, const ActionRepository::mapped_type& callbacks)
+		: TreeNodeLeaf(std::move(_name))
 		, m_tCallbackStartSimple(std::get<0>(callbacks))
 		, m_tCallbackUpdateSimple(std::get<1>(callbacks))
 		, m_tCallbackFinishSimple(std::get<2>(callbacks))
@@ -91,8 +93,8 @@ public:
 
 		// el context lleva una maquina de estados por flujo
 		_change_state(context, id_flow, this);
-		
-		// ejecutar la acci�n
+
+        // ejecutar la accion
 		this->_status = update(deltatime);
 
 		// TODO: refactor esto, hay que borrar status del nodo

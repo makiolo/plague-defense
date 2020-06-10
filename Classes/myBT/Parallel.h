@@ -60,26 +60,17 @@ public:
 
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
-		size_t totalChilds = TreeNodeComposite::size();
-		TreeNode* child;
-		size_t code;
-
-		// std::cout << "------------------ " << totalChilds << " ------------------" << std::endl;
-
 		bool anyFail = false;
 		bool allFail = true;
 		bool anyComplete = false;
 		bool allComplete = true;
 		size_t candidato = RUNNING;
 
-		for(i = 0; i < totalChilds; i++)
+		for(auto& child : _childs)
 		{
-			child = TreeNodeComposite::get_child(i);
-			child->printTrace();
-
 			std::stringstream ss;
 			ss << id_flow << "/" << child->get_name();
-			code = child->update(context, ss.str(), deltatime);
+			auto code = child->update(context, ss.str(), deltatime);
 
 			if(code == PANIC_ERROR)
 			{
@@ -169,9 +160,6 @@ public:
 		m_CompletedMode = pipe["CompletedMode"].get<size_t>();
 		m_AbortedMode = pipe["AbortedMode"].get<size_t>();
 	}
-
-private:
-	size_t i;
 };
 
 }

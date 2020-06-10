@@ -1,8 +1,8 @@
 /*
  * Contar las unidades que existen de tipo "Insecto"
- * y actualizar su CountSensorComponent
+ * y actualizar su EnemyCountSensorComponent
  */
-/* System class CountSensorSystem
+/* System class EnemyCountSensorSystem
 *
 *  Ricardo Marmolejo García 2019
 */
@@ -15,18 +15,18 @@
 #include "entityx/entityx.h"
 #include "engine/component/Transform.h"
 #include "engine/component/type/InsectComponent.h"
-#include "engine/component/ai/sensor/CountSensorComponent.h"
+#include "engine/component/ai/sensor/EnemyCountSensorComponent.h"
 
 namespace plague {
 
-struct CountSensorSystem : public entityx::System<CountSensorSystem>
+struct EnemyCountSensorSystem : public entityx::System<EnemyCountSensorSystem>
 {
-	explicit CountSensorSystem()
+	explicit EnemyCountSensorSystem()
 	{
 		
 	}
 
-	virtual ~CountSensorSystem()
+	virtual ~EnemyCountSensorSystem()
 	{
 		
 	}
@@ -51,7 +51,7 @@ struct CountSensorSystem : public entityx::System<CountSensorSystem>
 			x = positions[positions.size() / 2];
 		}
 		// Actualizar sensores
-		es.each<plague::CountSensorComponent>([&](entityx::Entity entity, plague::CountSensorComponent& count_sensor) {
+		es.each<plague::EnemyCountSensorComponent>([&](entityx::Entity entity, plague::EnemyCountSensorComponent& count_sensor) {
 			count_sensor.x = x;	
 		});
 	}

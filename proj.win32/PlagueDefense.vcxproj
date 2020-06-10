@@ -170,7 +170,7 @@ xcopy "$(ProjectDir)..\Resources" "$(OutDir)\Resources\" /D /E /I /F /Y
     <ClInclude Include="..\Classes\Cloud.h" />
     <ClInclude Include="..\Classes\CountDownResetEvent.h" />
     <ClInclude Include="..\Classes\CountdownSystem.h" />
-    <ClInclude Include="..\Classes\DebugBarComponent.h" />
+    <ClInclude Include="..\Classes\ConsoleComponent.h" />
     <ClInclude Include="..\Classes\DebugPhysicsCommand.h" />
     <ClInclude Include="..\Classes\design-patterns-cpp14\common.h" />
     <ClInclude Include="..\Classes\design-patterns-cpp14\factory.h" />

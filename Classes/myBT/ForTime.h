@@ -16,17 +16,16 @@ namespace myBT {
 class ForTime : public TreeNodeComposite
 {
 	PROPERTY(double, ValueSecs)
-	PROPERTY(bool, UseRange)
 	PROPERTY(double, ValueMin)
 	PROPERTY(double, ValueMax)
 
 public:
 	explicit ForTime(const std::string& _name = "")
 		: TreeNodeComposite(_name)
-		, m_ValueSecs(1.0f)
+		, m_ValueSecs(-1.0f)
 		, m_UseRange(false)
-		, m_ValueMin(1.0f)
-		, m_ValueMax(1.0f)
+		, m_ValueMin(-1.0f)
+		, m_ValueMax(-1.0f)
 		, _gen(_rd())
 	{  }
 
@@ -45,6 +44,7 @@ public:
 			{
 				m_Init = true;
 				m_Counter = 0.0f;
+				m_UseRange = (m_ValueMin != -1.0f) && (m_ValueMax != -1.0f);
 
 				if(!m_UseRange)
 				{
@@ -52,15 +52,15 @@ public:
 				}
 				else
 				{
-					std::uniform_real_distribution<> scale_random{ m_ValueMin, m_ValueMax };
-					m_CounterMax = scale_random(_gen);
+                    std::uniform_real_distribution<> scale_random{m_ValueMin, m_ValueMax};
+                    m_CounterMax = scale_random(_gen);
 				}
 			}
 			
-			if(m_Counter < m_CounterMax)
+			if(m_CounterMax == -1.0f || (m_Counter < m_CounterMax))
 			{
 				TreeNode* child = TreeNodeComposite::get_child(0);
-				child->printTrace();
+				child->printTrace(context, id_flow);
 				size_t code = child->update(context, id_flow, deltatime);
 				
 				// contabilizamos la ejecucion
@@ -68,42 +68,43 @@ public:
 				
 				switch(code)
 				{
-					case RUNNING:
-					{
-						return RUNNING;
-					}
+                    case RUNNING:
 					case COMPLETED:
 					{
-						// ha terminado antes de tiempo
-						child->configure(context, id_flow);
+                        if(code == COMPLETED)
+                        {
+                            child->configure(context, id_flow);
+                        }
 
-						return RUNNING;
+                        if(m_CounterMax == -1.0f || (m_Counter < m_CounterMax))
+                        {
+                            return RUNNING;
+                        }
+                        else
+                        {
+                            return COMPLETED;
+                        }
 					}
 					case FAILED:
+                    case ABORTED:
 					{
-						return FAILED;
-					}
-					case ABORTED:
-					{
-						return ABORTED;
+						return code;
 					}
 					default:
 					{
-						//EXCEPCION(E_TreeBehaviours, "WARNING: Status code desconocido en ForTime::tick");
 						return PANIC_ERROR;
 					}
 				}
 			}
 			else
 			{
-				// con aborted atravesaría las secuencias y los selectores
-				return COMPLETED;
-			}
+			    return COMPLETED;
+            }
 
-		}
-		else
-		{
-			// si no tiene hijos, no hace nada
+        }
+        else
+        {
+            // si no tiene hijos, no hace nada
 			return PANIC_ERROR;
 		}
 	}
@@ -116,7 +117,6 @@ public:
 	virtual void write(nlohmann::json& pipe) override
 	{
 		pipe["ValueSecs"] = m_ValueSecs;
-		pipe["UseRange"] = m_UseRange;
 		pipe["ValueMin"] = m_ValueMin;
 		pipe["ValueMax"] = m_ValueMax;
 	}
@@ -124,7 +124,6 @@ public:
 	virtual void read(nlohmann::json& pipe) override
 	{
 		m_ValueSecs = pipe["ValueSecs"].get<double>();
-		m_UseRange = pipe["UseRange"].get<bool>();
 		m_ValueMin = pipe["ValueMin"].get<double>();
 		m_ValueMax = pipe["ValueMax"].get<double>();
 	}
@@ -133,6 +132,7 @@ protected:
 	double m_Counter;
 	double m_CounterMax;
 	bool m_Init;
+	bool m_UseRange;
 	std::random_device _rd;
 	std::mt19937 _gen;
 

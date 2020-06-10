@@ -135,7 +135,7 @@ struct InputSystem : public entityx::System<InputSystem>,
 		// Create Camera3D
 
 		_camera = cocos2d::Camera::create();
-		_camera->setPosition3D(cocos2d::Vec3(0.0f, 15.5f, 10.5f));
+		_camera->setPosition3D(cocos2d::Vec3(0.0f, 1500.5f, 10.5f));
 		_camera->lookAt(cocos2d::Vec3(0.0f, 0.0f, -10.0f), cocos2d::Vec3(0.0f, 0.0f, -1.0f));
 		_camera->setCameraFlag(cocos2d::CameraFlag::USER1);
 		_scene->addChild(_camera);

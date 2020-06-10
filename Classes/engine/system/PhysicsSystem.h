@@ -12,6 +12,7 @@
 #include <physics/CCPhysicsWorld.h>
 #include <physics/CCPhysicsBody.h>
 #include <physics3d/CCPhysics3DWorld.h>
+#include <engine/event/collision/ProjectilInsectCollisionEvent.h>
 #include "entityx/entityx.h"
 #include "engine/component/type/PhysicsIntrospectionComponent.h"
 #include "engine/component/descriptor/AutoDestroyDescription.h"
@@ -94,18 +95,28 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>
 		{
 			for (auto& tuple : _destroy)
 			{
-				entityx::Entity::Id idB;
-				std::tie(std::ignore, idB) = tuple;
+				entityx::Entity::Id idA, idB;
+				std::tie(idA, idB) = tuple;
 
-				auto insect = es.get(idB);
+
+				// emitir evento -> Projectil vs Insect
+
+				// El insecto esta registrado a ese evento
+
+				// Como insecto este es su on_hit() / on_dead()
+
+				events.emit<plague::ProjectilInsectCollisionEvent>(idA, idB);
+
+				/*
+                auto insect = es.get(idB);
 
 				if (!insect.has_component<plague::StammableComponent>())
 				{
 					insect.assign<plague::StammableComponent>();
+					insect.component<plague::SpiderBrainComponent>().remove();
 
 					// para su comportamiento (IA?)
 					auto sprite = insect.component<plague::Sprite2DComponent>().get();
-					sprite->get()->stopAllActions();
 					sprite->get()->setFlippedY(true);
 
 					// su fisica se convierte en dinamica
@@ -115,6 +126,7 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>
 					// evento de enemigo muerto
 					events.emit<plague::InsectDeadEvent>();
 				}
+				*/
 			}
 			_destroy.clear();
 		}

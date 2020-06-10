@@ -34,36 +34,29 @@ public:
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
         size_t counter = context[id_flow].registers[this]["counter"].get<size_t>();
-
 		size_t totalChilds = TreeNodeComposite::size();
 		if(counter < totalChilds)
 		{
 			TreeNode* child = TreeNodeComposite::get_child(counter);
-			child->printTrace();
+			child->printTrace(context, id_flow);
 			size_t code = child->update(context, id_flow, deltatime);
 
 			switch(code)
 			{
-				case RUNNING:
-				{
-					return RUNNING;
-				}
 				case COMPLETED:
 				{
-					context[id_flow].registers[this]["counter"] = counter + 1;
+                    child->configure(context, id_flow);
+                    context[id_flow].registers[this]["counter"] = counter + 1;
 					return update(context, id_flow, deltatime);
 				}
+                case RUNNING:
 				case FAILED:
+                case ABORTED:
 				{
-					return FAILED;
-				}
-				case ABORTED:
-				{
-					return ABORTED;
+					return code;
 				}
 				default:
 				{
-					// EXCEPCION(E_TreeBehaviours, "WARNING: Status code desconocido en Sequence::tick");
 					return PANIC_ERROR;
 				}
 			}

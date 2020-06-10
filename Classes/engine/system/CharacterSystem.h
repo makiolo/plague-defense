@@ -49,9 +49,13 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 			cocos2d::Vec2 position = transform.get()->getPosition();
 			float scale_x = abs(transform.get()->getScaleX());
 
+			// const double movement_delta = 12 * dt; // 200ms
+            // const double movement_delta = 6 * dt; // 100ms
+            const double movement_delta = dt;
+
 			if (character._left)
 			{
-				position.x -= velocity * dt;
+				position.x -= velocity * movement_delta;
 				if(character.invert_left) {
                     scale_x *= -1;
                 }
@@ -59,7 +63,7 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 
 			if (character._right)
 			{
-				position.x += velocity * dt;
+				position.x += velocity * movement_delta;
                 if(!character.invert_left) {
                     scale_x *= -1;
                 }
@@ -71,16 +75,20 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 			if(position.x >= level01::right_limit.x)
 				position.x = level01::right_limit.x;
 
-			if (character._left || character._right)
+			// if(transform.isDone())
 			{
-				transform.get()->setPosition(position);
-				transform.get()->setScaleX(scale_x);
-				character.play("walk");
-			}
-			else
-			{
-				character.play("idle");
-			}
+                if (character._left || character._right) {
+                    transform.get()->setScaleX(scale_x);
+
+                    transform.get()->setPosition(position);
+                    // transform.runAction(cocos2d::EaseElasticOut::create(cocos2d::MoveTo::create(movement_delta, position)));
+                    // transform.runAction(cocos2d::MoveTo::create(movement_delta, position));
+
+                    character.play("walk");
+                } else {
+                    character.play("idle");
+                }
+            }
 
 			if (character._fire)
 			{
@@ -103,7 +111,7 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 		// Apariencia
 		//
 		cocos2d::Scene* scene = cocos2d::Director::getInstance()->getRunningScene();
-		projectil.assign<plague::SceneComponent>(scene);
+		projectil.assign<plague::SceneComponent>(scene, 3);
 		projectil.assign<plague::Transform>(spawn_point, 0.2f);  // position and scale
 		projectil.assign<plague::Sprite2DComponent>("img/character/piedra.png");
 		// projectil.assign<plague::ParticleFireworksCompomnent>( projectil.id() );

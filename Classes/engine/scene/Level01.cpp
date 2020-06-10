@@ -7,10 +7,10 @@
 // COMPONENT
 #include "engine/component/2d/Sprite2DComponent.h"
 #include "engine/component/Transform.h"
-#include "engine/component/debug/DebugBarComponent.h"
+#include "engine/component/debug/ConsoleComponent.h"
 #include "engine/component/character/CharacterComponent.h"
 #include "engine/component/ai/brain/BrainComponent.h"
-#include "engine/component/ai/sensor/CountSensorComponent.h"
+#include "engine/component/ai/sensor/EnemyCountSensorComponent.h"
 #include "engine/component/SceneComponent.h"
 #include "engine/component/TimerComponent.h"
 #include "engine/component/2d/LayerColorComponent.h"
@@ -36,8 +36,9 @@
 #include "engine/system/BrainSystem.h"
 #include "engine/system/SteeringBehavioursSystem.h"
 #include "engine/system/CocosGeneratorSystem.h"
-#include "engine/system/sensor/CountSensorSystem.h"
+#include "engine/system/sensor/EnemyCountSensorSystem.h"
 #include "engine/system/TimerSystem.h"
+#include "engine/system/sensor/ProjectilCountSensorSystem.h"
 
 // SCENES
 #include "MainMenuScene.h"
@@ -91,16 +92,16 @@ bool Level01::init()
 	auto sky = ex.entities.create();
 	sky.assign<plague::SceneComponent>(this);
 	sky.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);
-	sky.assign<plague::LayerColorCompomnent>(128);
+	sky.assign<plague::LayerColorCompomnent>(255);
 
 	auto building = ex.entities.create();
-	building.assign<plague::SceneComponent>(this);
+	building.assign<plague::SceneComponent>(this, 1);
 	building.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);
 	building.assign<plague::Sprite2DComponent>("img/building/newlevel01.png", 255, cocos2d::Vec2::ANCHOR_BOTTOM_LEFT);
 
     auto debugbar = ex.entities.create();
     // todo: add scenecomponent
-    debugbar.assign<plague::DebugBarComponent>(this, ex.events);
+    debugbar.assign<plague::ConsoleComponent>(this, ex.events);
 
 	// Gestión textos
 	/*
@@ -112,7 +113,7 @@ bool Level01::init()
 	*/
 
 	auto character = ex.entities.create();
-	character.assign<plague::SceneComponent>(this, 5);
+	character.assign<plague::SceneComponent>(this, 2);
 	character.assign<plague::Transform>(plague::level01::player, 1.0f);  // position and scale
 	auto character_comp = character.assign<plague::CharacterComponent>(character.id(), 250.0f);
 	auto spriter_comp = character.assign<plague::SpriterModelComponent>("spriterpro/GreyGuy/player.scml", "Player", "flip");
@@ -121,12 +122,12 @@ bool Level01::init()
 
 
 	auto character2 = ex.entities.create();
-	character2.assign<plague::SceneComponent>(this);
+	character2.assign<plague::SceneComponent>(this, 2);
 	character2.assign<plague::Transform>(plague::level01::player, 0.30f);  // position and scale
 	character2.assign<plague::Sprite2DComponent>("img/character/character.png", 255, cocos2d::Vec2(0.5, 0.0));
-	character2.assign<plague::CharacterComponent>(character2.id(), 100.0f, false);
-	character2.assign<plague::CountSensorComponent>();
-	character2.assign<plague::BrainComponent>(character2.id(), "brain2");
+	character2.assign<plague::CharacterComponent>(character2.id(), 250.0f, false);
+	character2.assign<plague::EnemyCountSensorComponent>();
+	character2.assign<plague::BrainComponent>("brain2");
 
 
 
@@ -135,8 +136,8 @@ bool Level01::init()
 	// character3.assign<plague::Transform>(plague::level01::player, 0.21f);  // position and scale
 	// character3.assign<plague::Sprite2DComponent>("img/character/character.png", true, false);
 	// character3.assign<plague::CharacterComponent>(character3.id(), 200.0f);
-	// character3.assign<plague::CountSensorComponent>();
-	// character3.assign<plague::BrainComponent>(character3.id(), "brain3");
+	// character3.assign<plague::EnemyCountSensorComponent>();
+	// character3.assign<plague::BrainComponent>("brain3");
 
 
 
@@ -174,8 +175,6 @@ bool Level01::init()
 	https://www.youtube.com/watch?v=7hxrPKoELpo
 	*/
 
-
-
 	ex.systems.add<plague::CloudSystem>();
 	ex.systems.add<plague::InputSystem>(this, character.id());
 	ex.systems.add<plague::AutoDestroySystem>();
@@ -189,10 +188,10 @@ bool Level01::init()
 	ex.systems.add<plague::BrainSystem>();
 	ex.systems.add<plague::SteeringBehavioursSystem>();
 	ex.systems.add<plague::CocosGeneratorSystem>();
-	ex.systems.add<plague::CountSensorSystem>();
 	ex.systems.add<plague::TimerSystem>();
+    ex.systems.add<plague::EnemyCountSensorSystem>();
+    ex.systems.add<plague::ProjectilCountSensorSystem>();
 	ex.systems.configure();
-
 
     return true;
 }

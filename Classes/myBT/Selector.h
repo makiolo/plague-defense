@@ -36,80 +36,43 @@ public:
 	
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
-		if(!_init)
-		{
-			_init = true;
-			i = 0;
-
-			if( m_Random )
-			{
-				this->shuffle_childs();
-			}
-		}
-
 		size_t totalChilds = TreeNodeComposite::size();
 
 		if(totalChilds > 0)
 		{
-			if(i < totalChilds)
+		    size_t counter = context[id_flow].registers[this]["counter"].get<size_t>();
+
+			if(counter < totalChilds)
 			{
-				TreeNode* child = TreeNodeComposite::get_child(i);
-				child->printTrace();
+				TreeNode* child = TreeNodeComposite::get_child(counter);
+				child->printTrace(context, id_flow);
 				size_t code = child->update(context, id_flow, deltatime);
 
 				switch(code)
 				{
+                    case FAILED:
+                    {
+                        // avanzar a la siguiente rama
+                        child->configure(context, id_flow);
+                        context[id_flow].registers[this]["counter"] = counter + 1;
+                        return update(context, id_flow, deltatime);
+                    }
 					case RUNNING:
 					{
-						/*
-						if(m_Priority)
-						{
-							// el selector de prioridad no tiene memoria de su seleccion
-							// en el pr�ximo tick volver� a empezar
-							i = 0;
-						}
-						*/
-
-						return RUNNING;
+						return code;
 					}
 					case COMPLETED:
+                    case ABORTED:
 					{
-						if(m_Priority)
-						{
-							// el selector de prioridad no tiene memoria de su seleccion
-							// en el pr�ximo tick volver� a empezar
-							i = 0;
-						}
+                        if(m_Priority) {
+                            child->configure(context, id_flow);
+                            context[id_flow].registers[this]["counter"] = 0;
+                        }
 
-						if (m_AutoReset)
-						{
-							// se reinicia el selector
-							child->configure(context, id_flow);
-						}
-
-						return COMPLETED;
-					}
-					case ABORTED:
-					{
-						if(m_Priority)
-						{
-							// el selector de prioridad no tiene memoria de su seleccion
-							// en el pr�ximo tick volver� a empezar
-							i = 0;
-						}
-
-						return ABORTED;
-					}
-					case FAILED:
-					{	
-						// avanzar a la siguiente rama
-						++i;
-						
-						return update(context, id_flow, deltatime);
+						return code;
 					}
 					default:
 					{
-						//EXCEPCION(E_TreeBehaviours, "WARNING: Status code desconocido en Selector::tick");
 						return PANIC_ERROR;
 					}
 				}
@@ -140,7 +103,12 @@ public:
 
 	virtual void reset(myBT::Context& context, const std::string& id_flow) override
 	{
-		_init = false;
+        context[id_flow].registers[this]["counter"] = 0;
+
+        if (m_Random)
+        {
+            this->shuffle_childs();
+        }
 	}
 
 	virtual void write(nlohmann::json& pipe) override
@@ -158,12 +126,9 @@ public:
 		m_AutoReset = pipe["AutoReset"].get<bool>();
 		m_Priority = pipe["Priority"].get<bool>();
 	}
-
-protected:
-	bool _init;
-	size_t i;
 };
 
 }
 
 #endif /* SELECTORPERSONAJE_HPP_ */
+

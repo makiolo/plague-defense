@@ -107,9 +107,6 @@ public:
 		}
 
 		TreeNode* newtreenode = new T(what, std::forward<Args>(args)...);
-		// TreeNode* newtreenode = new ((void*)((size_t)_buffer + _offset)) T(what, std::forward<Args>(args)...);
-		// _offset += sizeof(T);
-		// assert(_offset < max_behaviour_tree);
 		this->add(newtreenode);
 		return static_cast<T*>(newtreenode);
 	}
@@ -119,7 +116,6 @@ public:
 	Asumiendo que han sido creado con make_node
 	Si se ham creado desde fuera y asociado con add, es el de fuera
 	el que debe encargarse de liberar la memoria.
-	 TODO: ojo
 	*/
 	void free_childs() final
 	{

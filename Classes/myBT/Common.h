@@ -22,7 +22,7 @@ Archivo com�n a toda la librer�a "myBT"
 	protected:\
 		type m_##varName;\
 	public:\
-		inline void set##varName(const type& _varName) {m_##varName = _varName;}\
+		inline auto set##varName(const type& _varName) -> decltype(this) {m_##varName = _varName; return this;}\
 		inline type get##varName() { return m_##varName; }\
 		inline const type& getRef##varName() const { return m_##varName; }
 

@@ -18,17 +18,16 @@ namespace myBT {
 class For : public TreeNodeComposite
 {
 	PROPERTY(int, Count)
-	PROPERTY(bool, UseRange)
 	PROPERTY(int, CountMin)
 	PROPERTY(int, CountMax)
 
 public:
 	explicit For(const std::string& name = "")
 		: TreeNodeComposite(name)
-		, m_Count(1)
+		, m_Count(-1)
 		, m_UseRange(false)
-		, m_CountMin(1)
-		, m_CountMax(1)
+		, m_CountMin(-1)
+		, m_CountMax(-1)
 		, _gen(_rd())
 	{  }
 
@@ -49,6 +48,7 @@ public:
 			{
 				m_Init = true;
 				m_Cycle = 0;
+				m_UseRange = (m_CountMin != -1) && (m_CountMax != -1);
 
 				if(!m_UseRange)
 				{
@@ -56,39 +56,41 @@ public:
 				}
 				else
 				{
-					std::uniform_int_distribution<> scale_random{ m_CountMin, m_CountMax };
-					m_CycleMax = scale_random(_gen);
+                    std::uniform_int_distribution<> scale_random{m_CountMin, m_CountMax};
+                    m_CycleMax = scale_random(_gen);
 				}
 			}
 
-			if(m_Cycle < m_CycleMax)
+			if(m_CycleMax == -1 || (m_Cycle < m_CycleMax))
 			{
 				TreeNode* child = TreeNodeComposite::get_child(0);
-				child->printTrace();
+				child->printTrace(context, id_flow);
 				size_t code = child->update(context, id_flow, deltatime);
 
 				switch(code)
 				{
-					case RUNNING:
-					{
-						return RUNNING;
-					}
 					case COMPLETED:
 					{
-						// contabilizamos la ejecucion
-						++m_Cycle;
+                        // contabilizamos la ejecucion
+                        ++m_Cycle;
 
-						child->configure(context, id_flow);
+                        // el hijo ha terminado antes de tiempo, lo reiniciamos
+                        child->configure(context, id_flow);
 
-						return RUNNING;
+                        if(m_CycleMax == -1 || (m_Cycle < m_CycleMax))
+                        {
+                            return RUNNING;
+                        }
+                        else
+                        {
+                            return COMPLETED;
+                        }
 					}
+                    case RUNNING:
 					case FAILED:
+                    case ABORTED:
 					{
-						return FAILED;
-					}
-					case ABORTED:
-					{
-						return ABORTED;
+						return code;
 					}
 					default:
 					{
@@ -98,13 +100,12 @@ public:
 			}
 			else
 			{
-				// con aborted atravesaría las secuencias y los selectores
-				return COMPLETED;
-			}
-		}
-		else
-		{
-			return PANIC_ERROR;
+                return COMPLETED;
+            }
+        }
+        else
+        {
+            return PANIC_ERROR;
 		}
 	}
 
@@ -116,7 +117,6 @@ public:
 	virtual void write(nlohmann::json& pipe) override
 	{
 		pipe["Count"] = m_Count;
-		pipe["UseRange"] = m_UseRange;
 		pipe["CountMin"] = m_CountMin;
 		pipe["CountMax"] = m_CountMax;
 	}
@@ -124,7 +124,6 @@ public:
 	virtual void read(nlohmann::json& pipe) override
 	{
 		m_Count = pipe["Count"].get<int>();
-		m_UseRange = pipe["UseRange"].get<bool>();
 		m_CountMin = pipe["CountMin"].get<int>();
 		m_CountMax = pipe["CountMax"].get<int>();
 	}
@@ -132,6 +131,7 @@ public:
 protected:
 	int m_Cycle;
 	int m_CycleMax;
+	bool m_UseRange;
 	bool m_Init;
 	std::random_device _rd;
 	std::mt19937 _gen;

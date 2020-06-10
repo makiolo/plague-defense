@@ -39,7 +39,7 @@ public:
 		{
 			// se espera que sea Condition
 			TreeNode* child0 = TreeNodeComposite::get_child(0);
-			child0->printTrace();
+			child0->printTrace(context, id_flow);
 			size_t code0 = child0->update(context, id_flow, deltatime);
 			bool checkCondition;
 			switch(code0)
@@ -64,21 +64,16 @@ public:
 			{
 				// segundo hijo, tiene la l�gica
 				TreeNode* child1 = TreeNodeComposite::get_child(1);
-				child1->printTrace();
+				child1->printTrace(context, id_flow);
 				size_t code1 = child1->update(context, id_flow, deltatime);
 
 				switch(code1)
 				{
-					case RUNNING:
-					{
-						return RUNNING;
-					}
 					case COMPLETED:
 					{
 						if(m_AutoReset)
 						{
-							// reiniciamos el proceso hijo (solo en el while)
-							child1->configure(context, id_flow);
+							this->configure(context, id_flow);
 
 							return RUNNING;
 						}
@@ -87,13 +82,11 @@ public:
 							return COMPLETED;
 						}
 					}
+                    case RUNNING:
 					case FAILED:
+                    case ABORTED:
 					{
-						return FAILED;
-					}
-					case ABORTED:
-					{
-						return ABORTED;
+						return code1;
 					}
 					default:
 					{

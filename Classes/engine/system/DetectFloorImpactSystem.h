@@ -56,7 +56,7 @@ struct DetectFloorImpactSystem : public entityx::System<DetectFloorImpactSystem>
 					}
 
 					//  TODO: retrasar la destrucción, pero hacerlo invisible
-					entity.assign<plague::AutoDestroyDescription>(0.5f);
+					entity.assign<plague::AutoDestroyDescription>(0.01f);
 				}
 			}
 		});
