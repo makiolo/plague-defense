@@ -6,8 +6,8 @@
 @author Ricardo Marmolejo Garc�a
 @date 2013
 */
-#ifndef _ASSERT_H_
-#define _ASSERT_H_
+#ifndef _ASSERTTT_H_
+#define _ASSERTTT_H_
 
 #include "TreeNodeComposite.h"
 
