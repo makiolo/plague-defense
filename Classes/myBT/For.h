@@ -116,6 +116,7 @@ public:
 
 	virtual void write(nlohmann::json& pipe) override
 	{
+        TreeNode::write(pipe);
 		pipe["Count"] = m_Count;
 		pipe["CountMin"] = m_CountMin;
 		pipe["CountMax"] = m_CountMax;
@@ -123,6 +124,7 @@ public:
 
 	virtual void read(nlohmann::json& pipe) override
 	{
+        TreeNode::read(pipe);
 		m_Count = pipe["Count"].get<int>();
 		m_CountMin = pipe["CountMin"].get<int>();
 		m_CountMax = pipe["CountMax"].get<int>();

@@ -107,7 +107,6 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>
 
 				events.emit<plague::ProjectilInsectCollisionEvent>(idA, idB);
 
-				/*
                 auto insect = es.get(idB);
 
 				if (!insect.has_component<plague::StammableComponent>())
@@ -126,7 +125,6 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>
 					// evento de enemigo muerto
 					events.emit<plague::InsectDeadEvent>();
 				}
-				*/
 			}
 			_destroy.clear();
 		}

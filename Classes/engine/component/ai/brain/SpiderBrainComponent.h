@@ -84,7 +84,7 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
                     return myBT::COMPLETED;
 				else
                     return myBT::RUNNING;
-			}, [&](bool interrupted) {
+			}, [&]() {
 
 			}
 		};
@@ -101,7 +101,7 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
                         return myBT::COMPLETED;
                     else
                         return myBT::RUNNING;
-                }, [&](bool interrupted) {
+                }, [&]() {
 
                 }
         };
@@ -118,7 +118,7 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
                         return myBT::COMPLETED;
                     else
                         return myBT::RUNNING;
-                }, [&](bool interrupted) {
+                }, [&]() {
 
                 }
         };
@@ -135,7 +135,7 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
                         return myBT::COMPLETED;
                     else
                         return myBT::RUNNING;
-                }, [&](bool interrupted) {
+                }, [&]() {
 
                 }
         };
@@ -152,7 +152,7 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
                         return myBT::COMPLETED;
                     else
                         return myBT::RUNNING;
-                }, [&](bool interrupted) {
+                }, [&]() {
 
                 }
         };
@@ -167,7 +167,7 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
                         return myBT::COMPLETED;
                     else
                         return myBT::RUNNING;
-                }, [&](bool interrupted) {
+                }, [&]() {
 
                 }
         };
@@ -182,7 +182,7 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
                         return myBT::COMPLETED;
                     else
                         return myBT::RUNNING;
-                }, [&](bool interrupted) {
+                }, [&]() {
 
                 }
         };
@@ -201,9 +201,31 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
                 }
         };
 
-		auto seq_00 = bt.make_node<myBT::Sequence>("main_control");
+        conditions["can_go_right? 2222"] = {
+                [&](double deltatime) {
+                    double myposition = transform.get()->getPosition().x;
+                    return myposition < (level01::column5 - 50);
+                }
+        };
 
-            auto selector_00 = seq_00->make_node<myBT::Selector>("selector_00")->setRandom(true);
+
+        auto fullpath = cocos2d::FileUtils::getInstance()->getWritablePath() + "/" + bt.get_name() + ".json";
+
+        if(cocos2d::FileUtils::getInstance()->isFileExist(fullpath)) {
+
+            // READ behaviour
+            bt.read_ai(fullpath, conditions, actions);
+
+        }
+        else {
+
+            auto name = bt.get_name();
+
+            if(name == "spider") {
+
+                auto seq_00 = bt.make_node<myBT::Sequence>("main_control");
+
+                auto selector_00 = seq_00->make_node<myBT::Selector>("selector_00")->setRandom(true);
 
                 selector_00->make_node<myBT::Action>("go_to_column1", actions["go_to_column1"]);
                 selector_00->make_node<myBT::Action>("go_to_column2", actions["go_to_column2"]);
@@ -211,45 +233,36 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
                 selector_00->make_node<myBT::Action>("go_to_column4", actions["go_to_column4"]);
                 selector_00->make_node<myBT::Action>("go_to_column5", actions["go_to_column5"]);
 
-            auto for_00 = seq_00->make_node<myBT::For>("for_00");
+                auto for_00 = seq_00->make_node<myBT::For>("for_00");
 
-                    auto seq_01 = for_00->make_node<myBT::Sequence>("seq_01");
+                auto seq_01 = for_00->make_node<myBT::Sequence>("seq_01");
 
-                        auto selector_01 = seq_01->make_node<myBT::Selector>("selector_01")->setRandom(true);
+                auto selector_01 = seq_01->make_node<myBT::Selector>("selector_01")->setRandom(true);
 
-                            // TODO: dar a las arañas, un sensor de proyectiles
+                auto seq_02 = selector_01->make_node<myBT::Sequence>("seq_02");
 
-                            auto seq_02 = selector_01->make_node<myBT::Sequence>("seq_02");
+                seq_02->make_node<myBT::Condition>("can_go_left?", conditions["can_go_left?"]);
+                seq_02->make_node<myBT::Action>("go_to_left", actions["go_to_left"]);
+                seq_02->make_node<myBT::Action>("go_to_right", actions["go_to_right"]);
 
-                                seq_02->make_node<myBT::Condition>("can_go_left?", conditions["can_go_left?"]);
-                                seq_02->make_node<myBT::Action>("go_to_left", actions["go_to_left"]);
-                                seq_02->make_node<myBT::Action>("go_to_right", actions["go_to_right"]);
+                auto seq_03 = selector_01->make_node<myBT::Sequence>("seq_03");
 
-                            auto seq_03 = selector_01->make_node<myBT::Sequence>("seq_03");
+                seq_03->make_node<myBT::Condition>("can_go_right?", conditions["can_go_right?"]);
+                seq_03->make_node<myBT::Action>("go_to_right", actions["go_to_right"]);
+                seq_03->make_node<myBT::Action>("go_to_left", actions["go_to_left"]);
+            }
+            else
+            {
+                // unknown IA
+                std::abort();
+            }
 
-                                seq_03->make_node<myBT::Condition>("can_go_right?", conditions["can_go_right?"]);
-                                seq_03->make_node<myBT::Action>("go_to_right", actions["go_to_right"]);
-                                seq_03->make_node<myBT::Action>("go_to_left", actions["go_to_left"]);
+            bt.write_ai(fullpath, conditions, actions);
+        }
 
+        bt.configure(context, bt.get_name());
 
-#ifdef __ANDROID__
-        /*
-        // https://discuss.cocos2d-x.org/t/please-help-cocos2d-x-to-determine-whats-the-correct-path-to-save-a-file-on-ios-and-android/5578/19
-        Persistant data like savegames, highscores, replays
-        Android: Contect.getFilesDir()
-        iOS: /Documents (Note it is NOT /Library/Documents)
-
-        Temporary data like user avatars:
-        Android: Context.getCacheDir()
-        iOS: /Library/Caches
-        */
-		auto fullpath = cocos2d::FileUtils::getInstance()->getWritablePath() + "/spider.json";
-		bt.write_ai(fullpath, conditions, actions);
-#endif
-
-		bt.configure(context, bt.get_name());
-
-		is_configured = true;
+        is_configured = true;
 	}
 
 	void update_fw(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt, plague::Transform& transform, plague::ProjectilCountSensorComponent& count_sensor)
@@ -267,7 +280,9 @@ struct SpiderBrainComponent : public entityx::Component<SpiderBrainComponent>
         }
 	}
 
+	// Contexto individual
 	myBT::Context context;
+	// Arbol compartido
 	myBT::Parallel bt;
 	myBT::ActionRepository actions;
 	myBT::ConditionRepository conditions;

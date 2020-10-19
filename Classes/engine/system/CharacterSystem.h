@@ -49,7 +49,7 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 			cocos2d::Vec2 position = transform.get()->getPosition();
 			float scale_x = abs(transform.get()->getScaleX());
 
-			// const double movement_delta = 12 * dt; // 200ms
+    		// const double movement_delta = 12 * dt; // 200ms
             // const double movement_delta = 6 * dt; // 100ms
             const double movement_delta = dt;
 
@@ -69,15 +69,12 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
                 }
 			}
 
-			if(position.x <= level01::left_limit.x)
-				position.x = level01::left_limit.x;
+            update_collision(position);
 
-			if(position.x >= level01::right_limit.x)
-				position.x = level01::right_limit.x;
-
-			// if(transform.isDone())
+            // if(transform.isDone())
 			{
-                if (character._left || character._right) {
+                if (character._left || character._right)
+                {
                     transform.get()->setScaleX(scale_x);
 
                     transform.get()->setPosition(position);
@@ -95,10 +92,18 @@ struct CharacterSystem : public entityx::System<CharacterSystem>
 				spwan_projectil(es, events, position + cocos2d::Vec2(0, -20));
 				character._fire = false;
 			}
-		});	
+		});
 	}
 
-	void spwan_projectil(entityx::EntityManager& es, entityx::EventManager& events, cocos2d::Vec2 spawn_point)
+    void update_collision(Vec2 &position) const {
+        if(position.x <= level01::left_limit.x)
+            position.x = level01::left_limit.x;
+
+        if(position.x >= level01::right_limit.x)
+            position.x = level01::right_limit.x;
+    }
+
+    void spwan_projectil(entityx::EntityManager& es, entityx::EventManager& events, cocos2d::Vec2 spawn_point)
 	{
 		entityx::Entity projectil = es.create();
 		// Hace que la entidad sea de tipo proyectil

@@ -20,28 +20,22 @@ class TreeNodeLeaf : public TreeNode
 public:
 	explicit TreeNodeLeaf(const std::string& _name = "")
 		: TreeNode(_name)
-		, _status(INITIAL)
-		, _id_flow_initial("none")
-		, _id_flow("none")
+		// , _status(INITIAL)
+		// , _id_flow_initial("none")
+		// , _id_flow("none")
 	{ ; }
 
 	virtual ~TreeNodeLeaf()
 	{ ; }
 
 	virtual void init() = 0;
-	virtual void terminate(bool interrupted) = 0;
+	virtual void terminate() = 0;
 
 	virtual void configure(myBT::Context& context, const std::string& id_flow) final
 	{
 		this->reset(context, id_flow);
-	}
-
-	/**
-	Devuelve el estado del nodo hoja
-	*/
-	virtual size_t get_status()
-	{
-		return this->_status;
+        context[id_flow].registers[this]["id_flow"] = "none";
+        context[id_flow].registers[this]["id_flow_initial"] = "none";
 	}
 
 	virtual void add(TreeNode* child) final
@@ -59,19 +53,18 @@ public:
 		// un nodo hoja no necesita esto
 	}
 
-	// std::string& getIdFlow() { return _id_flow; }
-	// const std::string& getIdFlow() const { return _id_flow; }
-
-	void set_flow(const std::string& id_flow)
+	void set_flow(myBT::Context& context, const std::string& id_flow)
 	{
-		if(_id_flow == "none")
+		if(context[id_flow].registers[this]["id_flow"] == "none")
 		{
-			_id_flow_initial = id_flow;
+			// _id_flow_initial = id_flow;
+            context[id_flow].registers[this]["id_flow_initial"] = id_flow;
 		}
-		_id_flow = id_flow;
+		// _id_flow = id_flow;
+        context[id_flow].registers[this]["id_flow"] = id_flow;
 
-		// Puede indicar que un proceso no devuelve ninguna accion y condicion
-		assert(_id_flow_initial == _id_flow && "La accion/condicion ha cambiado de canal de flujo");
+        // Puede indicar que un proceso no devuelve ninguna accion y condicion
+		assert(context[id_flow].registers[this]["id_flow_initial"] == context[id_flow].registers[this]["id_flow"] && "La accion/condicion ha cambiado de canal de flujo");
 	}
 
 	virtual void serialize(nlohmann::json& pipe) final
@@ -83,22 +76,6 @@ public:
 	{
 		this->read(pipe);
 	}
-
-protected:
-	/**
-	id del flujo de control que recibe el nodo hoja
-	*/
-	std::string _id_flow;
-
-	/**
-	Indica su flujo inicial
-	*/
-	std::string _id_flow_initial;
-
-	/**
-	Es interesante guardar el estado de los nodos hoja para consultas
-	*/
-	size_t _status;
 };
 
 }

@@ -116,6 +116,7 @@ public:
 
 	virtual void write(nlohmann::json& pipe) override
 	{
+        TreeNode::write(pipe);
 		pipe["ValueSecs"] = m_ValueSecs;
 		pipe["ValueMin"] = m_ValueMin;
 		pipe["ValueMax"] = m_ValueMax;
@@ -123,6 +124,7 @@ public:
 
 	virtual void read(nlohmann::json& pipe) override
 	{
+        TreeNode::read(pipe);
 		m_ValueSecs = pipe["ValueSecs"].get<double>();
 		m_ValueMin = pipe["ValueMin"].get<double>();
 		m_ValueMax = pipe["ValueMax"].get<double>();

@@ -5,7 +5,7 @@ Accion primitiva
 
 @see myBT
 
-@author Ricardo Marmolejo Garc�a
+@author Ricardo Marmolejo Garcia
 @date 2013
 */
 #ifndef _ACTION_H_
@@ -69,7 +69,7 @@ public:
 				{
 					// Es interrumpido si en el cambio de acci�n
 					// la anterior esta en estado de RUNNING
-					data._current_action->terminate(data._current_action->get_status() == myBT::RUNNING);
+					data._current_action->terminate();
 				}
 
 				pNewState->init();
@@ -89,44 +89,26 @@ public:
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		// se establece su flujo
-		this->set_flow( id_flow );
+		this->set_flow( context, id_flow );
 
 		// el context lleva una maquina de estados por flujo
 		_change_state(context, id_flow, this);
 
         // ejecutar la accion
-		this->_status = update(deltatime);
+		size_t status = update(deltatime);
 
-		// TODO: refactor esto, hay que borrar status del nodo
-		// context._last_state = this->_status;
-		
-		return this->_status;
+		return status;
 	}
 
-    virtual void terminate(bool interrupted) override
+    virtual void terminate() override
     {
         if (m_tCallbackFinishSimple)
-            m_tCallbackFinishSimple(interrupted);
+            m_tCallbackFinishSimple();
     }
 
 	virtual size_t update(double deltatime)
 	{
 		return m_tCallbackUpdateSimple(deltatime);
-	}
-
-	void set_start(const func0& callbackStartSimple)
-	{
-		m_tCallbackStartSimple = callbackStartSimple;
-	}
-
-	void set_update(const func1& callbackUpdateSimple)
-	{
-		m_tCallbackUpdateSimple = callbackUpdateSimple;
-	}
-
-	void set_finish(const func2& callbackFinishSimple)
-	{
-		m_tCallbackFinishSimple = callbackFinishSimple;
 	}
 
 protected:

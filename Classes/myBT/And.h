@@ -97,12 +97,14 @@ public:
 
 	virtual void write(nlohmann::json& pipe) override
 	{
+        TreeNode::write(pipe);
 		pipe["Inverse"] = m_Inverse;
 		pipe["Lazy"] = m_Lazy;
 	}
 
 	virtual void read(nlohmann::json& pipe) override
 	{
+        TreeNode::read(pipe);
 		m_Inverse = pipe["Inverse"].get<bool>();
 		m_Lazy = pipe["Lazy"].get<bool>();
 	}

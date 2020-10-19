@@ -104,21 +104,19 @@ bool Level01::init()
     debugbar.assign<plague::ConsoleComponent>(this, ex.events);
 
 	// Gestión textos
-	/*
 	auto scenary = ex.entities.create();
 	scenary.assign<plague::SceneComponent>(this);
 	scenary.assign<plague::Transform>(cocos2d::Vec2(800, 200), 2.5f);  // position and scale
 	scenary.assign<plague::Sprite2DComponent>("gui/bocadillo.png", 255, cocos2d::Vec2::ANCHOR_MIDDLE, cocos2d::Vec2(0, -12), 0.3f);
 	scenary.assign<plague::LabelWithTTFUICompomnent>(cocos2d::Color4B(128, 128, 128, 255), "Hola mundo", 32);
-	*/
+
 
 	auto character = ex.entities.create();
 	character.assign<plague::SceneComponent>(this, 2);
 	character.assign<plague::Transform>(plague::level01::player, 1.0f);  // position and scale
 	auto character_comp = character.assign<plague::CharacterComponent>(character.id(), 250.0f);
 	auto spriter_comp = character.assign<plague::SpriterModelComponent>("spriterpro/GreyGuy/player.scml", "Player", "flip");
-    character_comp.get()->setSpriter(spriter_comp.get());
-
+    character_comp->setSpriter(spriter_comp.get());
 
 
 	auto character2 = ex.entities.create();
@@ -128,7 +126,6 @@ bool Level01::init()
 	character2.assign<plague::CharacterComponent>(character2.id(), 250.0f, false);
 	character2.assign<plague::EnemyCountSensorComponent>();
 	character2.assign<plague::BrainComponent>("brain2");
-
 
 
 	// auto character3 = ex.entities.create();

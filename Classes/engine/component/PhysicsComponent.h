@@ -53,11 +53,11 @@ struct PhysicsComponent : public entityx::Component<PhysicsComponent>
 
 	void update_collision_bitmask(PhysicsMask mask)
 	{
+        physics_body->setCategoryBitmask(0xFFFFFFFF);
+        physics_body->setCollisionBitmask(0x00000000);
+        physics_body->setContactTestBitmask(0xFFFFFFFF);
 		if (mask == DYNAMIC)
 		{
-			physics_body->setCategoryBitmask(0xFFFFFFFF);
-			physics_body->setCollisionBitmask(0x00000000);
-			physics_body->setContactTestBitmask(0xFFFFFFFF);
 			physics_body->setDynamic(true);
 			physics_body->setGravityEnable(true);
 			physics_body->setMass(10);
@@ -65,9 +65,6 @@ struct PhysicsComponent : public entityx::Component<PhysicsComponent>
 		}
 		else if (mask == STATIC)
 		{
-			physics_body->setCategoryBitmask(0xFFFFFFFF);
-			physics_body->setCollisionBitmask(0x00000000);
-			physics_body->setContactTestBitmask(0xFFFFFFFF);
 			physics_body->setDynamic(false);
 			physics_body->setMass(cocos2d::PHYSICS_INFINITY);
 			physics_body->setGroup(STATIC);

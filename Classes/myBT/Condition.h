@@ -51,7 +51,7 @@ public:
 
 	}
 
-	virtual void terminate(bool interrupted) final
+	virtual void terminate() final
 	{
 
 	}
@@ -67,17 +67,16 @@ public:
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		// se establece su flujo
-		this->set_flow( id_flow );
+		this->set_flow( context, id_flow );
 
 		bool retorno = check(deltatime);
 
 		// hacer inversa
 		if(m_Inverse) retorno = !retorno;
 
-		this->_status = retorno ? COMPLETED : FAILED;
+		size_t status = retorno ? COMPLETED : FAILED;
 
-		// una condici�n se satisface si la acci�n devuelve COMPLETED
-		return this->_status;
+		return status;
 	}
 
 	virtual void reset(myBT::Context& context, const std::string& id_flow) override
@@ -90,27 +89,15 @@ public:
 		return m_tCallbackCondition(deltatime);
 	}
 
-	void setCondition(const func0& callbackCondition)
-	{
-		m_tCallbackCondition = callbackCondition;
-	}
-
-	/*
-	Condition* set_inverse_ex()
-	{
-		m_Inverse = true;
-		this->_name.insert(0,"not ");
-		return this;
-	}
-	*/
-
 	virtual void write(nlohmann::json& pipe) override
 	{
+	    TreeNode::write(pipe);
 		pipe["Inverse"] = m_Inverse;
 	}
 
 	virtual void read(nlohmann::json& pipe) override
 	{
+	    TreeNode::read(pipe);
 		m_Inverse = pipe["Inverse"].get<bool>();
 	}
 

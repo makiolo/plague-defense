@@ -41,26 +41,24 @@ enum Status {
  */
 enum Type {
 	TYPE_ACTION,
-	TYPE_TRIVIAL_ACTION,
+    TYPE_AND,
 	TYPE_ASSERT,
 	TYPE_CONDITION,
 	TYPE_FOR,
 	TYPE_FORTIME,
+    TYPE_OR,
 	TYPE_PARALLEL,
 	TYPE_SELECTOR,
-	TYPE_SELECTOR_PROBABILITY,
-	TYPE_SEMAPHORE,
 	TYPE_SEQUENCE,
 	TYPE_WHILE,
-	TYPE_TRUE,
-	TYPE_FALSE,
-	TYPE_AND,
-	TYPE_OR,
+    // Conditions
+    TYPE_TRUE,
+    TYPE_FALSE,
+	// Actions
 	TYPE_ABORTED,
 	TYPE_COMPLETED,
 	TYPE_FAILED,
 	TYPE_RUNNING,
-	TYPE_WAIT,
 };
 
 struct FlowProgramData
@@ -83,11 +81,6 @@ struct FlowProgramData
 	myBT::TreeNodeLeaf* _current_action;
 
 	/*
-	Resultado del último estado
-	*/
-	size_t _last_state;
-
-	/*
 	Program registers
 	*/
 	std::unordered_map<TreeNode*, nlohmann::json> registers;
@@ -98,7 +91,7 @@ struct FlowProgramData
 	std::vector<std::string> traces;
 };
 
-using ActionRepository = std::unordered_map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void(bool)> > >;
+using ActionRepository = std::unordered_map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void()> > >;
 using ConditionRepository = std::unordered_map<std::string, std::tuple< std::function<bool(double)> > >;
 using Context = std::unordered_map<std::string, FlowProgramData>;
 
@@ -113,9 +106,6 @@ public:
 		case TYPE_ACTION:
 			return "Action";
 
-		case TYPE_TRIVIAL_ACTION:
-			return "TrivialAction";
-			
 		case TYPE_ASSERT:
 			return "Assert";
 			
@@ -133,13 +123,7 @@ public:
 			
 		case TYPE_SELECTOR:
 			return "Selector";
-		
-		case TYPE_SELECTOR_PROBABILITY:
-			return "SelectorProbabilidad";
 
-		case TYPE_SEMAPHORE:
-			return "Semaforo";
-			
 		case TYPE_SEQUENCE:
 			return "Sequence";
 			
@@ -170,9 +154,6 @@ public:
 		case TYPE_RUNNING:
 			return "Running";
 
-		case TYPE_WAIT:
-			return "Wait";
-			
 		default:
 			return "UNKNOWN";
 		}
@@ -209,6 +190,7 @@ public:
 
 	void printTrace(myBT::Context& context, const std::string& id_flow)
 	{
+        char buffer_trace[BUFSIZ];
 	    const bool verbose = true;
         int counter = BUFSIZ - 1;
         buffer_trace[counter] = '\0';
@@ -288,7 +270,6 @@ public:
 protected:
 	TreeNode* _parent;
 	std::string _name;
-    char buffer_trace[BUFSIZ];
 
 };
 

@@ -122,12 +122,14 @@ public:
 
 	virtual void write(nlohmann::json& pipe) override
 	{
-		pipe["AutoReset"] = m_AutoReset;
+        TreeNode::write(pipe);
+        pipe["AutoReset"] = m_AutoReset;
 		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
 	}
 
 	virtual void read(nlohmann::json& pipe) override
 	{
+        TreeNode::read(pipe);
 		m_AutoReset = pipe["AutoReset"].get<bool>();
 		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<int>();
 	}

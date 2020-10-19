@@ -113,6 +113,7 @@ public:
 
 	virtual void write(nlohmann::json& pipe) override
 	{
+        TreeNode::write(pipe);
 		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
 		pipe["Random"] = m_Random;
 		pipe["AutoReset"] = m_AutoReset;
@@ -121,6 +122,7 @@ public:
 
 	virtual void read(nlohmann::json& pipe) override
 	{
+        TreeNode::read(pipe);
 		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<int>();
 		m_Random = pipe["Random"].get<bool>();
 		m_AutoReset = pipe["AutoReset"].get<bool>();

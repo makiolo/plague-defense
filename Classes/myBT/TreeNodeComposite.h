@@ -25,8 +25,6 @@ public:
 
 	explicit TreeNodeComposite(const std::string& name = "")
 		: TreeNode(name)
-		// , _buffer(new uint8_t[max_behaviour_tree])
-		// , _offset(0)
 	{
 		;	
 	}
@@ -170,8 +168,6 @@ public:
 
 protected:
 	TreeNodeChilds _childs;
-	//uint8_t* _buffer;
-	//size_t _offset;
 };
 
 }

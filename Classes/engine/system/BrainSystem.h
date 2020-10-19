@@ -48,6 +48,10 @@ struct BrainSystem : public entityx::System<BrainSystem>
 			brain.update_fw(es, events, dt, transform, count_sensor);
 		});
 	}
+
+	// TODO:
+	// Arbol brain2
+	// Arbol spider
 };
 
 }

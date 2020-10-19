@@ -17,6 +17,11 @@ void TreeNodeComposite::unserialize(nlohmann::json& pipe, const ConditionReposit
 			auto newchild = this->make_node<Sequence>(name);
 			newchild->unserialize(child, conditions, actions);
 		}
+        else if (type == "Parallel")
+        {
+            auto newchild = this->make_node<Parallel>(name);
+            newchild->unserialize(child, conditions, actions);
+        }
 		else if (type == "Selector")
 		{
 			auto newchild = this->make_node<Selector>(name);
@@ -82,11 +87,6 @@ void TreeNodeComposite::unserialize(nlohmann::json& pipe, const ConditionReposit
 			auto newchild = this->make_node<Running>(name);
 			newchild->unserialize(child, conditions, actions);
 		}
-		else if (type == "Wait")
-		{
-			auto newchild = this->make_node<Wait>(name);
-			newchild->unserialize(child, conditions, actions);
-		}
 		else if (type == "True")
 		{
 			auto newchild = this->make_node<AlwaysFalse>(name);
@@ -99,7 +99,6 @@ void TreeNodeComposite::unserialize(nlohmann::json& pipe, const ConditionReposit
 		}
 		else
 		{
-			// TODO: AND, OR, For, ForTime ....
 			std::abort();
 		}
 	}
@@ -130,7 +129,9 @@ void TreeNodeComposite::write_ai(const std::string& filename, const ConditionRep
 
 	std::ofstream myfile;
 	myfile.open(filename);
+	// pretyprint
 	myfile << std::setw(4) << pipe.dump(4) << std::endl;
+	// fastprint
     // myfile << pipe.dump() << std::endl;
 	myfile.close();
 }

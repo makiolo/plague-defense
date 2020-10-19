@@ -6,7 +6,8 @@
 
 namespace plague {
 
-class CharacterInterface {
+class CharacterInterface
+{
     virtual void left(bool active) = 0;
 
     virtual void right(bool active) = 0;

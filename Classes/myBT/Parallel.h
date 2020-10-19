@@ -149,6 +149,7 @@ public:
 
 	virtual void write(nlohmann::json& pipe) override
 	{
+        TreeNode::write(pipe);
 		pipe["FailedMode"] = m_FailedMode;
 		pipe["CompletedMode"] = m_CompletedMode;
 		pipe["AbortedMode"] = m_AbortedMode;
@@ -156,6 +157,7 @@ public:
 
 	virtual void read(nlohmann::json& pipe) override
 	{
+        TreeNode::read(pipe);
 		m_FailedMode = pipe["FailedMode"].get<size_t>();
 		m_CompletedMode = pipe["CompletedMode"].get<size_t>();
 		m_AbortedMode = pipe["AbortedMode"].get<size_t>();
