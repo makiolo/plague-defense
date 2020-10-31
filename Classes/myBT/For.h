@@ -25,43 +25,24 @@ public:
 	explicit For(const std::string& name = "")
 		: TreeNodeComposite(name)
 		, m_Count(-1)
-		, m_UseRange(false)
 		, m_CountMin(-1)
 		, m_CountMax(-1)
-		, _gen(_rd())
 	{  }
 
-	virtual ~For()
-	{
-		
-	}
+	~For() override { ; }
 
-	virtual Type getType() const override {return TYPE_FOR;}
+	Type get_type() const override {return TYPE_FOR;}
+    std::string get_typename() const override {return "For";}
 
-	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
+	size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		size_t totalChilds = TreeNodeComposite::size();
-
 		if(totalChilds == 1)
 		{
-			if(!m_Init)
-			{
-				m_Init = true;
-				m_Cycle = 0;
-				m_UseRange = (m_CountMin != -1) && (m_CountMax != -1);
+            auto cycle = context.flows[id_flow].registers[this].get_int("cycle");
+            auto cycle_max = context.flows[id_flow].registers[this].get_int("cycle_max");
 
-				if(!m_UseRange)
-				{
-					m_CycleMax = m_Count;
-				}
-				else
-				{
-                    std::uniform_int_distribution<> scale_random{m_CountMin, m_CountMax};
-                    m_CycleMax = scale_random(_gen);
-				}
-			}
-
-			if(m_CycleMax == -1 || (m_Cycle < m_CycleMax))
+			if(cycle_max == -1 || (cycle < cycle_max))
 			{
 				TreeNode* child = TreeNodeComposite::get_child(0);
 				child->printTrace(context, id_flow);
@@ -72,12 +53,12 @@ public:
 					case COMPLETED:
 					{
                         // contabilizamos la ejecucion
-                        ++m_Cycle;
+                        context.flows[id_flow].registers[this].set_int("cycle", cycle + 1);
 
                         // el hijo ha terminado antes de tiempo, lo reiniciamos
                         child->configure(context, id_flow);
 
-                        if(m_CycleMax == -1 || (m_Cycle < m_CycleMax))
+                        if(cycle_max == -1 || (cycle < cycle_max))
                         {
                             return RUNNING;
                         }
@@ -109,12 +90,22 @@ public:
 		}
 	}
 
-	virtual void reset(myBT::Context& context, const std::string& id_flow) override
+	void reset(myBT::Context& context, const std::string& id_flow) override
 	{
-		m_Init = false;
+        context.flows[id_flow].registers[this].set_int("cycle", 0);
+        bool use_range = (m_CountMin != -1) && (m_CountMax != -1);
+        if(!use_range)
+        {
+            context.flows[id_flow].registers[this].set_int("cycle_max", m_Count);
+        }
+        else
+        {
+            std::uniform_int_distribution<> scale_random{m_CountMin, m_CountMax};
+            context.flows[id_flow].registers[this].set_int("cycle_max", scale_random(_gen));
+        }
 	}
 
-	virtual void write(nlohmann::json& pipe) override
+	void write(nlohmann::json& pipe) override
 	{
         TreeNode::write(pipe);
 		pipe["Count"] = m_Count;
@@ -122,21 +113,13 @@ public:
 		pipe["CountMax"] = m_CountMax;
 	}
 
-	virtual void read(nlohmann::json& pipe) override
+	void read(nlohmann::json& pipe) override
 	{
         TreeNode::read(pipe);
 		m_Count = pipe["Count"].get<int>();
 		m_CountMin = pipe["CountMin"].get<int>();
 		m_CountMax = pipe["CountMax"].get<int>();
 	}
-
-protected:
-	int m_Cycle;
-	int m_CycleMax;
-	bool m_UseRange;
-	bool m_Init;
-	std::random_device _rd;
-	std::mt19937 _gen;
 
 };
 

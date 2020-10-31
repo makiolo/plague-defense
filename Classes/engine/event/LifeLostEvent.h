@@ -19,9 +19,9 @@ struct LifeLostEvent : public entityx::Event<LifeLostEvent>
 		
 	}
 
-    virtual ~LifeLostEvent()
+    ~LifeLostEvent()
     {
-        	    
+
     }
 
 	int lifes;

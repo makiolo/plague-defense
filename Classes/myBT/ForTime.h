@@ -22,49 +22,33 @@ class ForTime : public TreeNodeComposite
 public:
 	explicit ForTime(const std::string& _name = "")
 		: TreeNodeComposite(_name)
-		, m_ValueSecs(-1.0f)
-		, m_UseRange(false)
-		, m_ValueMin(-1.0f)
-		, m_ValueMax(-1.0f)
-		, _gen(_rd())
+		, m_ValueSecs(-1.0)
+		, m_ValueMin(-1.0)
+		, m_ValueMax(-1.0)
 	{  }
 
-	virtual ~ForTime()
-	{ ; }
+	~ForTime() override { ; }
 
-	virtual Type getType() const override {return TYPE_FORTIME;}
+	Type get_type() const override {return TYPE_FORTIME;}
+    std::string get_typename() const override {return "ForTime";}
 
-	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
+	size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		size_t totalChilds = TreeNodeComposite::size();
 		
 		if(totalChilds == 1)
 		{
-			if(!m_Init)
-			{
-				m_Init = true;
-				m_Counter = 0.0f;
-				m_UseRange = (m_ValueMin != -1.0f) && (m_ValueMax != -1.0f);
+            auto counter = context.flows[id_flow].registers[this].get_double("counter");
+            auto counter_max = context.flows[id_flow].registers[this].get_double("counter_max");
 
-				if(!m_UseRange)
-				{
-					m_CounterMax = m_ValueSecs;
-				}
-				else
-				{
-                    std::uniform_real_distribution<> scale_random{m_ValueMin, m_ValueMax};
-                    m_CounterMax = scale_random(_gen);
-				}
-			}
-			
-			if(m_CounterMax == -1.0f || (m_Counter < m_CounterMax))
+			if(counter_max == -1.0 || (counter < counter_max))
 			{
 				TreeNode* child = TreeNodeComposite::get_child(0);
 				child->printTrace(context, id_flow);
 				size_t code = child->update(context, id_flow, deltatime);
 				
 				// contabilizamos la ejecucion
-				m_Counter += deltatime;
+                context.flows[id_flow].registers[this].set_double("counter", counter + deltatime);
 				
 				switch(code)
 				{
@@ -76,7 +60,7 @@ public:
                             child->configure(context, id_flow);
                         }
 
-                        if(m_CounterMax == -1.0f || (m_Counter < m_CounterMax))
+                        if(counter_max == -1.0 || (counter < counter_max))
                         {
                             return RUNNING;
                         }
@@ -109,12 +93,22 @@ public:
 		}
 	}
 	
-	virtual void reset(myBT::Context& context, const std::string& id_flow) override
+	void reset(myBT::Context& context, const std::string& id_flow) override
 	{
-		m_Init = false;
+        context.flows[id_flow].registers[this].set_double("counter", 0.0);
+        bool use_range = (m_ValueMin != -1.0) && (m_ValueMax != -1.0);
+        if(!use_range)
+        {
+            context.flows[id_flow].registers[this].set_double("counter_max", m_ValueSecs);
+        }
+        else
+        {
+            std::uniform_real_distribution<> scale_random{m_ValueMin, m_ValueMax};
+            context.flows[id_flow].registers[this].set_double("counter_max", scale_random(_gen));
+        }
 	}
 
-	virtual void write(nlohmann::json& pipe) override
+	void write(nlohmann::json& pipe) override
 	{
         TreeNode::write(pipe);
 		pipe["ValueSecs"] = m_ValueSecs;
@@ -122,21 +116,13 @@ public:
 		pipe["ValueMax"] = m_ValueMax;
 	}
 
-	virtual void read(nlohmann::json& pipe) override
+	void read(nlohmann::json& pipe) override
 	{
         TreeNode::read(pipe);
 		m_ValueSecs = pipe["ValueSecs"].get<double>();
 		m_ValueMin = pipe["ValueMin"].get<double>();
 		m_ValueMax = pipe["ValueMax"].get<double>();
 	}
-	
-protected:
-	double m_Counter;
-	double m_CounterMax;
-	bool m_Init;
-	bool m_UseRange;
-	std::random_device _rd;
-	std::mt19937 _gen;
 
 };
 

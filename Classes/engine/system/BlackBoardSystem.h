@@ -64,10 +64,17 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 	{
 		cocos2d::Scene* scene = cocos2d::Director::getInstance()->getRunningScene();
 
-		// entityx::Entity fireworks = es.create();
-		// fireworks.assign<plague::SceneComponent>(scene, 10);
-		// fireworks.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
-		// fireworks.assign<plague::ParticleFireworksCompomnent>( fireworks.id() );
+		/*
+		entityx::Entity fireworks = es.create();
+		fireworks.assign<plague::SceneComponent>(scene, 10);
+		fireworks.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
+		fireworks.assign<plague::ParticleFireworksCompomnent>( fireworks.id(), Particle::SUN );
+
+        entityx::Entity health = es.create();
+        health.assign<plague::SceneComponent>(scene, 10);
+        health.assign<plague::Transform>(cocos2d::Vec2::ZERO, 1.0f);  // position and scale
+        health.assign<plague::LabelWithTTFUICompomnent>(cocos2d::Color4B(128, 128, 128, 255), "100", 9, 1, cocos2d::Vec2::ZERO, 2.5f);
+        */
 
 		entityx::Entity spider = es.create();
 		// Vida
@@ -85,8 +92,15 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 		spider.assign<plague::Transform>(plague::level01::enemies, 1.0f);  // position and scale
 		spider.assign<plague::Sprite2DComponent>("img/enemy/spider.png");
         spider.assign<plague::ProjectilCountSensorComponent>();
+        //
+        // spider.assign<plague::LabelWithTTFUICompomnent>(cocos2d::Color4B(28, 255, 28, 255), "100", 10, 1, cocos2d::Vec2(0, 80), 2.5f);
+        //
+        // Componente que indica la vida de la araña
+        //
         // spider.assign<plague::LinkedEntityCompomnent>( fireworks.id() );
-        spider.assign<plague::CombatPointsComponent>();
+        // spider.assign<plague::LinkedEntityCompomnent>( health.id() );
+        //
+        spider.assign<plague::CombatPointsComponent>(100, 1, 0);
 	}
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
@@ -112,8 +126,8 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 					for (int stage = 0; stage < 1; ++stage)
 					{
 						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						//spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 10.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						// spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
@@ -122,10 +136,10 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				{
 					for (int stage = 0; stage < 1; ++stage)
 					{
-						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						//spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 10.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						// spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
@@ -133,43 +147,43 @@ struct BlackboardSystem : public entityx::System<BlackboardSystem>, public entit
 				{
 					for (int stage = 0; stage < 1; ++stage)
 					{
-						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, level01::column3, 800.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 10.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 4)
 				{
 					for (int stage = 0; stage < 1; ++stage)
 					{
-						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						//spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column4, 10.0f, gen, step_dist, wait_dist, offset_dist);
+						//spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 5)
 				{
 					for (int stage = 0; stage < 1; ++stage)
 					{
-						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						// spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						// spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, level01::column4, 330.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, level01::column5, 330.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column4, 10.0f, gen, step_dist, wait_dist, offset_dist);
+						//spwan_spider_normal(es, events, level01::column5, 330.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}
 				else if (_level == 6)
 				{
 					for (int stage = 0; stage < 1; ++stage)
 					{
-						// spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column1, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						spwan_spider_normal(es, events, level01::column2, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, level01::column3, 150.0f, gen, step_dist, wait_dist, offset_dist);
-						spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
+						spwan_spider_normal(es, events, level01::column3, 10.0f, gen, step_dist, wait_dist, offset_dist);
+						//spwan_spider_normal(es, events, level01::column4, 150.0f, gen, step_dist, wait_dist, offset_dist);
 						// spwan_spider_normal(es, events, level01::column5, 150.0f, gen, step_dist, wait_dist, offset_dist);
 					}
 				}

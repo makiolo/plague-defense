@@ -17,7 +17,8 @@ namespace plague {
 
 struct LayerColorCompomnent : public entityx::Component<LayerColorCompomnent>
 {
-	explicit LayerColorCompomnent(uint8_t opacity_ = 255, const cocos2d::Color4B& color = cocos2d::Color4B(185, 220, 234, 255))
+	explicit LayerColorCompomnent(  uint8_t opacity_ = 255,
+	                                const cocos2d::Color4B& color = cocos2d::Color4B(185, 220, 234, 255))
 		: node(cocos2d::LayerColor::create(color))
 		, configured(false)
 		, opacity(opacity_)

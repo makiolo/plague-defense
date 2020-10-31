@@ -23,6 +23,8 @@ struct ProjectilCountSensorComponent : public entityx::Component<ProjectilCountS
 		
 	}
 
+	~ProjectilCountSensorComponent() = default;
+
 	// posicion x con más proyectiles
 	double x;
 };

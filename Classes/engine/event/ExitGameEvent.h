@@ -16,6 +16,11 @@ struct ExitGameEvent : public entityx::Event<ExitGameEvent>
 	{
 
 	}
+
+	~ExitGameEvent()
+    {
+
+    }
 };
 
 }

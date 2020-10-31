@@ -21,7 +21,7 @@ struct FireCommand : public entityx::Event<FireCommand>
 		
 	}
 
-	virtual ~FireCommand()
+	~FireCommand()
 	{
 
 	}

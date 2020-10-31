@@ -13,6 +13,11 @@ struct CloudComponent : public entityx::Component<CloudComponent> {
 		;
 	}
 
+	~CloudComponent()
+    {
+
+    }
+
 };
 
 }

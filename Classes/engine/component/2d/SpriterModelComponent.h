@@ -18,13 +18,13 @@ namespace plague {
 
 struct SpriterModelComponent : public entityx::Component<SpriterModelComponent>
 {
-	explicit SpriterModelComponent(const std::string& scmlfile, const std::string& entityName_, const std::string& defaultAnimation_)
+	explicit SpriterModelComponent(const std::string& scmlfile, std::string entityName_, std::string defaultAnimation_)
 		: node(Spriter2dX::AnimationNode::create(
 					cocos2d::FileUtils::getInstance()->fullPathForFilename(scmlfile)))
 		, configured(false)
 		, entity(nullptr)
-		, entityName(entityName_)
-		, defaultAnimation(defaultAnimation_)
+		, entityName(std::move(entityName_))
+		, defaultAnimation(std::move(defaultAnimation_))
 	{
 		node->retain();
 	}

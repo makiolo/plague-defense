@@ -17,7 +17,7 @@ struct StartGameEvent : public entityx::Event<StartGameEvent>
 		
 	}
 
-	virtual ~StartGameEvent()
+	~StartGameEvent()
 	{
 
 	}

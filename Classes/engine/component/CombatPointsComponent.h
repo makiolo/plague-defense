@@ -25,6 +25,11 @@ struct CombatPointsComponent : public entityx::Component<CombatPointsComponent>
 		;
 	}
 
+	~CombatPointsComponent()
+    {
+
+    }
+
 	void on_hit(const CombatPointsComponent& other)
     {
 	    this->life -= (this->get_attack() - other.get_defense());

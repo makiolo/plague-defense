@@ -7,12 +7,13 @@ namespace myBT {
 class Aborted : public Action
 {
 public:
-	explicit Aborted(const std::string& what) : Action(what) {}
-	virtual ~Aborted() {}
+	explicit Aborted(const std::string& what) : Action(what) { ; }
+	~Aborted() override { ; }
 
-	virtual Type getType() const override { return TYPE_ABORTED; }
+	Type get_type() const override { return TYPE_ABORTED; }
+    std::string get_typename() const override {return "Aborted";}
 
-	virtual size_t update(double deltatime) override
+	size_t execute(myBT::Context& context, double deltatime) override
 	{
 		return ABORTED;
 	}

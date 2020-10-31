@@ -16,7 +16,7 @@ struct CountDownResetEvent : public entityx::Event<CountDownResetEvent> {
 		
 	}
 
-	virtual ~CountDownResetEvent()
+	~CountDownResetEvent()
 	{
 
 	}

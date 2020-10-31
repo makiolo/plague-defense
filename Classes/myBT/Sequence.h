@@ -3,7 +3,7 @@
 
 @see myBT
 
-@author Ricardo Marmolejo Garc�a
+@author Ricardo Marmolejo Garcia
 @date 2013
 */
 #ifndef _SEQUENCE_H_
@@ -15,7 +15,7 @@ namespace myBT {
 
 class Sequence : public TreeNodeComposite
 {
-	PROPERTY(int, ReturnCodeFinish)
+	PROPERTY(size_t, ReturnCodeFinish)
 	PROPERTY(bool, Random)
 	PROPERTY(bool, AutoReset)
 
@@ -27,13 +27,14 @@ public:
 		, m_AutoReset(false)
 	{  }
 
-	virtual ~Sequence() { ; }
+	~Sequence() override { ; }
 
-	virtual Type getType() const override {return TYPE_SEQUENCE;}
-	
-	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
+	Type get_type() const override {return TYPE_SEQUENCE;}
+    std::string get_typename() const override {return "Sequence";}
+
+	size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
-        size_t counter = context[id_flow].registers[this]["counter"].get<size_t>();
+        auto counter = context.flows[id_flow].registers[this].get<size_t>("counter");
 		size_t totalChilds = TreeNodeComposite::size();
 		if(counter < totalChilds)
 		{
@@ -46,7 +47,7 @@ public:
 				case COMPLETED:
 				{
                     child->configure(context, id_flow);
-                    context[id_flow].registers[this]["counter"] = counter + 1;
+                    context.flows[id_flow].registers[this].set<size_t>("counter", counter + 1);
 					return update(context, id_flow, deltatime);
 				}
                 case RUNNING:
@@ -78,9 +79,9 @@ public:
 		}
 	}
 
-	virtual void reset(myBT::Context& context, const std::string& id_flow) override
+	void reset(myBT::Context& context, const std::string& id_flow) override
 	{
-		context[id_flow].registers[this]["counter"] = 0;
+		context.flows[id_flow].registers[this].set<size_t>("counter", 0);
 
 		if (m_Random)
 		{
@@ -88,7 +89,7 @@ public:
 		}
 	}
 
-	virtual void write(nlohmann::json& pipe) override
+	void write(nlohmann::json& pipe) override
 	{
         TreeNode::write(pipe);
 		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
@@ -96,10 +97,10 @@ public:
 		pipe["AutoReset"] = m_AutoReset;
 	}
 
-	virtual void read(nlohmann::json& pipe) override
+	void read(nlohmann::json& pipe) override
 	{
         TreeNode::read(pipe);
-		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<int>();
+		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<size_t>();
 		m_Random = pipe["Random"].get<bool>();
 		m_AutoReset = pipe["AutoReset"].get<bool>();
 	}

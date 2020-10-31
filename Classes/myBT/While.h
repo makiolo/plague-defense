@@ -3,10 +3,9 @@
 
 @see myBT
 
-@author Ricardo Marmolejo Garc�a
+@author Ricardo Marmolejo Garcia
 @date 2013
 */
-
 #ifndef _WHILE_H_
 #define _WHILE_H_
 
@@ -23,8 +22,9 @@ public:
 		Assert::m_AutoReset = true;
 	}
 
-	virtual ~While() { ; }
-	virtual Type getType() const override {return TYPE_WHILE;}
+	~While() override { ; }
+	Type get_type() const override {return TYPE_WHILE;}
+    std::string get_typename() const override {return "While";}
 };
 
 }

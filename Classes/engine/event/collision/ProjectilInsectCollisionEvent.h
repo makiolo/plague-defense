@@ -24,6 +24,11 @@ struct ProjectilInsectCollisionEvent : public entityx::Event<ProjectilInsectColl
 
 	}
 
+	~ProjectilInsectCollisionEvent()
+    {
+
+    }
+
 	entityx::Entity::Id projectil;
     entityx::Entity::Id insect;
 };

@@ -16,24 +16,55 @@
 
 namespace plague {
 
+enum Particle {
+    SUN,
+    FIREWORKS,
+    FIRE,
+    RAIN,
+    SNOW,
+    METEOR,
+    GALAXY,
+    SMOKE
+};
+
 struct ParticleFireworksCompomnent : public entityx::Component<ParticleFireworksCompomnent>, public entityx::Receiver<EntityWillDestroyEvent>
 {
-	explicit ParticleFireworksCompomnent(entityx::Entity::Id whoiam_)
-		// : node(cocos2d::ParticleFireworks::create())
-		// : node(cocos2d::ParticleFire::create())
-		// : node(cocos2d::ParticleRain::create())
-		//: node(cocos2d::ParticleSnow::create())
-		//: node(cocos2d::ParticleMeteor::create())
-		//: node(cocos2d::ParticleGalaxy::create())
-		// : node(cocos2d::ParticleSmoke::create())
-		: node(cocos2d::ParticleSun::create())
-		, whoiam(whoiam_)
+	explicit ParticleFireworksCompomnent(entityx::Entity::Id whoiam_, plague::Particle mode = Particle::SUN)
+		: whoiam(whoiam_)
 		, configured(false)
 	{
+	    switch(mode)
+        {
+            case FIREWORKS:
+                node = cocos2d::ParticleFireworks::create();
+                break;
+            case FIRE:
+                node = cocos2d::ParticleFire::create();
+                break;
+            case RAIN:
+                node = cocos2d::ParticleRain::create();
+                break;
+            case SNOW:
+                node = cocos2d::ParticleSnow::create();
+                break;
+            case METEOR:
+                node = cocos2d::ParticleMeteor::create();
+                break;
+            case GALAXY:
+                node = cocos2d::ParticleGalaxy::create();
+                break;
+            case SMOKE:
+                node = cocos2d::ParticleSmoke::create();
+                break;
+            case SUN:
+            default:
+                node = cocos2d::ParticleSun::create();
+                break;
+        }
 		node->retain();
 	}
 
-	~ParticleFireworksCompomnent()
+	virtual ~ParticleFireworksCompomnent()
 	{
 		node->removeFromParent();
 		node->release();

@@ -12,6 +12,7 @@ void TreeNodeComposite::unserialize(nlohmann::json& pipe, const ConditionReposit
 		std::string type = child["type"].get<std::string>();
 		std::string name = child["name"].get<std::string>();
 		// Please, need factory :D
+		// Composite
 		if (type == "Sequence")
 		{
 			auto newchild = this->make_node<Sequence>(name);
@@ -57,6 +58,7 @@ void TreeNodeComposite::unserialize(nlohmann::json& pipe, const ConditionReposit
 			auto newchild = this->make_node<Or>(name);
 			newchild->unserialize(child, conditions, actions);
 		}
+		// Leaf
 		else if (type == "Condition")
 		{
 			auto newchild = this->make_node<Condition>(name, conditions.at(name));

@@ -22,6 +22,8 @@ struct EnemyCountSensorComponent : public entityx::Component<EnemyCountSensorCom
 		
 	}
 
+	~EnemyCountSensorComponent() = default;
+
 	// posicion x con mayor numero de enemigos
 	double x;
 };

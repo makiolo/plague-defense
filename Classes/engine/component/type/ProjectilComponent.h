@@ -17,6 +17,11 @@ struct ProjectilComponent : public entityx::Component<ProjectilComponent>
 	{
 		
 	}
+
+	~ProjectilComponent()
+    {
+
+    }
 };
 
 }

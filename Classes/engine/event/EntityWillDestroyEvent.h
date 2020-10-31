@@ -22,7 +22,7 @@ struct EntityWillDestroyEvent : public entityx::Event<EntityWillDestroyEvent>
 		
 	}
 
-    virtual ~EntityWillDestroyEvent()
+    ~EntityWillDestroyEvent()
     {
 
     }

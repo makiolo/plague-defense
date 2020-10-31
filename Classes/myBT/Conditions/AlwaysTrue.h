@@ -7,16 +7,16 @@ namespace myBT {
 class AlwaysTrue : public Condition
 {
 public:
-	explicit AlwaysTrue(const std::string& what) : Condition(what) {}
-	virtual ~AlwaysTrue() {}
+	explicit AlwaysTrue(const std::string& what) : Condition(what) { ; }
+	~AlwaysTrue() override { ; }
 
-	virtual Type getType() const override { return TYPE_TRUE; }
+	Type get_type() const override { return TYPE_TRUE; }
+    std::string get_typename() const override {return "True";}
 
-	virtual bool check(double deltatime) override
+	bool check(myBT::Context& context, double deltatime) override
 	{
 		return true;
 	}
-
 };
 
 }

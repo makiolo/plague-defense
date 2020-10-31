@@ -24,55 +24,49 @@ public:
 	using func1 = typename std::tuple_element<1, ActionRepository::mapped_type>::type;
 	using func2 = typename std::tuple_element<2, ActionRepository::mapped_type>::type;
 
-	explicit Action(std::string _name = "")
-		 : TreeNodeLeaf(std::move(_name))
+	explicit Action(const std::string& _name = "")
+		 : TreeNodeLeaf(_name)
 		 , m_tCallbackStartSimple(nullptr)
 		 , m_tCallbackUpdateSimple(nullptr)
 		 , m_tCallbackFinishSimple(nullptr)
 	{  }
 
-	explicit Action(std::string _name, func0 callbackStartSimple, func1 callbackUpdateSimple, func2 callbackFinishSimple)
-		: TreeNodeLeaf(std::move(_name))
+	explicit Action(const std::string& _name, func0 callbackStartSimple, func1 callbackUpdateSimple, func2 callbackFinishSimple)
+		: TreeNodeLeaf(_name)
 		, m_tCallbackStartSimple(std::move(callbackStartSimple))
 		, m_tCallbackUpdateSimple(std::move(callbackUpdateSimple))
 		, m_tCallbackFinishSimple(std::move(callbackFinishSimple))
 	{  }
 
-	explicit Action(std::string _name, const ActionRepository::mapped_type& callbacks)
-		: TreeNodeLeaf(std::move(_name))
+	explicit Action(const std::string& _name, const ActionRepository::mapped_type& callbacks)
+		: TreeNodeLeaf(_name)
 		, m_tCallbackStartSimple(std::get<0>(callbacks))
 		, m_tCallbackUpdateSimple(std::get<1>(callbacks))
 		, m_tCallbackFinishSimple(std::get<2>(callbacks))
 	{  }
 
-	virtual ~Action()
-	{
-		
-	}
+	~Action() override { ; }
 
-	virtual Type getType() const override { return TYPE_ACTION; }
+	Type get_type() const override { return TYPE_ACTION; }
+    std::string get_typename() const override {return "Action";}
 
-	virtual void reset(myBT::Context& context, const std::string& id_flow) override
-	{
-		
-	}
-
-	void _change_state(myBT::Context& context, const std::string& id_flow, myBT::TreeNodeLeaf* pNewState)
+	static void _change_state(myBT::Context& context, const std::string& id_flow, myBT::TreeNodeLeaf* pNewState)
 	{
 		if (pNewState)
 		{
-			auto& data = context[id_flow];
+			FlowProgramData& data = context.flows[id_flow];
 
-			if ((pNewState != data._current_action) || (!data._previous_action && !data._current_action))
+			// if ((pNewState != data._current_action) || (!data._previous_action && !data._current_action))
+			if (pNewState != data._current_action)
 			{
 				if (data._current_action != nullptr)
 				{
-					// Es interrumpido si en el cambio de acci�n
+					// Es interrumpido si en el cambio de accion
 					// la anterior esta en estado de RUNNING
-					data._current_action->terminate();
+					data._current_action->terminate(context);
 				}
 
-				pNewState->init();
+				pNewState->init(context);
 
 				data._previous_action = data._current_action;
 				data._current_action = pNewState;
@@ -80,13 +74,13 @@ public:
 		}
 	}
 
-    virtual void init() override
+    void init(myBT::Context& context) override
     {
         if (m_tCallbackStartSimple)
-            m_tCallbackStartSimple();
+            m_tCallbackStartSimple(context);
     }
 	
-	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
+	size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		// se establece su flujo
 		this->set_flow( context, id_flow );
@@ -95,21 +89,19 @@ public:
 		_change_state(context, id_flow, this);
 
         // ejecutar la accion
-		size_t status = update(deltatime);
-
-		return status;
+		return execute(context, deltatime);
 	}
 
-    virtual void terminate() override
+    virtual size_t execute(myBT::Context& context, double deltatime)
     {
-        if (m_tCallbackFinishSimple)
-            m_tCallbackFinishSimple();
+        return m_tCallbackUpdateSimple(context, deltatime);
     }
 
-	virtual size_t update(double deltatime)
-	{
-		return m_tCallbackUpdateSimple(deltatime);
-	}
+    void terminate(myBT::Context& context) override
+    {
+        if (m_tCallbackFinishSimple)
+            m_tCallbackFinishSimple(context);
+    }
 
 protected:
 	func0 m_tCallbackStartSimple;
@@ -121,4 +113,3 @@ protected:
 } /* namespace myBT */
 
 #endif /* _ACTION_H_ */
-

@@ -67,12 +67,12 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>
 
 		if (objA->type == "projectil" && objB->type == "insect")
 		{
-			_destroy.push_back(std::make_tuple(objA->id, objB->id));
+			_destroy.emplace_back(objA->id, objB->id);
 			return false;
 		}
 		else if (objB->type == "projectil" && objA->type == "insect")
 		{
-			_destroy.push_back(std::make_tuple(objB->id, objA->id));
+			_destroy.emplace_back(objB->id, objA->id);
 			return false;
 		}
  		return false;
@@ -91,7 +91,7 @@ struct PhysicsSystem : public entityx::System<PhysicsSystem>
 
 	void update(entityx::EntityManager& es, entityx::EventManager& events, entityx::TimeDelta dt) override
 	{
-		if (_destroy.size() > 0)
+		if (!_destroy.empty())
 		{
 			for (auto& tuple : _destroy)
 			{

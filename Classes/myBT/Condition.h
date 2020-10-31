@@ -1,11 +1,11 @@
 /**
 @file Condition.h
 
-Acci�n primitiva que verifica que una condici�n se cumple.
+Accion primitiva que verifica que una condicion se cumple.
 
 @see myBT
 
-@author Ricardo Marmolejo Garc�a
+@author Ricardo Marmolejo Garcia
 @date 2013
 */
 #ifndef _CONDITION_H_
@@ -22,41 +22,39 @@ class Condition : public TreeNodeLeaf
 public:
 	using func0 = typename std::tuple_element<0, ConditionRepository::mapped_type>::type;
 
-	explicit Condition(std::string name = "")
-		: TreeNodeLeaf(std::move(name))
+	explicit Condition(const std::string& name = "")
+		: TreeNodeLeaf(name)
 		, m_Inverse(false)
 	{  }
 
-	explicit Condition(std::string name, func0 callbackCondition)
-		: TreeNodeLeaf(std::move(name))
+	explicit Condition(const std::string& name, func0 callbackCondition)
+		: TreeNodeLeaf(name)
 		, m_Inverse(false)
 		, m_tCallbackCondition(std::move(callbackCondition))
 	{  }
 
-	explicit Condition(std::string name, const ConditionRepository::mapped_type& callback)
-		: TreeNodeLeaf(std::move(name))
+	explicit Condition(const std::string& name, const ConditionRepository::mapped_type& callback)
+		: TreeNodeLeaf(name)
 		, m_Inverse(false)
 		, m_tCallbackCondition(std::get<0>(callback))
 	{  }
 
-	virtual ~Condition()
-	{
-		
-	}
+	~Condition() override { ; }
 
-	virtual Type getType() const override {return TYPE_CONDITION;}
+	Type get_type() const override {return TYPE_CONDITION;}
+    std::string get_typename() const override {return "Condition";}
 
-	virtual void init() final
+	void init(myBT::Context& context) final
 	{
 
 	}
 
-	virtual void terminate() final
+	void terminate(myBT::Context& context) final
 	{
 
 	}
 
-    virtual std::string get_name() const override
+    std::string get_name() const override
     {
 	    if(m_Inverse)
 	        return std::string("not " + _name);
@@ -64,12 +62,12 @@ public:
     	    return _name;
     }
 
-	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
+	size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		// se establece su flujo
 		this->set_flow( context, id_flow );
 
-		bool retorno = check(deltatime);
+		bool retorno = check(context, deltatime);
 
 		// hacer inversa
 		if(m_Inverse) retorno = !retorno;
@@ -77,25 +75,20 @@ public:
 		size_t status = retorno ? COMPLETED : FAILED;
 
 		return status;
-	}
 
-	virtual void reset(myBT::Context& context, const std::string& id_flow) override
+
+	virtual bool check(myBT::Context& context, double deltatime)
 	{
-		
+		return m_tCallbackCondition(context, deltatime);
 	}
 
-	virtual bool check(double deltatime)
-	{
-		return m_tCallbackCondition(deltatime);
-	}
-
-	virtual void write(nlohmann::json& pipe) override
+	void write(nlohmann::json& pipe) override
 	{
 	    TreeNode::write(pipe);
 		pipe["Inverse"] = m_Inverse;
 	}
 
-	virtual void read(nlohmann::json& pipe) override
+	void read(nlohmann::json& pipe) override
 	{
 	    TreeNode::read(pipe);
 		m_Inverse = pipe["Inverse"].get<bool>();

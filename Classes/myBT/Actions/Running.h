@@ -7,12 +7,13 @@ namespace myBT {
 class Running : public Action
 {
 public:
-	explicit Running(const std::string& what) : Action(what) {}
-	virtual ~Running() {}
+	explicit Running(const std::string& what) : Action(what) { ; }
+	~Running() override { ; }
 
-	virtual Type getType() const override { return TYPE_RUNNING; }
+	Type get_type() const override { return TYPE_RUNNING; }
+    std::string get_typename() const override {return "Running";}
 
-	virtual size_t update(double deltatime) override
+	size_t execute(myBT::Context& context, double deltatime) override
 	{
 		return RUNNING;
 	}

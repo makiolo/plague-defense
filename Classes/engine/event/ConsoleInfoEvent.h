@@ -24,6 +24,11 @@ struct ConsoleInfoEvent : public entityx::Event<ConsoleInfoEvent>
 		
 	}
 
+	~ConsoleInfoEvent()
+    {
+
+    }
+
 	std::string from;
 	std::string message;
 };

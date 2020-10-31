@@ -18,7 +18,7 @@ struct InsectDeadEvent : public entityx::Event<InsectDeadEvent>
 		
 	}
 
-	virtual ~InsectDeadEvent()
+	~InsectDeadEvent()
 	{
 
 	}

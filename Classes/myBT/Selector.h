@@ -3,7 +3,7 @@
 
 @see myBT
 
-@author Ricardo Marmolejo Garc�a
+@author Ricardo Marmolejo Garcia
 @date 2013
 */
 #ifndef _SELECTOR_H_
@@ -15,7 +15,7 @@ namespace myBT {
 
 class Selector : public TreeNodeComposite
 {
-	PROPERTY(int, ReturnCodeFinish)
+	PROPERTY(size_t, ReturnCodeFinish)
 	PROPERTY(bool, Random)
 	PROPERTY(bool, AutoReset)
 	PROPERTY(bool, Priority)
@@ -29,18 +29,18 @@ public:
 		 , m_Priority(false)
 	{  }
 
-	virtual ~Selector()
-	{ ; }
+	~Selector() override { ; }
 
-	virtual Type getType() const override {return TYPE_SELECTOR;}
-	
-	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
+	Type get_type() const override {return TYPE_SELECTOR;}
+    std::string get_typename() const override {return "Selector";}
+
+	size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		size_t totalChilds = TreeNodeComposite::size();
 
 		if(totalChilds > 0)
 		{
-		    size_t counter = context[id_flow].registers[this]["counter"].get<size_t>();
+            auto counter = context.flows[id_flow].registers[this].get<size_t>("counter");
 
 			if(counter < totalChilds)
 			{
@@ -54,7 +54,7 @@ public:
                     {
                         // avanzar a la siguiente rama
                         child->configure(context, id_flow);
-                        context[id_flow].registers[this]["counter"] = counter + 1;
+                        context.flows[id_flow].registers[this].set<size_t>("counter", counter + 1);
                         return update(context, id_flow, deltatime);
                     }
 					case RUNNING:
@@ -66,7 +66,7 @@ public:
 					{
                         if(m_Priority) {
                             child->configure(context, id_flow);
-                            context[id_flow].registers[this]["counter"] = 0;
+                            context.flows[id_flow].registers[this].set<size_t>("counter", 0);
                         }
 
 						return code;
@@ -101,9 +101,9 @@ public:
 		}
 	}
 
-	virtual void reset(myBT::Context& context, const std::string& id_flow) override
+	void reset(myBT::Context& context, const std::string& id_flow) override
 	{
-        context[id_flow].registers[this]["counter"] = 0;
+        context.flows[id_flow].registers[this].set<size_t>("counter", 0);
 
         if (m_Random)
         {
@@ -111,7 +111,7 @@ public:
         }
 	}
 
-	virtual void write(nlohmann::json& pipe) override
+	void write(nlohmann::json& pipe) override
 	{
         TreeNode::write(pipe);
 		pipe["ReturnCodeFinish"] = m_ReturnCodeFinish;
@@ -120,10 +120,10 @@ public:
 		pipe["Priority"] = m_Priority;
 	}
 
-	virtual void read(nlohmann::json& pipe) override
+	void read(nlohmann::json& pipe) override
 	{
         TreeNode::read(pipe);
-		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<int>();
+		m_ReturnCodeFinish = pipe["ReturnCodeFinish"].get<size_t>();
 		m_Random = pipe["Random"].get<bool>();
 		m_AutoReset = pipe["AutoReset"].get<bool>();
 		m_Priority = pipe["Priority"].get<bool>();
@@ -133,4 +133,3 @@ public:
 }
 
 #endif /* SELECTORPERSONAJE_HPP_ */
-

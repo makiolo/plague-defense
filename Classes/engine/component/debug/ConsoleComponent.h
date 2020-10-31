@@ -23,6 +23,11 @@ struct ConsoleComponent : public entityx::Component<ConsoleComponent>, public en
         _label->setPosition(cocos2d::Vec2(200, 60));
         _label->setColor(cocos2d::Color3B(0, 0, 0));
         _label->setAlignment(cocos2d::TextHAlignment::LEFT);
+        _label->setString("");
+
+        /*
+         * TODO: Hacer una consola multilinea
+         */
 
         // add the label as a child to this layer
         _scene->addChild(_label, 5);
@@ -45,7 +50,8 @@ struct ConsoleComponent : public entityx::Component<ConsoleComponent>, public en
 
     void receive(const plague::ConsoleInfoEvent& command)
     {
-        if (command.from == "brain2") {
+        // if (command.from == "brain2")
+        if (command.from == "spider") {
             std::stringstream ss;
             ss << command.message;
             _label->setString(ss.str());

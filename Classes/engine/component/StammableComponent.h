@@ -17,6 +17,11 @@ struct StammableComponent : public entityx::Component<StammableComponent>
 	{
 		
 	}
+
+    ~StammableComponent()
+    {
+
+    }
 };
 
 }

@@ -29,15 +29,15 @@ struct Transform : public entityx::Component<Transform>
 	void runAction(cocos2d::Action* action)
     {
 	    if(running) {
-            running = false;
+            node->stopAction(current_action);
             current_action->release();
         }
 	    current_action = node->runAction(action);
-	    if(!current_action->isDone())
-        {
-	        running = true;
-	        current_action->retain();
-        }
+	    // if(!current_action->isDone())
+        // {
+        current_action->retain();
+        running = true;
+        // }
     }
 
     bool isDone() const

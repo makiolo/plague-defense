@@ -182,7 +182,7 @@ bool Level01::init()
 	ex.systems.add<plague::DetectFloorImpactSystem>();
 	ex.systems.add<plague::PhysicsSystem>(this);
 	ex.systems.add<plague::PhysicsBuilderSystem>();
-	ex.systems.add<plague::BrainSystem>();
+	ex.systems.add<plague::BrainSystem>(this);
 	ex.systems.add<plague::SteeringBehavioursSystem>();
 	ex.systems.add<plague::CocosGeneratorSystem>();
 	ex.systems.add<plague::TimerSystem>();

@@ -17,6 +17,11 @@ struct InsectComponent : public entityx::Component<InsectComponent>
 	{
 		
 	}
+
+    ~InsectComponent()
+    {
+
+    }
 };
 
 }

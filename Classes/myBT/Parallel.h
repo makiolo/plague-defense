@@ -3,7 +3,7 @@
 
 @see myBT
 
-@author Ricardo Marmolejo Garc�a
+@author Ricardo Marmolejo Garcia
 @date 2013
 */
 #ifndef _PARALLEL_H_
@@ -37,12 +37,12 @@ public:
 		, m_AbortedMode(NONE)
 	{  }
 
-	virtual ~Parallel()
-	{ ; }
+	~Parallel() override { ; }
 
-	virtual Type getType() const override {return TYPE_PARALLEL;}
+	Type get_type() const override {return TYPE_PARALLEL;}
+	std::string get_typename() const override {return "Parallel";}
 
-	virtual void configure(myBT::Context& context, const std::string& id_flow) final
+	void configure(myBT::Context& context, const std::string& id_flow) final
 	{
 		this->reset(context, id_flow);
 
@@ -58,7 +58,7 @@ public:
 		}
 	}
 
-	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
+	size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		bool anyFail = false;
 		bool allFail = true;
@@ -142,12 +142,12 @@ public:
 		return candidato;
 	}
 
-	virtual void reset(myBT::Context& context, const std::string& id_flow) override
+	void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 		
 	}
 
-	virtual void write(nlohmann::json& pipe) override
+	void write(nlohmann::json& pipe) override
 	{
         TreeNode::write(pipe);
 		pipe["FailedMode"] = m_FailedMode;
@@ -155,7 +155,7 @@ public:
 		pipe["AbortedMode"] = m_AbortedMode;
 	}
 
-	virtual void read(nlohmann::json& pipe) override
+	void read(nlohmann::json& pipe) override
 	{
         TreeNode::read(pipe);
 		m_FailedMode = pipe["FailedMode"].get<size_t>();

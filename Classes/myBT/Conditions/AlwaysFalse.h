@@ -8,11 +8,12 @@ class AlwaysFalse : public Condition
 {
 public:
 	explicit AlwaysFalse(const std::string& what) : Condition(what) {}
-	virtual ~AlwaysFalse() {}
+	~AlwaysFalse() override { ; }
 
-	virtual Type getType() const override { return TYPE_FALSE; }
+	Type get_type() const override { return TYPE_FALSE; }
+    std::string get_typename() const override {return "False";}
 
-	virtual bool check(double deltatime) override
+	bool check(myBT::Context& context, double deltatime) override
 	{
 		return false;
 	}

@@ -16,7 +16,7 @@ struct RightCommand : public entityx::Event<RightCommand>
 		
 	}
 
-	virtual ~RightCommand()
+	~RightCommand()
 	{
 
 	}

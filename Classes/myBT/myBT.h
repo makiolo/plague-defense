@@ -36,7 +36,6 @@ namespace myBT {
     class Completed;
     class Failed;
     class Running;
-    class Sleep;
     class AlwaysTrue;
     class AlwaysFalse;
 
@@ -58,7 +57,8 @@ namespace myBT {
 #include <list>
 #include <deque>
 #include <tuple>
-#include <nlohmann/json.hpp>
+
+#include "nlohmann/json.hpp"
 
 #include "For.h"
 #include "ForTime.h"

@@ -11,7 +11,11 @@ namespace plague {
 
 struct Sprite2DComponent : public entityx::Component<Sprite2DComponent>
 {
-	explicit Sprite2DComponent(const std::string& appearance_, uint8_t opacity_ = 255, cocos2d::Vec2 anchor_point_ = cocos2d::Vec2::ANCHOR_MIDDLE, const cocos2d::Vec2& offset_position_ = cocos2d::Vec2::ZERO, float offset_scale_ = 1.0f)
+	explicit Sprite2DComponent( const std::string& appearance_,
+	                            uint8_t opacity_ = 255,
+	                            cocos2d::Vec2 anchor_point_ = cocos2d::Vec2::ANCHOR_MIDDLE,
+	                            const cocos2d::Vec2& offset_position_ = cocos2d::Vec2::ZERO,
+	                            float offset_scale_ = 1.0f)
 		: sprite(cocos2d::Sprite::create(appearance_))
 		, configured(false)
 		, opacity(opacity_)

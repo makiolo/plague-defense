@@ -3,20 +3,19 @@
 
 @see myBT
 
-@author Ricardo Marmolejo Garc�a
+@author Ricardo Marmolejo Garcia
 @date 2013
 */
 #ifndef _TREENODECOMPOSITE_H_
 #define _TREENODECOMPOSITE_H_
 
+#include <random>
 #include <sstream>
 #include <iomanip>
 //
 #include "TreeNode.h"
 
 namespace myBT {
-
-const size_t max_behaviour_tree = 8192;
 
 class TreeNodeComposite : public TreeNode
 {
@@ -25,45 +24,42 @@ public:
 
 	explicit TreeNodeComposite(const std::string& name = "")
 		: TreeNode(name)
+		, _gen(_rd())
 	{
-		;	
+	    ;
 	}
 
-	virtual ~TreeNodeComposite()
+	~TreeNodeComposite() override
 	{
 		;
 	}
 
-	virtual void configure(myBT::Context& context, const std::string& id_flow) override
+	void configure(myBT::Context& context, const std::string& id_flow) override
 	{
 		this->reset(context, id_flow);
 
-		size_t totalChilds = TreeNodeComposite::size();
-		TreeNode* child;
-
-		for(size_t i = 0; i < totalChilds; ++i)
+		for(auto& child : _childs)
 		{
-			child = _childs[i];
 			child->configure(context, id_flow);
 		}
 	}
 
-	virtual void add(TreeNode* child) final
+	void add(TreeNode* child) final
 	{
 		if(child)
 		{
 			_childs.push_back(child);
 
-			// Hijo, yo soy tu padre. FUUU
+			// Hijo, yo soy tu padre
 			child->set_parent(this);
 		}
 	}
 
-	virtual void remove(TreeNode* child) final
+	void remove(TreeNode* child) final
 	{
 		if(child)
 		{
-			for (size_t i = 0; i<_childs.size(); ++i)
+			for (size_t i = 0; i < _childs.size(); ++i)
 			{
 				if(_childs[i] == child)
 				{
@@ -78,19 +74,19 @@ public:
 		}
 	}
 
-	inline size_t size()
+	inline size_t size() const
 	{
 		return _childs.size();
 	}
 
-	inline TreeNode* get_child(size_t id)
+	inline TreeNode* get_child(size_t id) const
 	{
-		return _childs[id];
+		return _childs.at(id);
 	}
 
-	virtual void shuffle_childs() final
+	void shuffle_childs() final
 	{
-		std::random_shuffle ( _childs.begin(), _childs.end() );
+        std::shuffle ( _childs.begin(), _childs.end() , _gen );
 	}
 
 	/*
@@ -99,7 +95,7 @@ public:
 	template <typename T, typename ... Args>
 	T* make_node(const std::string& what, Args&& ... args)
 	{
-		if (what == "" && this->getType() == TYPE_PARALLEL)
+		if (what == "" && this->get_type() == TYPE_PARALLEL)
 		{
 			assert(false && "Name is mandatory in childs of Parallel");
 		}
@@ -117,43 +113,30 @@ public:
 	*/
 	void free_childs() final
 	{
-		TreeNode* child;
 		TreeNodeChilds delayedDelete;
-		{
-			auto it = _childs.begin();
-			auto ite = _childs.end();
-
-			for(; it != ite; ++it)
-			{
-				child = *it;
-				child->free_childs();
-				delayedDelete.push_back(child);
-			}
-		}
-		{
-			auto it = delayedDelete.begin();
-			auto ite = delayedDelete.end();
-
-			for(; it != ite; ++it)
-			{
-				child = *it;
-				remove(child);
-				delete child;
-			}
-		}
-		assert(_childs.size() == 0);
+        for(auto& child : _childs)
+        {
+            child->free_childs();
+            delayedDelete.emplace_back(child);
+        }
+        for(auto& child : delayedDelete)
+        {
+            remove(child);
+            delete child;
+        }
+		assert(_childs.empty());
 	}
 
-	virtual void serialize(nlohmann::json& pipe) final
+	void serialize(nlohmann::json& pipe) final
 	{
 		this->write(pipe);
 		size_t i = 0;
 		for (auto& child : _childs)
 		{
 			std::stringstream ss;
-			ss << std::setfill('0') << std::setw(3) << i << "_" << child->getTypeStr();
+			ss << std::setfill('0') << std::setw(3) << i << "_" << child->get_typename();
 			std::string name = child->get_name();
-			if (name != "")
+			if (!name.empty())
 			{
 				ss << "_" << name;
 			}
@@ -161,13 +144,15 @@ public:
 			++i;
 		}
 	}
+	void unserialize(nlohmann::json& pipe, const ConditionRepository& conditions, const ActionRepository& actions) final;
 
-	virtual void unserialize(nlohmann::json& pipe, const ConditionRepository& conditions, const ActionRepository& actions) final;
 	void write_ai(const std::string& filename, const ConditionRepository& conditions, const ActionRepository& actions);
 	void read_ai(const std::string& filename, const ConditionRepository& conditions, const ActionRepository& actions);
 
 protected:
 	TreeNodeChilds _childs;
+    std::random_device _rd;
+    std::mt19937 _gen;
 };
 
 }

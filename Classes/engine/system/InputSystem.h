@@ -94,7 +94,7 @@ struct InputSystem : public entityx::System<InputSystem>,
 				Sprite3D
 				NavMeshAgent (Componente de Sprite3D)
 		*/
-
+#if 0
 		using namespace cocos2d;
 
 		//////////////////////////////
@@ -135,7 +135,7 @@ struct InputSystem : public entityx::System<InputSystem>,
 		// Create Camera3D
 
 		_camera = cocos2d::Camera::create();
-		_camera->setPosition3D(cocos2d::Vec3(0.0f, 15.5f, 10.5f));
+		_camera->setPosition3D(cocos2d::Vec3(0.0f, 150.5f, 10.5f));
 		_camera->lookAt(cocos2d::Vec3(0.0f, 0.0f, -10.0f), cocos2d::Vec3(0.0f, 0.0f, -1.0f));
 		_camera->setCameraFlag(cocos2d::CameraFlag::USER1);
 		_scene->addChild(_camera);
@@ -187,6 +187,7 @@ struct InputSystem : public entityx::System<InputSystem>,
         */
         sprite->setMaterial(material);
         sprite->setLightMask((int)LightFlag::LIGHT0);
+#endif
 	}
 
 	virtual ~InputSystem()
@@ -323,7 +324,8 @@ struct InputSystem : public entityx::System<InputSystem>,
         _scene->addChild(obstacleNode, 1);
     }
 
-    void move_agent(const Vec2 &location) {
+    void move_agent(const Vec2 &location)
+    {
         Vec3 nearP(location.x, location.y, 0.0f), farP(location.x, location.y, 1.0f);
 
         auto size = Director::getInstance()->getWinSize();
@@ -491,7 +493,6 @@ Nodo tiene los métodos para llegar a Local Space = (world matrix)^-1 * world sp
         agent_material->getTechniqueByIndex(0)->getPassByIndex(0)->setUniformPointLightColor((const void*)&color, sizeof(cocos2d::Vec3));
         agent_material->getTechniqueByIndex(0)->getPassByIndex(0)->setUniformPointLightRangeInverse((const void*)&range, sizeof(float));
         */
-
         agentNode->setMaterial(agent_material);
 
         _scene->addChild(agentNode, 1);
@@ -594,7 +595,7 @@ protected:
 
 	// NavMesh
 	cocos2d::NavMesh* navmesh;
-	cocos2d::Camera *_camera;
+	cocos2d::Camera* _camera;
 	std::vector<cocos2d::NavMeshAgent*> agents;
 
 	bool _spawn_agent;

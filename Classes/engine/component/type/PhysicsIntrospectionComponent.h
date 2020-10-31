@@ -18,6 +18,11 @@ struct PhysicsIntrospectionComponent : public entityx::Component<PhysicsIntrospe
 		
 	}
 
+	~PhysicsIntrospectionComponent()
+    {
+
+    }
+
 	std::string type;
 	entityx::Entity::Id id;
 };

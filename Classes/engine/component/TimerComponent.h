@@ -26,6 +26,11 @@ struct TimerComponent : public entityx::Component<TimerComponent>
 		
 	}
 
+	~TimerComponent()
+    {
+
+    }
+
 	void update_fw(entityx::EventManager& events, double deltatime)
 	{
 		_internal_clock += deltatime;

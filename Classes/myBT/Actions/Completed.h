@@ -7,12 +7,13 @@ namespace myBT {
 class Completed : public Action
 {
 public:
-	explicit Completed(const std::string& what) : Action(what) {}
-	virtual ~Completed() {}
+	explicit Completed(const std::string& what) : Action(what) { ; }
+	~Completed() override { ; }
 
-	virtual Type getType() const override { return TYPE_COMPLETED; }
+	Type get_type() const override { return TYPE_COMPLETED; }
+    std::string get_typename() const override {return "Completed";}
 
-	virtual size_t update(double deltatime) override
+	size_t execute(myBT::Context& context, double deltatime) override
 	{
 		return COMPLETED;
 	}

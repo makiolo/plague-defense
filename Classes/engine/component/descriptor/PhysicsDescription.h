@@ -20,8 +20,13 @@ struct PhysicsDescription : public entityx::Component<PhysicsDescription>
 		, restitution(restitution_)
 		, friction(friction_)
 	{
-		
+
 	}
+
+	~PhysicsDescription()
+    {
+
+    }
 
 	/*
 	Materials describe material attributes:

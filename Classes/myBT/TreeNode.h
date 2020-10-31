@@ -5,7 +5,7 @@ Nodo abstracto de un arbol de comportamiento
 
 @see myBT
 
-@author Ricardo Marmolejo Garc�a
+@author Ricardo Marmolejo Garcia
 @date 2013
 */
 #ifndef _TREENODE_H_
@@ -14,7 +14,8 @@ Nodo abstracto de un arbol de comportamiento
 #include <string>
 #include <tuple>
 #include <unordered_map>
-#include <nlohmann/json.hpp>
+#include "nlohmann/json.hpp"
+#include "Property/Props.h"
 
 namespace myBT {
 
@@ -61,6 +62,20 @@ enum Type {
 	TYPE_RUNNING,
 };
 
+template <typename Key, typename Value>
+using Dict = std::unordered_map<Key, Value>;
+
+struct FlowProgramData;
+
+struct Context
+{
+    Props stack;
+    Dict<std::string, FlowProgramData> flows;
+};
+using ActionRepository = std::unordered_map<std::string, std::tuple< std::function<void(Context&)>, std::function<size_t(Context&, double)>, std::function<void(Context&)> > >;
+using ConditionRepository = std::unordered_map<std::string, std::tuple< std::function<bool(Context&, double)> > >;
+
+
 struct FlowProgramData
 {
 	FlowProgramData()
@@ -80,106 +95,41 @@ struct FlowProgramData
 	*/
 	myBT::TreeNodeLeaf* _current_action;
 
-	/*
+	/**
 	Program registers
 	*/
-	std::unordered_map<TreeNode*, nlohmann::json> registers;
+    Dict<TreeNode*, Props> registers;
 
-	/*
+	/**
 	 * Trace
 	 */
 	std::vector<std::string> traces;
 };
 
-using ActionRepository = std::unordered_map<std::string, std::tuple< std::function<void()>, std::function<size_t(double)>, std::function<void()> > >;
-using ConditionRepository = std::unordered_map<std::string, std::tuple< std::function<bool(double)> > >;
-using Context = std::unordered_map<std::string, FlowProgramData>;
-
 class TreeNode
 {
 public:
-	virtual Type getType() const = 0;
-	virtual std::string getTypeStr() const
-	{
-		switch( getType() )
-		{
-		case TYPE_ACTION:
-			return "Action";
+	virtual Type get_type() const = 0;
+	virtual std::string get_typename() const = 0;
 
-		case TYPE_ASSERT:
-			return "Assert";
-			
-		case TYPE_CONDITION:
-			return "Condition";
-			
-		case TYPE_FOR:
-			return "For";
-			
-		case TYPE_FORTIME:
-			return "Fortime";
-			
-		case TYPE_PARALLEL:
-			return "Parallel";
-			
-		case TYPE_SELECTOR:
-			return "Selector";
-
-		case TYPE_SEQUENCE:
-			return "Sequence";
-			
-		case TYPE_WHILE:
-			return "While";
-
-		case TYPE_AND:
-			return "And";
-
-		case TYPE_OR:
-			return "Or";
-
-		case TYPE_TRUE:
-			return "True";
-
-		case TYPE_FALSE:
-			return "False";
-
-		case TYPE_ABORTED:
-			return "Aborted";
-
-		case TYPE_COMPLETED:
-			return "Completed";
-
-		case TYPE_FAILED:
-			return "Failed";
-
-		case TYPE_RUNNING:
-			return "Running";
-
-		default:
-			return "UNKNOWN";
-		}
-	}
-
-	explicit TreeNode(const std::string& name = "")
+	explicit TreeNode(std::string name = "")
 		: _parent(nullptr)
-		, _name(name)
+		, _name(std::move(name))
 	{
         
 	}
 
-	virtual ~TreeNode()
-	{
-		
-	}
+	virtual ~TreeNode() = default;
 
-	void clearTraces(myBT::Context& context)
+	static void clearTraces(myBT::Context& context)
     {
-	    for(auto flow : context)
+	    for(auto flow : context.flows)
         {
 	        flow.second.traces.clear();
         }
     }
 
-    int strcat_reverse(char* buffer, const char* what, int counter) const
+    static int strcat_reverse(char* buffer, const char* what, int counter)
     {
         for(int i=((int)strlen(what)-1); i>=0; --i)
         {
@@ -190,8 +140,8 @@ public:
 
 	void printTrace(myBT::Context& context, const std::string& id_flow)
 	{
+        const bool verbose = true;
         char buffer_trace[BUFSIZ];
-	    const bool verbose = true;
         int counter = BUFSIZ - 1;
         buffer_trace[counter] = '\0';
         counter = counter - 1;
@@ -214,29 +164,24 @@ public:
                 finalStr = "Trace is so long ...";
             }
 
-            context[id_flow].traces.emplace_back(finalStr);
+            context.flows[id_flow].traces.emplace_back(finalStr);
         }
         else
         {
-            context[id_flow].traces.emplace_back(this->get_name());
+            context.flows[id_flow].traces.emplace_back(this->get_name());
         }
 
 	}
-
-	////////////////////////////////////////////////
 
 	virtual void add(TreeNode* child) = 0;
 	virtual void remove(TreeNode* child) = 0;
 	virtual void configure(myBT::Context& context, const std::string& id_flow) = 0;
 	virtual void shuffle_childs() = 0;
 
-	////////////////////////////////////////////////
-
     virtual std::string get_name() const {return _name;}
 	virtual void reset(myBT::Context& context, const std::string& id_flow) = 0;
 	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) = 0;
-	
-	virtual void free_childs() {}
+	virtual void free_childs() { ; }
 
 	void set_parent(TreeNode* parent)
 	{
@@ -258,7 +203,7 @@ public:
 
 	virtual void write(nlohmann::json& pipe)
 	{
-		pipe["type"] = getTypeStr();
+		pipe["type"] = get_typename();
 		pipe["name"] = _name;
 	}
 

@@ -7,12 +7,13 @@ namespace myBT {
 class Failed : public Action
 {
 public:
-	explicit Failed(const std::string& what) : Action(what) {}
-	virtual ~Failed() {}
+	explicit Failed(const std::string& what) : Action(what) { ; }
+	~Failed() override { ; }
 
-	virtual Type getType() const override { return TYPE_FAILED; }
+	Type get_type() const override { return TYPE_FAILED; }
+    std::string get_typename() const override {return "Failed";}
 
-	virtual size_t update(double deltatime) override
+	size_t execute(myBT::Context& context, double deltatime) override
 	{
 		return FAILED;
 	}

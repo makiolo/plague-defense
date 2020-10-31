@@ -23,6 +23,11 @@ struct SceneComponent : public entityx::Component<SceneComponent>
 		
 	}
 
+    ~SceneComponent()
+    {
+
+    }
+
 	cocos2d::Scene* get() const
 	{
 		return scene;

@@ -15,11 +15,16 @@ namespace plague {
 
 struct TimerEvent : public entityx::Event<TimerEvent>
 {
-	explicit TimerEvent(const std::string& tag_)
-		: tag(tag_)
+	explicit TimerEvent(std::string tag_)
+		: tag(std::move(tag_))
 	{
 		
 	}
+
+	~TimerEvent()
+    {
+
+    }
 
 	std::string tag;
 };

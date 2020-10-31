@@ -16,6 +16,11 @@ struct AutoDestroyDescription : public entityx::Component<AutoDestroyDescription
 		;
 	}
 
+	~AutoDestroyDescription()
+    {
+
+    }
+
 	float life;
 	float linked_life;
 };

@@ -28,14 +28,12 @@ public:
 		, m_Lazy(true)
 	{  }
 
-	virtual ~And()
-	{
+	~And() override { ; }
 
-	}
+	Type get_type() const override {return TYPE_AND;}
+    std::string get_typename() const override {return "And";}
 
-	virtual Type getType() const override {return TYPE_AND;}
-
-	virtual size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
+	size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
 		size_t totalChilds = TreeNodeComposite::size();
 
@@ -49,11 +47,11 @@ public:
 				TreeNode* child = TreeNodeComposite::get_child(i);
 
 				// Los hijos de un AND / OR deben ser condiciones
-				assert(		child->getType() == Type::TYPE_CONDITION ||
-							child->getType() == Type::TYPE_TRUE || 
-							child->getType() == Type::TYPE_FALSE ||
-							child->getType() == Type::TYPE_AND ||
-							child->getType() == Type::TYPE_OR);
+				assert(child->get_type() == Type::TYPE_CONDITION ||
+                                       child->get_type() == Type::TYPE_TRUE ||
+                                       child->get_type() == Type::TYPE_FALSE ||
+                                       child->get_type() == Type::TYPE_AND ||
+                                       child->get_type() == Type::TYPE_OR);
 
 				size_t code = child->update(context, id_flow, deltatime);
 
@@ -90,19 +88,19 @@ public:
 
 	}
 
-	virtual void reset(myBT::Context& context, const std::string& id_flow) override
+	void reset(myBT::Context& context, const std::string& id_flow) override
 	{
 
 	}
 
-	virtual void write(nlohmann::json& pipe) override
+	void write(nlohmann::json& pipe) override
 	{
         TreeNode::write(pipe);
 		pipe["Inverse"] = m_Inverse;
 		pipe["Lazy"] = m_Lazy;
 	}
 
-	virtual void read(nlohmann::json& pipe) override
+	void read(nlohmann::json& pipe) override
 	{
         TreeNode::read(pipe);
 		m_Inverse = pipe["Inverse"].get<bool>();
