@@ -58,8 +58,6 @@ namespace myBT {
 #include <deque>
 #include <tuple>
 
-#include "nlohmann/json.hpp"
-
 #include "For.h"
 #include "ForTime.h"
 #include "Parallel.h"
@@ -78,4 +76,3 @@ namespace myBT {
 #include "Conditions/AlwaysFalse.h"
 
 #endif
-

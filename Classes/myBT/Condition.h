@@ -64,18 +64,18 @@ public:
 
 	size_t update(myBT::Context& context, const std::string& id_flow, double deltatime) override
 	{
-		// se establece su flujo
-		this->set_flow( context, id_flow );
+        // se establece su flujo
+        this->set_flow(context, id_flow);
 
-		bool retorno = check(context, deltatime);
+        bool retorno = check(context, deltatime);
 
-		// hacer inversa
-		if(m_Inverse) retorno = !retorno;
+        // hacer inversa
+        if (m_Inverse) retorno = !retorno;
 
-		size_t status = retorno ? COMPLETED : FAILED;
+        size_t status = retorno ? COMPLETED : FAILED;
 
-		return status;
-
+        return status;
+    }
 
 	virtual bool check(myBT::Context& context, double deltatime)
 	{

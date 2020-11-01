@@ -39,10 +39,10 @@ public:
 		
 		if(totalChilds > 0)
 		{
-			bool retorno = false;
-			bool salir = false;
+			bool value = false;
+			bool exit = false;
 
-			for(size_t i = 0; (i < totalChilds) && !salir; ++i)
+			for(size_t i = 0; (i < totalChilds) && !exit; ++i)
 			{
 				TreeNode* child = TreeNodeComposite::get_child(i);
 
@@ -60,24 +60,23 @@ public:
 					if(m_Lazy)
 					{
 						// en evaluación perezosa deja de evaluar el resto de hijos
-						retorno = true;
-						salir = true;
+						value = true;
+						exit = true;
 					}
 					else
 					{
-						if(!retorno)
+						if(!value)
 						{
-							retorno = true;
+							value = true;
 						}
 					}
 				}
 			}
 
 			// hacer inversa
-			if(m_Inverse) retorno = !retorno;
+			if(m_Inverse) value = !value;
 
-			// valor de retorno
-			size_t eStatus = (retorno) ? COMPLETED : FAILED;
+			size_t eStatus = value ? COMPLETED : FAILED;
 			return eStatus;
 		}
 		else

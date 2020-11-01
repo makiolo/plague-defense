@@ -95,7 +95,7 @@ public:
 	template <typename T, typename ... Args>
 	T* make_node(const std::string& what, Args&& ... args)
 	{
-		if (what == "" && this->get_type() == TYPE_PARALLEL)
+		if (what.empty() && this->get_type() == TYPE_PARALLEL)
 		{
 			assert(false && "Name is mandatory in childs of Parallel");
 		}

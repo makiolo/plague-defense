@@ -1,5 +1,5 @@
 /**
-@file Asercion.h
+@file Assert.h
 
 @see myBT
 
@@ -103,7 +103,7 @@ public:
 				}
 				else // assert
 				{
-					// cuando deja de cumplirse, se le pide al select que cambie de estrategia
+					// cuando deja de cumplirse, se le pide al select que cambie de estrategia (para generar un arbol de decision)
 					return m_ReturnCodeFinish;
 				}
 			}
