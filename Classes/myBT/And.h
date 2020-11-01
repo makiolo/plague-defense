@@ -46,12 +46,12 @@ public:
 			{
 				TreeNode* child = TreeNodeComposite::get_child(i);
 
-				// Los hijos de un AND / OR deben ser condiciones
-				assert(child->get_type() == Type::TYPE_CONDITION ||
-                                       child->get_type() == Type::TYPE_TRUE ||
-                                       child->get_type() == Type::TYPE_FALSE ||
-                                       child->get_type() == Type::TYPE_AND ||
-                                       child->get_type() == Type::TYPE_OR);
+				// Los hijos de un AND / OR deben ser condiciones, o bien, and, or, all, any
+				assert(     child->get_type() == Type::TYPE_CONDITION ||
+                            child->get_type() == Type::TYPE_TRUE ||
+                            child->get_type() == Type::TYPE_FALSE ||
+                            child->get_type() == Type::TYPE_AND ||
+                            child->get_type() == Type::TYPE_OR);
 
 				size_t code = child->update(context, id_flow, deltatime);
 

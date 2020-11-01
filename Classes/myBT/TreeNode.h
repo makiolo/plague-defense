@@ -41,21 +41,34 @@ enum Status {
  *          ANY --> vector of bool
  */
 enum Type {
-	TYPE_ACTION,
-    TYPE_AND,
 	TYPE_ASSERT,
-	TYPE_CONDITION,
 	TYPE_FOR,
 	TYPE_FORTIME,
-    TYPE_OR,
 	TYPE_PARALLEL,
 	TYPE_SELECTOR,
 	TYPE_SEQUENCE,
 	TYPE_WHILE,
+
+	// New TreeNodeComposite
+    TYPE_AND,
+    TYPE_OR,
+	// TYPE_ALL,
+	// TYPE_ANY,
+
     // Conditions
+    TYPE_CONDITION,
     TYPE_TRUE,
     TYPE_FALSE,
+    // New Conditions
+    // TYPE_EQ,
+    // TYPE_EQ_STR,
+    // TYPE_GE,
+    // TYPE_GT,
+    // TYPE_LE,
+    // TYPE_LT,
+
 	// Actions
+    TYPE_ACTION,
 	TYPE_ABORTED,
 	TYPE_COMPLETED,
 	TYPE_FAILED,
