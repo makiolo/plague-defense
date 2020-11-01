@@ -67,12 +67,12 @@ public:
         // se establece su flujo
         this->set_flow(context, id_flow);
 
-        bool retorno = check(context, deltatime);
+        bool value = check(context, deltatime);
 
         // hacer inversa
-        if (m_Inverse) retorno = !retorno;
+        if (m_Inverse) value = !value;
 
-        size_t status = retorno ? COMPLETED : FAILED;
+        size_t status = value ? COMPLETED : FAILED;
 
         return status;
     }

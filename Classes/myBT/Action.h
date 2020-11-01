@@ -11,8 +11,6 @@ Accion primitiva
 #ifndef _ACTION_H_
 #define _ACTION_H_
 
-#include <utility>
-
 #include "TreeNodeLeaf.h"
 
 namespace myBT {
